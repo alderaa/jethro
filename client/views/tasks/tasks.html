@@ -1,0 +1,50 @@
+<template name="newtask">
+	<div class="col-md-8 floating card">
+		<h1>Add a Task</h1>
+		<form class="new-task">
+
+			<label>Title</label> <input type="text" name="title" class="form-control"/>
+			<label>Description</label> <input type="text" name="description" class="form-control"/>
+			<label>Due On</label> <input type="date" name="due_on" class="form-control"/>
+			<label>Status</label>
+			<select name="status" class="form-control">
+				<option value="not_started">Not Started</option>
+				<option value="in_progress">In Progress</option>
+				<option value="completed">Completed</option>
+			</select>
+			<br/>
+			<label>Notes</label> 
+			<br/>
+			<textarea name="notes" class="notes"></textarea>
+			<br/>
+			<input type="submit" class="btn btn-success" value="Submit"/>
+
+		</form>
+	</div>
+</template>
+
+<template name="edittask">
+	<div class="col-md-8 floating card">
+		<h1>Edit Task</h1>
+		<form class="edit-task">
+
+		<label>Title</label> <input type="text" name="title" class="form-control" value="{{task.title}}"/>
+		<label>Description</label> <input type="text" name="description" class="form-control" value="{{task.description}}"/>
+		<label>Due On</label> <input type="date" name="due_on" class="form-control" value="{{task.due_on}}"/>
+		<label>Completed On</label> <input type="date" name="completed_on" class="form-control" value="{{task.completed_on}}"/>
+		<label>Status</label>
+		<select name="status" class="form-control">
+				<option value="not_started">Not Started</option>
+				<option value="in_progress">In Progress</option>
+				<option value="completed">Completed</option>
+		</select>
+		<br/>
+		<label>Notes</label> 
+		<br/>
+		<textarea name="notes" class="notes">{{task.notes}}</textarea>
+		<br/>
+		<a href="/project/{{task.projectId}}" class="btn btn-primary">Back</a>
+		<input type="submit" class="btn btn-success pull-right" value="Submit"/>
+		</form>
+	</div>
+</template>

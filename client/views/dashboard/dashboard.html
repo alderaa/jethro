@@ -1,0 +1,15 @@
+<template name="dashboard">
+	<h1>Current Projects</h1>
+	{{> reactiveTable fields=fields collection=projects}}
+    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
+</template>
+
+<template name="projectLink">
+	<a href="/project/{{_id}}">{{title}}</a>
+</template>
+
+<template name="Actions">
+	<a href="/editproject/{{_id}}" class="btn btn-info">Edit</a> 
+	<input type="button" class="btn btn-danger delete" value="Delete"/> 
+</template>
+

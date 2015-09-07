@@ -1,0 +1,125 @@
+<template name="project">
+	
+	<div class="col-md-9">
+	<h1>{{project.title}}</h1>
+	<div class="col-md-12" style="min-height:50px;margin-top:30px;font-size:16px">
+		<div class="col-md-3">
+			Created On: {{project.created_on}}
+		</div>
+		<div class="col-md-3">
+			Due On: {{project.due_on}}
+		</div>
+		<div class="col-md-3">
+			Completed On: {{project.completed_on}}
+		</div>
+	</div>
+	<h1>Tasks</h1>
+	<div class="col-md-12"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
+	<div class="col-md-4">
+		<h3>Not Started</h3>
+		{{# each not_started}}
+			<div class="bg-info card floating">
+				<h4>{{title}}</h4>
+				<p>{{description}}</p>
+				<p>Due On: {{due_on}}</p>
+				<p>Completed On: {{completed_on}}</p>
+				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+			</div>
+		{{/each}}
+	</div>
+	<div class="col-md-4">
+		<h3>In Progress</h3>
+		{{# each in_progress}}
+			<div class="bg-warning card floating">
+				<h4>{{title}}</h4>
+				<p>{{description}}</p>
+				<p>Due On: {{due_on}}</p>
+				<p>Completed On: {{completed_on}}</p>
+				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+			</div>
+		{{/each}}
+	</div>
+	<div class="col-md-4">
+		<h3>Completed</h3>
+		{{# each finished}}
+			<div class="bg-success card floating">
+				<h4>{{title}}</h4>
+				<p>{{description}}</p>
+				<p>Due On: {{due_on}}</p>
+				<p>Completed On: {{completed_on}}</p>
+				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+			</div>
+		{{/each}}
+		</div>
+	</div>
+	<div class="col-md-3 bg-info conv-col" style="background:#eee">
+		<h3>Conversation</h3>
+		<form class="add-conv">
+			<label>Add Note</label>
+			<textarea name="text" class="form-control"></textarea>
+			<input type="submit" class="btn btn-success" value="Submit" style="margin-top:10px">
+		</form>
+		{{# each convs}}
+			<div class="conv" style="padding-left:5px;">
+				<p style="margin-bottom:2px">{{{text}}}</p>
+				<p><strong>{{user}}</strong> <i>{{date.toLocaleDateString}}</i></p>
+			</div>
+		{{/each}}
+	</div>
+	<script type="text/javascript">
+	console.log($(".container").height());
+		$(function(){
+
+		$(".conv-col").height($(".col-md-9").height());
+
+		})	
+	</script>
+</template>
+
+<template name="conv">
+
+</template>
+
+<template name="taskActions">
+	<a href="/edittask/{{_id}}" class="btn btn-info">Edit</a>
+</template>
+
+<template name="newproject">
+	<div class="col-md-8 floating card">
+		<h1>Add a Project</h1>
+		<form class="new-project">
+
+			<label>Title</label> <input type="text" name="title" class="form-control"/>
+			<label>Description</label> <input type="text" name="description" class="form-control"/>
+			<label>Status</label> <input type="text" name="status" class="form-control"/>
+			<label>Due On</label> <input type="date" name="due_on" class="form-control"/>
+			<br/>
+			<label>Notes</label> 
+			<br/>
+			<textarea name="notes" class="notes"></textarea>
+			<br/>
+			<input type="submit" class="btn btn-success" value="Submit"/>
+
+		</form>
+	</div>
+</template>
+
+<template name="editproject">
+	<div class="col-md-8 floating card">
+		<h1>Edit Project</h1>
+		<form class="edit-project">
+
+		<label>Title</label> <input type="text" name="title" class="form-control" value="{{project.title}}"/>
+		<label>Description</label> <input type="text" name="description" class="form-control" value="{{project.description}}"/>
+		<label>Status</label> <input type="text" name="status" class="form-control" value="{{project.status}}"/>
+		<label>Due On</label> <input type="date" name="due_on" class="form-control" value="{{project.due_on}}"/>
+		<br/>
+		<label>Notes</label> 
+		<br/>
+		<textarea name="notes" class="notes">{{project.notes}}</textarea>
+		<br/>
+		<input type="submit" class="btn btn-success" value="Submit"/>
+
+		</form>
+	</div>
+</template>

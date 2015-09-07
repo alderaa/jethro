@@ -1,0 +1,52 @@
+<head>
+  <title>Felix</title>
+  <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+</head>
+
+<template name="mainLayout"> 
+      <!-- Navigation -->
+  <nav class="navbar floating navbar-default navbar-fixed-top topnav" role="navigation">
+      <div class="container topnav">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              
+              <a class="pull-left navbar-brand topnav" style="margin-top:2px;" href="/">Felix</a>
+              {{#if currentUser}}
+              <a class="pull-left white" href="/"><i class="glyphicon glyphicon-home"></i></a>
+              <a class="pull-left white" href="/"><i class="glyphicon glyphicon-th-list"></i></a>
+              <a class="pull-left white" href="/newproject"><i class="glyphicon glyphicon-plus-sign"></i></a>
+              {{/if}}
+              
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                  {{#if currentUser}}
+                  <li>
+                    <a href="#" style="color:#fff"><i class="glyphicon glyphicon-inbox floating"></i> 1</a>
+                  </li>
+                  {{/if}}                 
+                  <li>
+                      <p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{> loginButtons}}</p>
+                  </li>
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container -->
+  </nav>
+  <div style="margin-top:50px;" class="container">
+     {{#if currentUser}}
+      {{> Template.dynamic template=content}}
+    {{else}}
+      {{> home}}
+    {{/if}}
+  </div>
+  <div class="panel-footer text-center"><i class="glyphicon glyphicon-copyright-mark"></i> 2015 ExcelCEO</div>
+</template>

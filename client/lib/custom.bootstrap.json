@@ -37,7 +37,7 @@
 
     "modals"               : true,
     "tooltip"              : true,
-    "popovers"             : false,
+    "popovers"             : true,
     "carousel"             : false,
 
     "affix"                : false,

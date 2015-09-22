@@ -1,24 +1,47 @@
 <template name="newtask">
+	<style>
+		label{
+			margin-top:5px;
+		}
+		.col-md-6,.col-md-2,.col-md-12{
+			padding-left: 0px;
+		}
+	</style>
 	<div class="col-md-8 floating card">
 		<h1>Add a Task</h1>
 		<form class="new-task">
-
-			<label>Title</label> <input type="text" name="title" class="form-control"/>
-			<label>Description</label> <input type="text" name="description" class="form-control"/>
-			<label>Due On</label> <input type="date" name="due_on" class="form-control"/>
-			<label>Status</label>
-			<select name="status" class="form-control">
-				<option value="not_started">Not Started</option>
-				<option value="in_progress">In Progress</option>
-				<option value="completed">Completed</option>
-			</select>
-			<br/>
-			<label>Notes</label> 
-			<br/>
-			<textarea name="notes" class="notes"></textarea>
-			<br/>
-			<input type="submit" class="btn btn-success" value="Submit"/>
-
+			<div class="col-md-6">
+				<label>Name*</label> <input type="text" name="title" class="form-control" required/>
+			</div>
+			<div class="col-md-2">
+		    	<label>Task No*</label> <input type="number" name="order_num" class="form-control" required/>
+		    </div>
+		    <div class="col-md-12">
+				<label>Description*</label> <textarea name="description" class="form-control" required></textarea>
+			</div>
+			<div class="col-md-6">
+				<label>Assigned To*</label> 
+				<select name="assigned_to" class="form-control" required>
+				    {{#each employees}}
+				      <option value="{{_id}}">{{profile.firstname}} {{profile.lastname}}</option>
+				    {{/each}}
+				</select>
+				
+			</div>
+			<div class="col-md-6">
+				<label>Due Date*</label> <input type="date" name="due_on" class="form-control" required/>
+			</div>
+			<div class="col-md-6">
+				<label>Completed Date</label> <input type="date" name="completed_on" class="form-control"/>
+			</div>
+			<div class="col-md-12">
+				<label>Notes</label> 
+				<br/>
+				<textarea name="notes" class="notes form-control"></textarea>
+				<br/>
+				<button class="btn btn-danger back">Cancel</button>
+				<input type="submit" class="btn btn-success pull-right" value="Submit"/>
+			</div>
 		</form>
 	</div>
 </template>
@@ -27,24 +50,38 @@
 	<div class="col-md-8 floating card">
 		<h1>Edit Task</h1>
 		<form class="edit-task">
-
-		<label>Title</label> <input type="text" name="title" class="form-control" value="{{task.title}}"/>
-		<label>Description</label> <input type="text" name="description" class="form-control" value="{{task.description}}"/>
-		<label>Due On</label> <input type="date" name="due_on" class="form-control" value="{{task.due_on}}"/>
-		<label>Completed On</label> <input type="date" name="completed_on" class="form-control" value="{{task.completed_on}}"/>
-		<label>Status</label>
-		<select name="status" class="form-control">
-				<option value="not_started">Not Started</option>
-				<option value="in_progress">In Progress</option>
-				<option value="completed">Completed</option>
-		</select>
-		<br/>
-		<label>Notes</label> 
-		<br/>
-		<textarea name="notes" class="notes">{{task.notes}}</textarea>
-		<br/>
-		<a href="/project/{{task.projectId}}" class="btn btn-primary">Back</a>
-		<input type="submit" class="btn btn-success pull-right" value="Submit"/>
+			<div class="col-md-6">
+				<label>Name*</label> <input type="text" name="title" class="form-control" value="{{task.title}}"/>
+			</div>
+			<div class="col-md-2">
+				<label>Task No*</label> <input type="number" name="order_num" class="form-control" value="{{task.order_num}}"/>
+		    </div>
+		    <div class="col-md-12">
+				<label>Description*</label> <input type="text" name="description" class="form-control" value="{{task.description}}"/>
+			</div>
+			<div class="col-md-6">
+				<label>Assigned To*</label>
+				<select name="assigned_to" class="form-control" required>
+				    {{#each employees}}
+				  		<option value="{{_id}}" {{selectedIfEquals _id task.assigned_to}}>{{profile.firstname}} {{profile.lastname}}</option>
+				    {{/each}}
+				</select>
+			</div>
+			<div class="col-md-6">
+				<label>Due Date*</label> <input type="date" name="due_on" class="form-control" value="{{task.due_on}}"/>
+			</div>
+			<div class="col-md-6">
+				<label>Completed Date</label> <input type="date" name="completed_on" class="form-control" value="{{task.completed_on}}"/>
+			</div>
+			<div class="col-md-12">
+				<br/>
+				<label>Notes</label> 
+				<br/>
+				<textarea name="notes" class="notes form-control">{{task.notes}}</textarea>
+				<br/>
+				<a href="/project/{{task.projectId}}" class="btn btn-primary">Back To Project</a>
+				<input type="submit" class="btn btn-success pull-right" value="Submit"/>
+			</div>
 		</form>
 	</div>
 </template>

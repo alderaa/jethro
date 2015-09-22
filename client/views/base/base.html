@@ -16,11 +16,10 @@
                   <span class="icon-bar"></span>
               </button>
               
-              <a class="pull-left navbar-brand topnav" style="margin-top:2px;" href="/">Felix</a>
+              <a class="pull-left navbar-brand topnav" style="margin-top:2px;color:#fff" href="/">Felix</a>
               {{#if currentUser}}
-              <a class="pull-left white" href="/"><i class="glyphicon glyphicon-home"></i></a>
-              <a class="pull-left white" href="/"><i class="glyphicon glyphicon-th-list"></i></a>
-              <a class="pull-left white" href="/newproject"><i class="glyphicon glyphicon-plus-sign"></i></a>
+              <a class="pull-left white" href="/" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Checklist"><i class="glyphicon glyphicon-th-list"></i></a>
+              <a class="pull-left white" href="/newproject" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Add Project"><i class="glyphicon glyphicon-plus-sign"></i></a>
               {{/if}}
               
           </div>
@@ -29,12 +28,24 @@
               <ul class="nav navbar-nav navbar-right">
                   {{#if currentUser}}
                   <li>
-                    <a href="#" style="color:#fff"><i class="glyphicon glyphicon-inbox floating"></i> 1</a>
+                    <a href="#" style="color:#fff"><i class="glyphicon glyphicon-inbox" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Notifications"></i> 1</a>
                   </li>
-                  {{/if}}                 
+                  <li role="presentation" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
+                      <i class="glyphicon glyphicon-user" style="color:#fff"></i>
+                      <span style="color:#fff">{{currentUser.profile.firstname}}</span>
+                      <span class="caret" style="color:#fff"></span>
+                    </a>
+                    <ul id="menu2" class="dropdown-menu" aria-labelledby="drop5">
+                      <li><a href="/profile"><i class="glyphicon glyphicon-pencil"></i> Profile</a></li>
+                      <li><a href="#" class="logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
+                    </ul>
+                  </li>
+                  {{else}}
                   <li>
-                      <p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{> loginButtons}}</p>
+                       <a id="login" href="#" data-toggle="modal" data-target="#myModal" style="color:#fff"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login</a>
                   </li>
+                  {{/if}}
               </ul>
           </div>
           <!-- /.navbar-collapse -->
@@ -42,7 +53,7 @@
       <!-- /.container -->
   </nav>
   <div style="margin-top:50px;" class="container">
-     {{#if currentUser}}
+    {{#if currentUser}}
       {{> Template.dynamic template=content}}
     {{else}}
       {{> home}}

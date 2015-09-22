@@ -52,7 +52,7 @@ Meteor.methods({
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    conv.user = Meteor.user().emails[0].address;
+    conv.user = Meteor.user().profile.firstname +" "+Meteor.user().profile.lastname;
     conv.date = new Date();
     Convs.insert(conv);
   }

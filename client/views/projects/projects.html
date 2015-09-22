@@ -1,56 +1,27 @@
 <template name="project">
-	
+	<style>
+		.col-md-4,.col-md-12{
+			padding-left: 0px;
+		}
+	</style>
 	<div class="col-md-9">
-	<h1>{{project.title}}</h1>
-	<div class="col-md-12" style="min-height:50px;margin-top:30px;font-size:16px">
-		<div class="col-md-3">
-			Created On: {{project.created_on}}
-		</div>
-		<div class="col-md-3">
-			Due On: {{project.due_on}}
-		</div>
-		<div class="col-md-3">
-			Completed On: {{project.completed_on}}
-		</div>
-	</div>
-	<h1>Tasks</h1>
-	<div class="col-md-12"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
-	<div class="col-md-4">
-		<h3>Not Started</h3>
-		{{# each not_started}}
-			<div class="bg-info card floating">
-				<h4>{{title}}</h4>
-				<p>{{description}}</p>
-				<p>Due On: {{due_on}}</p>
-				<p>Completed On: {{completed_on}}</p>
-				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+		<h1>Project: {{project.title}}</h1>
+		<div class="col-md-12" style="min-height:50px;margin-top:30px;font-size:16px">
+			<div class="col-md-4">
+				Created On: {{project.created_on}}
 			</div>
-		{{/each}}
-	</div>
-	<div class="col-md-4">
-		<h3>In Progress</h3>
-		{{# each in_progress}}
-			<div class="bg-warning card floating">
-				<h4>{{title}}</h4>
-				<p>{{description}}</p>
-				<p>Due On: {{due_on}}</p>
-				<p>Completed On: {{completed_on}}</p>
-				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+			<div class="col-md-4">
+				Due On: {{project.due_on}}
 			</div>
-		{{/each}}
-	</div>
-	<div class="col-md-4">
-		<h3>Completed</h3>
-		{{# each finished}}
-			<div class="bg-success card floating">
-				<h4>{{title}}</h4>
-				<p>{{description}}</p>
-				<p>Due On: {{due_on}}</p>
-				<p>Completed On: {{completed_on}}</p>
-				<p><a href="/edittask/{{_id}}" class="btn btn-info">Edit</a></p>
+			<div class="col-md-4">
+				Completed On: {{project.completed_on}}
 			</div>
-		{{/each}}
 		</div>
+		<h2>Tasks</h2>
+		<div class="col-md-12"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
+		{{> reactiveTable fields=fields collection=todo showFilter=false}}
+<!-- 		<h2>Tasks Completed</h2>
+		{{> reactiveTable fields=fields collection=completed showFilter=false}}-->
 	</div>
 	<div class="col-md-3 bg-info conv-col" style="background:#eee">
 		<h3>Conversation</h3>
@@ -62,26 +33,23 @@
 		{{# each convs}}
 			<div class="conv" style="padding-left:5px;">
 				<p style="margin-bottom:2px">{{{text}}}</p>
-				<p><strong>{{user}}</strong> <i>{{date.toLocaleDateString}}</i></p>
+				<p><strong>{{user}}</strong> <i>{{formatDateTime date}}</i></p>
 			</div>
 		{{/each}}
 	</div>
+	
 	<script type="text/javascript">
-	console.log($(".container").height());
 		$(function(){
 
-		$(".conv-col").height($(".col-md-9").height());
+			$(".conv-col").height($("body").height());
 
 		})	
 	</script>
 </template>
 
-<template name="conv">
-
-</template>
-
 <template name="taskActions">
 	<a href="/edittask/{{_id}}" class="btn btn-info">Edit</a>
+	<a href="/edittask/{{_id}}" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i></a>
 </template>
 
 <template name="newproject">

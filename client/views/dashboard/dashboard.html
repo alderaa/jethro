@@ -1,15 +1,21 @@
 <template name="dashboard">
-	<h1>Current Projects</h1>
-	{{> reactiveTable fields=fields collection=projects}}
+	<h1>Checklist</h1>
+	<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
+	<p style="font-size:18px"> as of {{today}}</p>
+	{{> reactiveTable fields=fields collection=tasks}}
     <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 </template>
 
 <template name="projectLink">
-	<a href="/project/{{_id}}">{{title}}</a>
+	<a href="/project/{{projectId}}">{{projectTitle}}</a>
+</template>
+
+<template name="taskLink">
+	<a href="/edittask/{{_id}}">{{title}}</a>
 </template>
 
 <template name="Actions">
-	<a href="/editproject/{{_id}}" class="btn btn-info">Edit</a> 
-	<input type="button" class="btn btn-danger delete" value="Delete"/> 
+	<button class="btn btn-success done"><i class="glyphicon glyphicon-ok"></i></button> 
+	<!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
 </template>
 

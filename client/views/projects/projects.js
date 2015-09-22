@@ -4,26 +4,22 @@ Template.project.helpers({
 		var project = Projects.findOne({_id:projectId});
 		return project;
 	},
-	not_started: function(){
+	todo: function(){
 		var projectId = FlowRouter.getParam("projectId");
-		var tasks =  Tasks.find({projectId:projectId,status:"not_started"});
-		return tasks;
-	},
-	in_progress: function(){
-		var projectId = FlowRouter.getParam("projectId");
-		var tasks =  Tasks.find({projectId:projectId,status:"in_progress"});
-		return tasks;
-	},
-	finished: function(){
-		var projectId = FlowRouter.getParam("projectId");
-		var tasks =  Tasks.find({projectId:projectId,status:"completed"});
+		var tasks =  Tasks.find({projectId:projectId}, {$sort:{order_num: 1}}).fetch();
+		for (t in tasks)
+		{
+			var assigned = Meteor.users.findOne({"_id":tasks[t].assigned_to});
+			tasks[t].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
+		}
 		return tasks;
 	},
 	fields:[
+		{'key':'order_num','label':'#'},
     	{'key':'title','label':'Title'},
     	{'key':'description','label':'Description'},
-    	{'key':'created_on','label':'Created On'},
-    	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
+    	{'key':'assigned_to','label':'Assigned To'},
+    	{'key':'due_on','label':'Due On'},
     	{'key':'_id','label':'Actions', 'tmpl':Template.taskActions}
     ],
     convs: function(){
@@ -67,6 +63,7 @@ Template.editproject.events({
 	  };
 	  var projectId = FlowRouter.getParam("projectId");
 	  Meteor.call("updateProject", projectId, proj);
+	  //console.log(Template.addPost.__helpers.get('project').call())
 	}
 });
 

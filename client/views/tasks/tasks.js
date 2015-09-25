@@ -27,7 +27,10 @@ Template.edittask.events({
 	  var projectId = Template.edittask.__helpers.get('task').call().projectId;
 	  FlowRouter.go("/project/"+projectId);
 	  Meteor.call("updateTask", taskId, proj);
-	}
+	},
+	"click .not-done": function(){
+      Meteor.call("markTaskNotDone",FlowRouter.getParam("taskId"));
+   } 
 });
 
 Template.newtask.events({
@@ -51,3 +54,20 @@ Template.newtask.events({
 		FlowRouter.go("/project/"+FlowRouter.getParam("projectId"));
 	}
 });
+var renderDate = function(){
+	var nowTemp = new Date();
+	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+	$('.datepicker').datepicker(
+	{
+		format: "mm/dd/yyyy",
+		autoclose: true
+	}
+	);
+};
+
+Template.newtask.rendered = function(){
+	renderDate();
+};
+Template.edittask.rendered = function(){
+	renderDate();
+};

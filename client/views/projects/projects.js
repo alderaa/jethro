@@ -20,6 +20,7 @@ Template.project.helpers({
     	{'key':'description','label':'Description'},
     	{'key':'assigned_to','label':'Assigned To'},
     	{'key':'due_on','label':'Due On'},
+    	{'key':'completed_on','label':'Completed On'},
     	{'key':'_id','label':'Actions', 'tmpl':Template.taskActions}
     ],
     convs: function(){
@@ -27,6 +28,20 @@ Template.project.helpers({
 		var convs =  Convs.find({projectId:projectId}, {sort: {date: -1}});
 		return convs;
     }
+});
+
+Template.projects.helpers({
+	projects: function () {
+      var tasks = [];
+      var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}}).fetch();
+	  return projects;
+	},
+    fields:[
+    	{'key':'title','label':'Title', tmpl:Template.editProjectLink},
+    	{'key':'description','label':'Description'},
+    	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
+    	{'key':'_id','label':'Mark Complete', 'tmpl':Template.Actions}
+    ]
 });
 
 Template.project.events({
@@ -38,7 +53,10 @@ Template.project.events({
 		};
 		event.target.text.value = "";
 		Meteor.call("addConv", conv);
-	}
+	},
+	"click .done": function(){
+      Meteor.call("markTaskDone",this._id);
+   } 
 });
 
 Template.editproject.helpers({
@@ -63,6 +81,7 @@ Template.editproject.events({
 	  };
 	  var projectId = FlowRouter.getParam("projectId");
 	  Meteor.call("updateProject", projectId, proj);
+	  toastr.success("'"+proj.title+"' has been saved", "Saved!");
 	  //console.log(Template.addPost.__helpers.get('project').call())
 	}
 });
@@ -82,3 +101,18 @@ Template.newproject.events({
 	  Meteor.call("addProject", proj);
 	}
 });
+
+var renderDate = function(){
+	var nowTemp = new Date();
+	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+	$('.datepicker').datepicker(
+	{
+		format: "mm/dd/yyyy",
+		autoclose: true
+	}
+	);
+};
+
+Template.newproject.rendered = function(){
+	renderDate();
+};

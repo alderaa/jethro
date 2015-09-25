@@ -4,7 +4,7 @@ Template.dashboard.helpers({
       var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}}).fetch();
       for ( var p in projects)
       {
-         projectTasks = Tasks.find({"projectId":projects[p]._id},{sort: {order_num: -1}}).fetch();
+         projectTasks = Tasks.find({"projectId":projects[p]._id, "completed_on": ""},{sort: {order_num: -1}}).fetch();
           for (var t in projectTasks)
           {
                 tasks.push(projectTasks[t]);
@@ -22,7 +22,7 @@ Template.dashboard.helpers({
     fields:[
     	{'key':'projectTitle','label':'Project', tmpl:Template.projectLink},
         {'key':'owner','label':'Project Manager'},
-        {'key':'title','label':'Title',tmpl:Template.taskLink},
+        {'key':'title','label':'Task',tmpl:Template.taskLink},
     	{'key':'description','label':'Description'},
         {'key':'assigned_to','label':'Assigned To'},
     	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
@@ -33,5 +33,9 @@ Template.dashboard.helpers({
 Template.dashboard.events({
 	"click .delete": function () {
       Meteor.call("deleteProject",this._id);
-    }
+    },
+   "click .done": function(){
+      Meteor.call("markTaskDone",this._id);
+
+   } 
 });

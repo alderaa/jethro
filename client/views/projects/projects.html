@@ -40,31 +40,48 @@
 	
 	<script type="text/javascript">
 		$(function(){
-
 			$(".conv-col").height($("body").height());
-
 		})	
 	</script>
 </template>
 
+<template name="projects">
+	<h1>Projects</h1>
+	{{> reactiveTable fields=fields collection=projects}}
+</template>
+
 <template name="taskActions">
 	<a href="/edittask/{{_id}}" class="btn btn-info">Edit</a>
-	<a href="/edittask/{{_id}}" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i></a>
+	{{#unless completed_on}}
+	<a href="#" class="btn btn-success done"><i class="glyphicon glyphicon-ok"></i></a>
+	{{/unless}}
 </template>
 
 <template name="newproject">
+	<style>
+		.col-md-6{
+			padding-left: 0px;
+		}
+	</style>
 	<div class="col-md-8 floating card">
 		<h1>Add a Project</h1>
 		<form class="new-project">
 
 			<label>Title</label> <input type="text" name="title" class="form-control"/>
 			<label>Description</label> <input type="text" name="description" class="form-control"/>
-			<label>Status</label> <input type="text" name="status" class="form-control"/>
-			<label>Due On</label> <input type="date" name="due_on" class="form-control"/>
-			<br/>
+			<div class="col-md-6">
+				<label>Status</label>
+				<select class="form-control" name="status">
+					<option value="Active">Active</option>
+					<option value="Hold">Hold</option>
+				</select>
+			</div>
+			<div class="col-md-6">
+				<label>Due On</label>  <input type="text" name="due_on" class="form-control datepicker"/>
+			</div>
 			<label>Notes</label> 
 			<br/>
-			<textarea name="notes" class="notes"></textarea>
+			<textarea name="notes" class="notes form-control"></textarea>
 			<br/>
 			<input type="submit" class="btn btn-success" value="Submit"/>
 
@@ -79,8 +96,11 @@
 
 		<label>Title</label> <input type="text" name="title" class="form-control" value="{{project.title}}"/>
 		<label>Description</label> <input type="text" name="description" class="form-control" value="{{project.description}}"/>
-		<label>Status</label> <input type="text" name="status" class="form-control" value="{{project.status}}"/>
-		<label>Due On</label> <input type="date" name="due_on" class="form-control" value="{{project.due_on}}"/>
+		<label>Status</label>
+		<select class="form-control" name="status">
+			<option value="Active" {{selectedIfEquals "Active" project.status}}>Active</option>
+			<option value="Hold" {{selectedIfEquals "Hold" project.status}}>Hold</option>
+		</select><label>Due On</label> <input type="date" name="due_on" class="form-control" value="{{project.due_on}}"/>
 		<br/>
 		<label>Notes</label> 
 		<br/>

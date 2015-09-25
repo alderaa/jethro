@@ -1,13 +1,25 @@
+<template name="noTasks">
+	<h2 class="text-center">You have nothing todo!</h2>
+</template>
+
 <template name="dashboard">
 	<h1>Checklist</h1>
 	<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
 	<p style="font-size:18px"> as of {{today}}</p>
-	{{> reactiveTable fields=fields collection=tasks}}
+	{{#if tasks}}
+		{{> reactiveTable fields=fields collection=tasks}}
+	{{else}}
+		{{> noTasks}}
+	{{/if}}
     <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 </template>
 
 <template name="projectLink">
 	<a href="/project/{{projectId}}">{{projectTitle}}</a>
+</template>
+
+<template name="editProjectLink">
+	<a href="/project/{{_id}}">{{title}}</a>
 </template>
 
 <template name="taskLink">
@@ -18,4 +30,3 @@
 	<button class="btn btn-success done"><i class="glyphicon glyphicon-ok"></i></button> 
 	<!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
 </template>
-

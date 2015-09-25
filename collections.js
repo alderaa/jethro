@@ -13,18 +13,24 @@ Meteor.methods({
    	proj.owner = Meteor.userId();
     Projects.insert(proj);
     FlowRouter.go('/');
+    if (Meteor.isClient)
+        toastr.success("Project added","Saved!");
   },
   deleteProject: function (projectId) {
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
     Projects.remove(projectId);
+    if (Meteor.isClient)
+        toastr.success("Project removed","Saved!");
   },
   updateProject: function (projectId,proj) {
     Projects.update(projectId, { 
     	$set: proj
     });
     FlowRouter.go('/');
+    if (Meteor.isClient)
+        toastr.success("Project updated","Saved!");
   },
   addTask: function (task) {
     // Make sure the user is logged in before inserting a Task
@@ -35,18 +41,38 @@ Meteor.methods({
     task.created_on = today.format("yyyy-mm-dd");
     Tasks.insert(task);
     FlowRouter.go('/project/'+task.projectId);
+    if (Meteor.isClient)    
+        toastr.success("Task added","Saved!");
   },
   deleteTask: function (taskId) {
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
     Tasks.remove(taskId);
+    if (Meteor.isClient)
+        toastr.success("Task removed","Saved!");
   },
   updateTask: function (taskId,task) {
     Tasks.update(taskId, { 
         $set: task
     });
+    if (Meteor.isClient)
+        toastr.success("Task updated", "Saved!");
     //FlowRouter.go('/project/'+projectId);
+  },
+  markTaskDone: function(taskId){
+    Tasks.update(taskId, { 
+        $set: {completed_on: new Date().format("mm/dd/yyyy")}
+    });
+    if (Meteor.isClient)
+        toastr.success("Task marked complete", "Saved!");
+  },
+  markTaskNotDone: function(taskId){
+    Tasks.update(taskId, { 
+        $set: {completed_on: ""}
+    });
+    if (Meteor.isClient)
+        toastr.warning("Task now marked incomplete");
   },
   addConv: function(conv){
     if (! Meteor.userId()) {

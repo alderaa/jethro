@@ -29,10 +29,10 @@
 				
 			</div>
 			<div class="col-md-6">
-				<label>Due Date*</label> <input type="date" name="due_on" class="form-control" required/>
+				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" required/>
 			</div>
 			<div class="col-md-6">
-				<label>Completed Date</label> <input type="date" name="completed_on" class="form-control"/>
+				<label>Completed Date</label> <input type="text" name="completed_on" class="form-control datepicker"/>
 			</div>
 			<div class="col-md-12">
 				<label>Notes</label> 
@@ -68,10 +68,18 @@
 				</select>
 			</div>
 			<div class="col-md-6">
-				<label>Due Date*</label> <input type="date" name="due_on" class="form-control" value="{{task.due_on}}"/>
+				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" value="{{task.due_on}}"/>
 			</div>
 			<div class="col-md-6">
-				<label>Completed Date</label> <input type="date" name="completed_on" class="form-control" value="{{task.completed_on}}"/>
+				<label>Completed Date</label> 
+				<div class="col-md-8" style="padding-left:0px">
+				<input type="text" name="completed_on" class="form-control datepicker" value="{{task.completed_on}}"/>
+				</div>
+				{{#if task.completed_on}}
+				<div class="col-md-4" style="padding-left:0px">
+				<a href="#" class="btn btn-danger not-done"><i class="glyphicon glyphicon-remove"></i></a>
+				</div>
+				{{/if}}
 			</div>
 			<div class="col-md-12">
 				<br/>

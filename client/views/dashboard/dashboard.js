@@ -1,10 +1,10 @@
 Template.dashboard.helpers({
 	tasks: function () {
       var tasks = [];
-      var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}}).fetch();
+      var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}}).fetch();
       for ( var p in projects)
       {
-         projectTasks = Tasks.find({"projectId":projects[p]._id, "completed_on": ""},{sort: {order_num: -1}}).fetch();
+          projectTasks = Tasks.find({"projectId":projects[p]._id, "completed_on": ""},{sort: {order_num: -1}}).fetch();
           for (var t in projectTasks)
           {
                 tasks.push(projectTasks[t]);

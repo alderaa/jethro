@@ -12,7 +12,7 @@ Template.login.events({
       // Meteor.loginWithPassword() function.
       Meteor.loginWithPassword(email, password, function(err){
       if (err)
-        console.log(err.message);
+        toastr.error("Bad username or password","Error");
       else
       {
         $('.modal-backdrop ').hide();

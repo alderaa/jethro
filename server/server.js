@@ -9,7 +9,7 @@ Meteor.startup(function () {
 	        profile: {
 	            firstname: "Aaron",
 	            lastname:  "Alder",
-	            birthday:  new Date("January 5, 1990"),
+	            birthday:  new Date("01/05/1990"),
 	            company: ["Felix"]
 	        },
 	    };

@@ -40,7 +40,7 @@ Template.projects.helpers({
     	{'key':'title','label':'Title', tmpl:Template.editProjectLink},
     	{'key':'description','label':'Description'},
     	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
-    	{'key':'_id','label':'Mark Complete', 'tmpl':Template.Actions}
+    	{'key':'notes','label':'Notes'}
     ]
 });
 
@@ -81,7 +81,6 @@ Template.editproject.events({
 	  };
 	  var projectId = FlowRouter.getParam("projectId");
 	  Meteor.call("updateProject", projectId, proj);
-	  toastr.success("'"+proj.title+"' has been saved", "Saved!");
 	  //console.log(Template.addPost.__helpers.get('project').call())
 	}
 });
@@ -112,7 +111,9 @@ var renderDate = function(){
 	}
 	);
 };
-
+Template.editproject.rendered = function(){
+	renderDate();
+};
 Template.newproject.rendered = function(){
 	renderDate();
 };

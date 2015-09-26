@@ -11,8 +11,8 @@ Meteor.methods({
     today = new Date();
    	proj.created_on = today.format("yyyy-mm-dd");
    	proj.owner = Meteor.userId();
-    Projects.insert(proj);
-    FlowRouter.go('/');
+    var projectId = Projects.insert(proj);
+    FlowRouter.go('/project/'+projectId);
     if (Meteor.isClient)
         toastr.success("Project added","Saved!");
   },
@@ -28,7 +28,7 @@ Meteor.methods({
     Projects.update(projectId, { 
     	$set: proj
     });
-    FlowRouter.go('/');
+    FlowRouter.go('/project/'+projectId);
     if (Meteor.isClient)
         toastr.success("Project updated","Saved!");
   },
@@ -78,9 +78,12 @@ Meteor.methods({
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    conv.user = Meteor.user().profile.firstname +" "+Meteor.user().profile.lastname;
-    conv.date = new Date();
-    Convs.insert(conv);
+    if(conv.text)
+    {
+        conv.user = Meteor.user().profile.firstname +" "+Meteor.user().profile.lastname;
+        conv.date = new Date();
+        Convs.insert(conv);
+    }
   }
 });
 

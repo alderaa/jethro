@@ -1,25 +1,17 @@
 <template name="newtask">
-	<style>
-		label{
-			margin-top:5px;
-		}
-		.col-md-6,.col-md-2,.col-md-12{
-			padding-left: 0px;
-		}
-	</style>
 	<div class="col-md-8 floating card">
 		<h1>Add a Task</h1>
 		<form class="new-task">
 			<div class="col-md-6">
 				<label>Name*</label> <input type="text" name="title" class="form-control" required/>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-2 nopadleft">
 		    	<label>Task No*</label> <input type="number" name="order_num" class="form-control" required/>
 		    </div>
-		    <div class="col-md-12">
+		    <div class="col-md-12 nopadleft">
 				<label>Description*</label> <textarea name="description" class="form-control" required></textarea>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6 nopadleft">
 				<label>Assigned To*</label> 
 				<select name="assigned_to" class="form-control" required>
 				    {{#each employees}}
@@ -28,13 +20,13 @@
 				</select>
 				
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6 nopadleft">
 				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" required/>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6 nopadleft">
 				<label>Completed Date</label> <input type="text" name="completed_on" class="form-control datepicker"/>
 			</div>
-			<div class="col-md-12">
+			<div class="col-md-12 nopadleft">
 				<label>Notes</label> 
 				<br/>
 				<textarea name="notes" class="notes form-control"></textarea>
@@ -47,7 +39,7 @@
 </template>
 
 <template name="edittask">
-	<div class="col-md-8 floating card">
+	<div class="col-md-8">
 		<h1>Edit Task</h1>
 		<form class="edit-task">
 			<div class="col-md-6">
@@ -71,14 +63,14 @@
 				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" value="{{task.due_on}}"/>
 			</div>
 			<div class="col-md-6">
-				<label>Completed Date</label> 
-				<div class="col-md-8" style="padding-left:0px">
-				<input type="text" name="completed_on" class="form-control datepicker" value="{{task.completed_on}}"/>
+				<div class="col-md-8 noleftpad">
+					<label>Completed Date</label> 
+					<input type="text" name="completed_on" class="form-control datepicker" value="{{task.completed_on}}"/>
 				</div>
 				{{#if task.completed_on}}
-				<div class="col-md-4" style="padding-left:0px">
-				<a href="#" class="btn btn-danger not-done"><i class="glyphicon glyphicon-remove"></i></a>
-				</div>
+					<div class="col-md-4 noleftpad" style="margin-top:30px">
+						<a href="#" class="btn btn-danger not-done"><i class="glyphicon glyphicon-remove"></i></a>
+					</div>
 				{{/if}}
 			</div>
 			<div class="col-md-12">
@@ -87,7 +79,7 @@
 				<br/>
 				<textarea name="notes" class="notes form-control">{{task.notes}}</textarea>
 				<br/>
-				<a href="/project/{{task.projectId}}" class="btn btn-primary">Back To Project</a>
+				<a href="/project/{{task.projectId}}" class="btn btn-primary"><i class="glyphicon glyphicon-menu-left"></i>Back To Project</a>
 				<input type="submit" class="btn btn-success pull-right" value="Submit"/>
 			</div>
 		</form>

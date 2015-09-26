@@ -16,7 +16,7 @@
                   <span class="icon-bar"></span>
               </button>
               
-              <a class="pull-left navbar-brand topnav" style="margin-top:2px;color:#fff" href="/">Felix</a>
+              <a class="pull-left navbar-brand topnav" style="margin-top:2px;color:#fff" href="/"><img src="logo-black.png" style="margin-top: -14px;"/></a>
               {{#if currentUser}}
               <a class="pull-left white" href="/" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Checklist"><i class="glyphicon glyphicon-th-list"></i></a>
               <a class="pull-left white" href="/projects" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Projects"><i class="glyphicon glyphicon-duplicate"></i></a>
@@ -53,12 +53,12 @@
       </div>
       <!-- /.container -->
   </nav>
-  <div style="margin-top:50px;" class="container">
+  <div style="margin-top:50px;">
     {{#if currentUser}}
       {{> Template.dynamic template=content}}
     {{else}}
       {{> home}}
     {{/if}}
   </div>
-  <div class="panel-footer text-center"><i class="glyphicon glyphicon-copyright-mark"></i> 2015 ExcelCEO</div>
+  <div class="panel-footer text-center col-md-12"><i class="glyphicon glyphicon-copyright-mark"></i> 2015 ExcelCEO <br/> <span style="font-size:10px">Documents Set graphic by <a href="http://www.freepik.com/">Freepik</a> from <a href="http://www.flaticon.com/">Flaticon</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>. Made with <a href="http://logomakr.com" title="Logo Maker">Logo Maker</a></span></div>
 </template>

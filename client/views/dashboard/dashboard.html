@@ -1,17 +1,36 @@
 <template name="noTasks">
-	<h2 class="text-center">You have nothing todo!</h2>
+	<h2 class="text-center">You have no tasks todo!</h2>
 </template>
-
+<template name="noProjects">
+	<h2 class="text-center">You have no active projects!</h2>
+</template>
+<template name="noRequests">
+	<h2 class="text-center">You have no project requests.</h2>
+</template>
 <template name="dashboard">
 	<div class="col-md-12">
 		<h1>Checklist</h1>
 		<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
 		{{#if tasks}}
-			{{> reactiveTable fields=fields collection=tasks}}
+			{{> reactiveTable fields=fields collection=tasks showFilter=false}}
 		{{else}}
 			{{> noTasks}}
 		{{/if}}
+		<hr/>
+		<p style="font-size:24px">Active Projects</p>
+		{{#if projects}}
+			{{> reactiveTable fields=projFields collection=projects showFilter=false}}
+		{{else}}
+			{{> noProjects}}
+		{{/if}}
 	    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
+	    <hr/>
+	   	<p style="font-size:24px">Projects Requests</p>
+		{{#if requests}}
+			{{> reactiveTable fields=projFields collection=requests showFilter=false}}
+		{{else}}
+			{{> noRequests}}
+		{{/if}}
     </div>
 </template>
 

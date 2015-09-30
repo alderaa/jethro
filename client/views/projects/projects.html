@@ -12,13 +12,17 @@
 				Completed On: {{project.completed_on}}
 			</div>
 		</div>
+		<div class="col-md-12 noleftpad">
+			<p><strong>Notes:</strong></p>
+			<p>{{project.notes}}</p>
+		</div>
 		<h2>Tasks</h2>
 		<div class="col-md-12 noleftpad"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
 		{{> reactiveTable fields=fields collection=todo showFilter=false}}
 <!-- 		<h2>Tasks Completed</h2>
 		{{> reactiveTable fields=fields collection=completed showFilter=false}}-->
 	</div>
-	<div class="col-md-3 bg-info conv-col" style="background:#eee">
+	<div class="col-md-3 bg-info conv-col" style="background:#d7e6ed">
 		<h3>Conversation</h3>
 		<form class="add-conv">
 			<label>Add Note</label>

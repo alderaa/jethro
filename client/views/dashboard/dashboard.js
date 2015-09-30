@@ -1,5 +1,5 @@
 Template.dashboard.helpers({
-	tasks: function () {
+  tasks: function () {
       var tasks = [];
       var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}}).fetch();
       for ( var p in projects)
@@ -17,21 +17,31 @@ Template.dashboard.helpers({
                 tasks[ind].projectTitle = project.title;
           }
       }
-	  return tasks;
-	},
-    fields:[
-    	{'key':'projectTitle','label':'Project', tmpl:Template.projectLink},
-        {'key':'owner','label':'Project Manager'},
-        {'key':'title','label':'Task',tmpl:Template.taskLink},
-    	{'key':'description','label':'Description'},
-        {'key':'assigned_to','label':'Assigned To'},
-    	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
-    	{'key':'_id','label':'Mark Complete', 'tmpl':Template.Actions}
-    ]
+      return tasks;
+  },
+  projects: function(){
+      var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}}).fetch();
+      return projects;
+  },
+  fields:[
+      {'key':'projectTitle','label':'Project', tmpl:Template.projectLink},
+      {'key':'owner','label':'Project Manager'},
+      {'key':'title','label':'Task',tmpl:Template.taskLink},
+      {'key':'description','label':'Description'},
+      {'key':'assigned_to','label':'Assigned To'},
+      {'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
+      {'key':'_id','label':'Mark Complete', 'tmpl':Template.Actions}
+    ],
+  projFields:[
+      {'key':'title','label':'Project', tmpl:Template.editProjectLink},
+      {'key':'description','label':'Description'},
+      {'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
+      {'key':'notes','label':'Notes'},
+  ]  
 });
 
 Template.dashboard.events({
-	"click .delete": function () {
+  "click .delete": function () {
       Meteor.call("deleteProject",this._id);
     },
    "click .done": function(){

@@ -31,11 +31,7 @@ Meteor.publish("convs", function () {
 });
 Meteor.publish("allUsers", function () {
   return Meteor.users.find({
+  		// "profile.company": { $in: [Meteor.user().currentCompany]}
   		"profile.company": { $in: ["Felix"]}
   });
 });
-// Accounts.onCreateUser(function(options, user) {
-//   if (options.profile)
-//     user.profile = options.profile;
-//   return user;
-// });

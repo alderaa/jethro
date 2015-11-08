@@ -1,26 +1,37 @@
-Meteor.subscribe("projects");
-Meteor.subscribe("tasks");
-Meteor.subscribe("convs");
 Meteor.subscribe("allUsers");
+AutoForm.setDefaultTemplate('materialize');
 Template.registerHelper('formatDateTime', function(date) {
-  return date.format('mm/dd/yyyy h:MM TT');
+  if(date)
+    return moment(Date.parse(date)).format('MM/DD/YYYY h:mm A');
 });
 Template.registerHelper('formatDate', function(date) {
-  return date.format('mm/dd/yyyy');
+  if(date)
+    return moment(Date.parse(date)).format('MM/DD/YYYY');
 });
 Template.registerHelper("checkedIf",function(value){
   return value ? "checked":"";
 });
 Template.registerHelper("today",function(value){
-  return new Date().format("mm/dd/yyyy h:MM TT");
+  return moment(new Date()).format('MM/DD/YYYY h:mm A');
 });
 
 Template.registerHelper("selectedIfEquals",function(left,right){
   return left==right ? "selected":"";
 });
 
+Template.registerHelper( "isReady", function(sub) {
+      if(sub) {
+        return FlowRouter.subsReady(sub);
+      } else {
+        return FlowRouter.subsReady();
+      }
+});
+
 Template.mainLayout.rendered = function(){
-	$(function () { $("[data-toggle='tooltip']").tooltip(); });
+	$(function () { 
+    $("[data-toggle='tooltip']").tooltip(); 
+  });
+
 };
 
 Template.mainLayout.events({
@@ -30,22 +41,7 @@ Template.mainLayout.events({
 });
 
 Template.registerHelper( "employees" , function(){
-	return Meteor.users.find({});	
+	return Meteor.users.find({}).map(function (c) {
+      return {label: c.profile.firstname, value: c._id};
+    });
 });
-toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-bottom-right",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "4000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-};

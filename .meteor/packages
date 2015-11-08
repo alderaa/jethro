@@ -6,7 +6,6 @@
 
 accounts-password
 accounts-ui
-kadira:flow-router
 kadira:blaze-layout
 less
 nemo64:bootstrap
@@ -27,5 +26,15 @@ spacebars
 check
 meteorhacks:fast-render
 rajit:bootstrap3-datepicker
-chrismbeckett:toastr
 meteorhacks:kadira
+kadira:flow-router
+fortawesome:fontawesome
+aldeed:collection2
+momentjs:moment
+aldeed:autoform
+gildaspk:autoform-materialize
+fourseven:scss
+gildaspk:autoform-modals-materialize
+gildaspk:autoform-medium@=0.0.4
+materialize:materialize@=0.97.0
+poetic:materialize-scss

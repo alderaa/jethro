@@ -1,87 +1,26 @@
 <template name="newtask">
-	<div class="col-md-8 floating card">
-		<h1>Add a Task</h1>
-		<form class="new-task">
-			<div class="col-md-6">
-				<label>Name*</label> <input type="text" name="title" class="form-control" required/>
-			</div>
-			<div class="col-md-2 nopadleft">
-		    	<label>Task No*</label> <input type="number" name="order_num" class="form-control" required/>
-		    </div>
-		    <div class="col-md-12 nopadleft">
-				<label>Description*</label> <textarea name="description" class="form-control" required></textarea>
-			</div>
-			<div class="col-md-6 nopadleft">
-				<label>Assigned To*</label> 
-				<select name="assigned_to" class="form-control" required>
-				    {{#each employees}}
-				      <option value="{{_id}}">{{profile.firstname}} {{profile.lastname}}</option>
-				    {{/each}}
-				</select>
-				
-			</div>
-			<div class="col-md-6 nopadleft">
-				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" required/>
-			</div>
-			<div class="col-md-6 nopadleft">
-				<label>Completed Date</label> <input type="text" name="completed_on" class="form-control datepicker"/>
-			</div>
-			<div class="col-md-12 nopadleft">
-				<label>Notes</label> 
-				<br/>
-				<textarea name="notes" class="notes form-control"></textarea>
-				<br/>
-				<button class="btn btn-danger back">Cancel</button>
-				<input type="submit" class="btn btn-success pull-right" value="Submit"/>
-			</div>
-		</form>
-	</div>
+	<h3>Add Task for <i>{{project.title}}</i></h3>
+	{{> quickForm collection="Tasks" id="insertTask" type="insert" doc=taskDefault}}
+	<input type="button" class="back btn btn-primary" value="Back To Project"/>
 </template>
 
 <template name="edittask">
-	<div class="col-md-8">
-		<h1>Edit Task</h1>
-		<form class="edit-task">
-			<div class="col-md-6">
-				<label>Name*</label> <input type="text" name="title" class="form-control" value="{{task.title}}"/>
-			</div>
-			<div class="col-md-2">
-				<label>Task No*</label> <input type="number" name="order_num" class="form-control" value="{{task.order_num}}"/>
-		    </div>
-		    <div class="col-md-12">
-				<label>Description*</label> <input type="text" name="description" class="form-control" value="{{task.description}}"/>
-			</div>
-			<div class="col-md-6">
-				<label>Assigned To*</label>
-				<select name="assigned_to" class="form-control" required>
-				    {{#each employees}}
-				  		<option value="{{_id}}" {{selectedIfEquals _id task.assigned_to}}>{{profile.firstname}} {{profile.lastname}}</option>
-				    {{/each}}
-				</select>
-			</div>
-			<div class="col-md-6">
-				<label>Due Date*</label> <input type="text" name="due_on" class="form-control datepicker" value="{{task.due_on}}"/>
-			</div>
-			<div class="col-md-6">
-				<div class="col-md-8 noleftpad">
-					<label>Completed Date</label> 
-					<input type="text" name="completed_on" class="form-control datepicker" value="{{task.completed_on}}"/>
-				</div>
-				{{#if task.completed_on}}
-					<div class="col-md-4 noleftpad" style="margin-top:30px">
-						<a href="#" class="btn btn-danger not-done"><i class="glyphicon glyphicon-remove"></i></a>
-					</div>
-				{{/if}}
-			</div>
-			<div class="col-md-12">
-				<br/>
-				<label>Notes</label> 
-				<br/>
-				<textarea name="notes" class="notes form-control">{{task.notes}}</textarea>
-				<br/>
-				<a href="/project/{{task.projectId}}" class="btn btn-primary"><i class="glyphicon glyphicon-menu-left"></i>Back To Project</a>
-				<input type="submit" class="btn btn-success pull-right" value="Submit"/>
-			</div>
-		</form>
-	</div>
+	<h3>Edit Task</h3>
+	{{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}}
+	  {{> afQuickField name='title'}}
+	  {{> afQuickField name='order_num'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='due_on'}}
+      {{#if task.completed_on}}
+      	<label>Completed On</label>
+	  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn btn-danger" value="X"/></p>
+	  {{else}}
+	  	{{> afQuickField name='completed_on'}}
+	  {{/if}}
+	  <div class="select-field">
+	  	{{> afQuickField name='assigned_to' class="browser-default" options=employees firstOption="(None Assigned)"}}
+	  </div>
+	  <input type="submit" class="btn btn-primary" value="Update"/>
+	{{/autoForm}}
+
 </template>

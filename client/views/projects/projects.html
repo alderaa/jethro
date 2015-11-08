@@ -1,41 +1,38 @@
 <template name="project">
 	<div class="col-md-9">
-		<h1>Project: {{project.title}} <a href="/editproject/{{project._id}}" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i></a></h1>
-		<div class="col-md-12 noleftpad" style="min-height:50px;margin-top:30px;font-size:16px">
-			<div class="col-md-3 noleftpad">
-				Created On: {{project.created_on}}
+	{{#if Template.subscriptionsReady}}
+		<h1>Project: {{project.title}} <a href="/editproject/{{project._id}}" class="btn blue lighten-1 pull-right">Edit Project</a></h1>
+		<div class="row" style="margin-top:30px;font-size:16px">
+			<div class="col-md-6">
+				<table class="table table-bordered">
+					<tr>
+						<th class="left-align">Due On: </th>
+						<th class="left-align">Completed On: </th>
+					</tr>
+					<tr>
+						<td>{{formatDate project.due_on}}</td>
+						<td>{{project.completed_on}}</td>
+					</tr>
+				</table>
 			</div>
-			<div class="col-md-3 noleftpad">
-				Due On: {{project.due_on}}
+			<div class="col-md-6">
+				<p><strong>Notes:</strong></p>
+				<p>{{project.notes}}</p>
 			</div>
-			<div class="col-md-3 noleftpad">
-				Completed On: {{project.completed_on}}
-			</div>
-		</div>
-		<div class="col-md-12 noleftpad">
-			<p><strong>Notes:</strong></p>
-			<p>{{project.notes}}</p>
 		</div>
 		<h2>Tasks</h2>
-		<div class="col-md-12 noleftpad"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
 		{{> reactiveTable fields=fields collection=todo showFilter=false}}
+		<div class="row"><a href="/newtask/{{project._id}}" class="btn btn-success">Add Task</a></div>
 <!-- 		<h2>Tasks Completed</h2>
 		{{> reactiveTable fields=fields collection=completed showFilter=false}}-->
+	{{else}}
+		<div class="text-center">
+			<p><i class="fa fa-spinner fa-spin"></i></p>
+			<p>Loading</p>
+		</div>
+	{{/if}}
 	</div>
-	<div class="col-md-3 bg-info conv-col" style="background:#d7e6ed">
-		<h3>Conversation</h3>
-		<form class="add-conv">
-			<label>Add Note</label>
-			<textarea name="text" class="form-control"></textarea>
-			<input type="submit" class="btn btn-success" value="Submit" style="margin-top:10px">
-		</form>
-		{{# each convs}}
-			<div class="conv" style="padding-left:5px;">
-				<p style="margin-bottom:2px">{{{text}}}</p>
-				<p><strong>{{user}}</strong> <i>{{formatDateTime date}}</i></p>
-			</div>
-		{{/each}}
-	</div>
+	{{> conv}}
 	
 	<script type="text/javascript">
 		$(function(){
@@ -48,68 +45,23 @@
 	<div class="col-md-12">
 		<h1>My Projects</h1>
 		{{> reactiveTable fields=fields collection=projects}}
+		<p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 	</div>
 </template>
 
 <template name="taskActions">
-	<a href="/edittask/{{_id}}" class="btn btn-info">Edit</a>
+	<a href="/edittask/{{_id}}" class="btn blue lighten-1">Edit</a>
 	{{#unless completed_on}}
-	<a href="#" class="btn btn-success done"><i class="glyphicon glyphicon-ok"></i></a>
+		<a href="#" class="btn btn-success done"><i class="fa fa-check"></i></a>
 	{{/unless}}
 </template>
 
 <template name="newproject">
-	<div class="col-md-8">
-		<h1>Add a Project</h1>
-		<form class="new-project">
-
-			<label>Title</label> <input type="text" name="title" class="form-control" required />
-			<label>Description</label> <textarea name="description" class="form-control" required></textarea>
-			<div class="col-md-6 noleftpad">
-				<label>Status</label>
-				<select class="form-control" name="status" required>
-					<option value="Active">Active</option>
-					<option value="Hold">Hold</option>
-				</select>
-			</div>
-			<div class="col-md-6 noleftpad">
-				<label>Due On</label>  <input type="text" name="due_on" class="form-control datepicker" required/>
-			</div>
-			<label>Notes</label> 
-			<br/>
-			<textarea name="notes" class="notes form-control"></textarea>
-			<br/>
-			<input type="submit" class="btn btn-success" value="Submit"/>
-
-		</form>
-	</div>
+	<h3>Add a Project</h3>
+	{{> quickForm collection="Projects" id="insertProject" type="insert"}}
 </template>
 
 <template name="editproject">
-	<div class="col-md-8" style="margin-left:10px">
-		<h1>Edit Project</h1>
-		<form class="edit-project">
-
-		<label>Title</label> <input type="text" name="title" class="form-control" value="{{project.title}}" required/>
-		<label>Description</label> <textarea name="description" class="form-control" required>{{project.description}}</textarea>
-		<div class="col-md-6 noleftpad">
-		<label>Status</label>
-		<select class="form-control" name="status" required>
-			<option value="Active" {{selectedIfEquals "Active" project.status}}>Active</option>
-			<option value="Hold" {{selectedIfEquals "Hold" project.status}}>Hold</option>
-		</select>
-		</div>
-		<div class="col-md-6 noleftpad">
-		<label>Due On</label> <input type="text" name="due_on" class="form-control datepicker" required value="{{project.due_on}}"/>
-		</div>
-		<br/>
-		<label>Notes</label> 
-		<br/>
-		<textarea name="notes" class="notes form-control">{{project.notes}}</textarea>
-		<br/>
-		<a href="/project/{{project._id}}" class="btn btn-primary"><i class="glyphicon glyphicon-menu-left"></i>Back to Project</a>
-		<input type="submit" class="btn btn-success pull-right" value="Submit"/>
-
-		</form>
-	</div>
+	<h3>Edit Project</h3>
+	{{> quickForm collection="Projects" id="updateProject" type="update" doc=project}}
 </template>

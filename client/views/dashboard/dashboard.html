@@ -1,3 +1,9 @@
+<template name="dueon">
+	{{formatDate this.due_on}}
+</template>
+<template name="completedon">
+	{{formatDate this.completed_on}}
+</template>
 <template name="noTasks">
 	<h2 class="text-center">You have no tasks todo!</h2>
 </template>
@@ -9,27 +15,33 @@
 </template>
 <template name="dashboard">
 	<div class="col-md-12">
-		<h1>Checklist</h1>
-		<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
-		{{#if tasks}}
-			{{> reactiveTable fields=fields collection=tasks showFilter=false}}
-		{{else}}
-			{{> noTasks}}
-		{{/if}}
-		<hr/>
-		<p style="font-size:24px">Active Projects</p>
-		{{#if projects}}
+		{{#if Template.subscriptionsReady}}
+			<h1>Checklist</h1>
+			<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
+			{{> reactiveTable fields=fields collection=tasks showFilter=false}}	
+			<hr/>
+			<p style="font-size:24px">Active Projects</p>
 			{{> reactiveTable fields=projFields collection=projects showFilter=false}}
-		{{else}}
-			{{> noProjects}}
-		{{/if}}
-	    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
-	    <hr/>
-	   	<p style="font-size:24px">Projects Requests</p>
-		{{#if requests}}
+
+		    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
+		    <hr/>
+		   	<p style="font-size:24px">Projects Requests</p>
 			{{> reactiveTable fields=projFields collection=requests showFilter=false}}
 		{{else}}
-			{{> noRequests}}
+			<div class="text-center">
+				  <div class="preloader-wrapper big active">
+				    <div class="spinner-layer spinner-blue-only">
+				      <div class="circle-clipper left">
+				        <div class="circle"></div>
+				      </div><div class="gap-patch">
+				        <div class="circle"></div>
+				      </div><div class="circle-clipper right">
+				        <div class="circle"></div>
+				      </div>
+				    </div>
+				  </div>
+				<p>Loading Checklist</p>
+			</div>
 		{{/if}}
     </div>
 </template>
@@ -47,6 +59,6 @@
 </template>
 
 <template name="Actions">
-	<button class="btn btn-success done"><i class="glyphicon glyphicon-ok"></i></button> 
+	<button class="btn btn-success done"><i class="fa fa-check"></i></button> 
 	<!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
 </template>

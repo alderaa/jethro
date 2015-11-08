@@ -6,23 +6,23 @@
     border-top: none; 
 }
 </style>
-<div class="card text-center">
+<div class="text-center">
 	<h1><img src="logo.png" style="margin-top: -30px;"/> Project Management</h1>
 	<h4>Project management shouldn't be complicated</h4>
-	<div class="col-md-3 card">
-		<h1 style="font-size:40px"><i class="glyphicon glyphicon-list-alt"></i></h1>
+	<div class="col-md-3">
+		<h1 style="font-size:40px"><i class="fa fa-list-alt"></i></h1>
 		<h4>Simple User Interface</h4>
 	</div>
-	<div class="col-md-3 card">
-		<h1 style="font-size:40px"><i class="glyphicon glyphicon-inbox"></i></h1>
+	<div class="col-md-3">
+		<h1 style="font-size:40px"><i class="fa fa-inbox"></i></h1>
 		<h4>Go Emailess</h4>
 	</div>
-	<div class="col-md-3 card text-center">
-		<h1 style="font-size:40px"><i class="glyphicon glyphicon-calendar"></i></h1>
+	<div class="col-md-3 text-center">
+		<h1 style="font-size:40px"><i class="fa fa-calendar"></i></h1>
 		<h4>Create Recurring Projects</h4>
 	</div>
-	<div class="col-md-3 card text-center">
-		<h1 style="font-size:40px;"><i class="glyphicon glyphicon-save-file"></i></h1>
+	<div class="col-md-3 text-center">
+		<h1 style="font-size:40px;"><i class="fa fa-download"></i></h1>
 		<h4>Generate Great Reports</h4>
 	</div>
 
@@ -30,17 +30,7 @@
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-<!--       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title" id="myModalLabel">Login</h2>
-      </div> -->
-      <div class="modal-body">
-        {{> login}}
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
+      {{> login}}
   </div>
 </div>
 </template>

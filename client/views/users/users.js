@@ -1,6 +1,5 @@
 Template.login.events({
-
-  'submit .login' : function(e, t){
+  'submit #login' : function(e, t){
     e.preventDefault();
     // retrieve the input field values
     var email = event.target.email.value;
@@ -11,15 +10,15 @@ Template.login.events({
       // If validation passes, supply the appropriate fields to the
       // Meteor.loginWithPassword() function.
       Meteor.loginWithPassword(email, password, function(err){
-      if (err)
-        toastr.error("Bad username or password","Error");
-      else
-      {
-        $('.modal-backdrop ').hide();
-        FlowRouter.go("/");
-      }
-    });
-       return false; 
+        if (err)
+          toastr.error("Bad username or password","Error");
+        else
+        {
+          $('.modal-backdrop ').hide();
+          FlowRouter.go("/");
+        }
+      });
+      return false; 
     }
 });
 
@@ -36,7 +35,10 @@ Template.register.events({
         },
     };
     Accounts.createUser( options , function(err){
-        if( err ) console.log( err.message );
+        if( err ){
+          toastr.error(err.message)
+        }
+         
     });
   }
 });

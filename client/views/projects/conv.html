@@ -1,0 +1,24 @@
+<template name="conv">
+	<div class="col-md-3 bg-info conv-col" style="background:#d7e6ed">
+		<h3>Conversation</h3>
+		<form class="add-conv">
+			<label>Add Note</label>
+			<textarea name="text" class="form-control"></textarea>
+			<input type="submit" class="btn btn-success" value="Submit" style="margin-top:10px">
+		</form>
+		{{#if Template.subscriptionsReady}}
+			{{# each convs}}
+				<div class="conv" style="padding-left:5px;">
+					<p style="margin-bottom:2px">{{{text}}}</p>
+					<p><strong>{{user}}</strong> <i>{{formatDateTime date}}</i></p>
+				</div>
+			{{/each}}
+		{{else}}
+			<div class="text-center">
+				<p><i class="fa fa-spinner fa-spin"></i></p>
+				<p>Loading</p>
+			</div>
+		{{/if}}
+
+	</div>
+</template>	

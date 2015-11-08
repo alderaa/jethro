@@ -1,3 +1,7 @@
+Template.dashboard.onCreated(function(){
+    this.subscribe('projects');
+    this.subscribe('tasks');
+});
 Template.dashboard.helpers({
   tasks: function () {
       var tasks = [];
@@ -23,11 +27,14 @@ Template.dashboard.helpers({
       var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}}).fetch();
       return projects;
   },
+  requests: function(){
+    return [];
+  },
   fields:[
-      {'key':'projectTitle','label':'Project', tmpl:Template.projectLink},
-      {'key':'owner','label':'Project Manager'},
       {'key':'title','label':'Task',tmpl:Template.taskLink},
       {'key':'description','label':'Description'},
+      {'key':'projectTitle','label':'Project', tmpl:Template.projectLink},
+      {'key':'owner','label':'Project Manager'},
       {'key':'assigned_to','label':'Assigned To'},
       {'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
       {'key':'_id','label':'Mark Complete', 'tmpl':Template.Actions}
@@ -35,9 +42,9 @@ Template.dashboard.helpers({
   projFields:[
       {'key':'title','label':'Project', tmpl:Template.editProjectLink},
       {'key':'description','label':'Description'},
-      {'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending'},
+      {'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending','tmpl':Template.dueon},
       {'key':'notes','label':'Notes'},
-  ]  
+    ] 
 });
 
 Template.dashboard.events({

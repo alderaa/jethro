@@ -1,4 +1,5 @@
 Meteor.startup(function () {
+	// process.env.MAIL_URL="smtp://aaron.m.alder%40gmail.com:5AjAQFFGU9NXcBb@smtp.gmail.com:465/"; 
 	var admin = Meteor.users.findOne({emails: { $elemMatch: { address: "felix@excelceo.com" } }});
 	if(admin == undefined)
 	{
@@ -15,6 +16,14 @@ Meteor.startup(function () {
 	    };
 	    Accounts.createUser(options);
 	}
+	Projects.find().forEach(function(proj) {
+		if(proj.recurring)
+		{
+			Meteor.call('scheduleRecurringProject', proj._id, true, function (error) {
+	          if (error) console.log("Couldn't add task");
+	        });
+		}
+	});
 });
 Meteor.publish("projects", function () {
 	return Projects.find({
@@ -29,9 +38,11 @@ Meteor.publish("convs", function () {
 
 	});
 });
-Meteor.publish("allUsers", function () {
+Meteor.publish("sendRecurringEmail", function () {
   return Meteor.users.find({
   		// "profile.company": { $in: [Meteor.user().currentCompany]}
   		"profile.company": { $in: ["Felix"]}
   });
 });
+
+SyncedCron.start();

@@ -27,9 +27,20 @@ Template.registerHelper( "isReady", function(sub) {
       }
 });
 
+Template.registerHelper( "isloginPage", function() {
+  return (window.location.pathname == '/login')
+});
+
 Template.mainLayout.rendered = function(){
 	$(function () { 
-    $("[data-toggle='tooltip']").tooltip(); 
+    $("[data-toggle='tooltip']").tooltip({delay: 0}); 
+  });
+
+};
+
+Template.dashboard.rendered = function(){
+  $(function () { 
+    $("[data-toggle='tooltip']").tooltip({delay: 0}); 
   });
 
 };
@@ -42,6 +53,6 @@ Template.mainLayout.events({
 
 Template.registerHelper( "employees" , function(){
 	return Meteor.users.find({}).map(function (c) {
-      return {label: c.profile.firstname, value: c._id};
+      return {label: c.profile.firstname+" "+c.profile.lastname, value: c._id};
     });
 });

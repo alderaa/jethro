@@ -4,31 +4,84 @@
 <template name="completedon">
 	{{formatDate this.completed_on}}
 </template>
-<template name="noTasks">
-	<h2 class="text-center">You have no tasks todo!</h2>
+<template name="projectBody">
+	<div class="card white darken-3">
+        <div class="card-content">
+              <div class="row">
+              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+                <div class="col s6">
+                	Status: {{status}}<br/>
+                	Notes:<br/>{{notes}}
+                </div>
+              </div>
+        </div>
+        <div class="card-action">
+        	{{>editProjectLink}}
+        </div>
+     </div>
 </template>
-<template name="noProjects">
-	<h2 class="text-center">You have no active projects!</h2>
-</template>
-<template name="noRequests">
-	<h2 class="text-center">You have no project requests.</h2>
+<template name="taskBody">
+	<div class="card white darken-3">
+        <div class="card-content">
+              <div class="row">
+              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+                <div class="col s6">
+                	Assigned to <strong>{{assigned_to}}</strong>
+                </div>
+              </div>
+        </div>
+        <div class="card-action">
+        	{{>taskLink}}
+        	{{>projectLink}}
+        	{{>Actions}}
+        </div>
+     </div>
 </template>
 <template name="dashboard">
-	<div class="col-md-12">
+	<div class="col s12">
 		{{#if Template.subscriptionsReady}}
-			<h1>Checklist</h1>
-			<p style="font-size:24px">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</p>
-			{{> reactiveTable fields=fields collection=tasks showFilter=false}}	
-			<hr/>
-			<p style="font-size:24px">Active Projects</p>
-			{{> reactiveTable fields=projFields collection=projects showFilter=false}}
+			<h3>Checklist</h3>
+			<h4 class="center">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</h4>
+			{{#if tasks}}
+				<p style="padding-left: 15px;padding-right: 40px;font-weight:bold">Title <span class="right">Due On</span></p>
+				<ul class="collapsible popout" data-collapsible="accordion">
+				{{#each tasks}}
+					<li>
+				      <div class="collapsible-header">{{projectTitle}}: {{title}} <span class="right">{{>dueon}}</span></div>
+				      <div class="collapsible-body">
+				      	{{>taskBody}}
+				      </div>
+				    </li>
+				{{/each}}
+				</ul>
+				<div class="divider"></div>
+			{{else}}
+				<h5 class="center green-text">You have no tasks!</h5>
+			{{/if}}
 
+			<h4 class="center" style="margin-top:30px">Active Projects</h4>
+			{{#if projects}}
+				<ul class="collapsible popout" data-collapsible="accordion">
+				{{#each projects}}
+					<li>
+				      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
+				      <div class="collapsible-body">
+				      	{{>projectBody}}
+				      </div>
+				    </li>
+				{{/each}}
+				</ul>
+			{{else}}
+				<h5 class="center green-text">You have no projects!</h5>
+			{{/if}}
 		    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
-		    <hr/>
-		   	<p style="font-size:24px">Projects Requests</p>
-			{{> reactiveTable fields=projFields collection=requests showFilter=false}}
+		    <div class="divider"></div>
+		   	<h4 class="center" style="margin-top:30px">Projects Requests</h4>
+			{{#unless requests}}
+				<h5 class="center green-text">You have no requests!</h5>
+			{{/unless}}
 		{{else}}
-			<div class="text-center">
+			<div class="center">
 				  <div class="preloader-wrapper big active">
 				    <div class="spinner-layer spinner-blue-only">
 				      <div class="circle-clipper left">
@@ -47,18 +100,21 @@
 </template>
 
 <template name="projectLink">
-	<a href="/project/{{projectId}}">{{projectTitle}}</a>
+	 <a href="/project/{{projectId}}" class="btn light-blue white-text">Go To Project</a>
 </template>
 
 <template name="editProjectLink">
-	<a href="/project/{{_id}}">{{title}}</a>
+	<a href="/project/{{_id}}" class="btn light-blue white-text">Go To Project</a> <a href="/newtask/{{_id}}" class="white-text btn">Add Task</a>
 </template>
 
 <template name="taskLink">
-	<a href="/edittask/{{_id}}">{{title}}</a>
+	<a href="/edittask/{{_id}}" class="btn light-blue white-text">Edit</a>
 </template>
 
 <template name="Actions">
-	<button class="btn btn-success done"><i class="fa fa-check"></i></button> 
+	{{#unless completed_on}}
+		<a class="btn done white-text">Done</a>
+	{{/unless}} 
+
 	<!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
 </template>

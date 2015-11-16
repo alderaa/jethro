@@ -5,32 +5,28 @@ Template.project.onCreated(function(){
 	this.subscribe('projects');
     this.subscribe('tasks');
 });
+function taskCursor(){
+    var projectId = FlowRouter.getParam("projectId");
+    var tasks =  Tasks.find({projectId:projectId}, {$sort:{order_num: -1}}).fetch();
+    for (t in tasks)
+    {
+      var assigned = Meteor.users.findOne({"_id":tasks[t].assigned_to});
+      if(assigned)
+        tasks[t].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
+    }
+    return tasks;
+}
+
+Template.project.onRendered(function(){
+  $(".conv-col").height($("body").height());
+});
 Template.project.helpers({
 	project: function () {
 		var projectId = FlowRouter.getParam("projectId"); 
 		var project = Projects.findOne({_id:projectId});
 		return project;
 	},
-	todo: function(){
-		var projectId = FlowRouter.getParam("projectId");
-		var tasks =  Tasks.find({projectId:projectId}, {$sort:{order_num: 1}}).fetch();
-		for (t in tasks)
-		{
-			var assigned = Meteor.users.findOne({"_id":tasks[t].assigned_to});
-			if(assigned)
-				tasks[t].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
-		}
-		return tasks;
-	},
-	fields:[
-		{'key':'order_num','label':'#'},
-    	{'key':'title','label':'Title'},
-    	{'key':'description','label':'Description'},
-    	{'key':'assigned_to','label':'Assigned To'},
-    	{'key':'due_on','label':'Due On','tmpl':Template.dueon},
-    	{'key':'completed_on','label':'Completed On','tmpl':Template.completedon},
-    	{'key':'_id','label':'Actions', 'tmpl':Template.taskActions}
-    ],
+	todo: taskCursor
 });
 Template.project.events({
 	"submit .add-conv" : function(event){
@@ -53,18 +49,45 @@ Projects Template
 Template.projects.onCreated(function(){
 	 this.subscribe('projects');
 });
+function projectsCursor(){
+    var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}});
+    return projects;
+}
+Template.projects.onRendered(function(){
+});
 Template.projects.helpers({
-	projects: function () {
-      var tasks = [];
-      var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}}).fetch();
-	  return projects;
-	},
-    fields:[
-    	{'key':'title','label':'Title', tmpl:Template.editProjectLink},
-    	{'key':'description','label':'Description'},
-    	{'key':'due_on','label':'Due On', sortOrder: 0, sortDirection: 'ascending',"tmpl":Template.dueon},
-    	{'key':'notes','label':'Notes'}
-    ]
+	projects: projectsCursor
+});
+
+Template.newproject.onRendered(function(){
+    $("#cron").appendTo($("#recurring").parent().parent());
+    $("#recurring").click(function(){
+      $("#cron").toggle();
+    });
+    $('#cron').cron({
+      onChange: function() {
+          $("input[name='recurringOptions']").val($(this).cron("value"));
+      },
+      periods : ["day", "week", "month", "year"]
+    });
+    $('select').material_select();
+
+});
+
+Template.editproject.onRendered(function(){
+    $("#cron").appendTo($("#recurring").parent().parent());
+    $("#recurring").click(function(){
+      $("#cron").toggle();
+    });
+    $('#cron').cron({
+      onChange: function() {
+          $("input[name='recurringOptions']").val($(this).cron("value"));
+      },
+      initial: $("input[name='recurringOptions']").val(),
+      periods : ["day", "week", "month", "year"]
+    });
+    $('select').material_select();
+
 });
 /**************************************
 Edit Project Template
@@ -86,6 +109,7 @@ var projHooks = {
     insert: function(doc) {
       if(Meteor.userId()){
         doc.owner = Meteor.userId();
+        doc.created_on = new Date();
         return doc;
       }
     }
@@ -95,13 +119,19 @@ var projHooks = {
     insert: function(error, result) {
     	if(!error)
     	{
-    		FlowRouter.go("/project/"+this.currentDoc._id);
+        Meteor.call('scheduleRecurringProject', result, true, function (error) {
+          if (error) console.log("Couldn't add recurring project")
+        });
+    		FlowRouter.go("/projects");
     		Materialize.toast('Added project!', 3000, 'green');
     	}
     },
     update: function(error, result) {
     	if(!error)
     	{
+        Meteor.call('updateRecurringProject', this.docId, true, function (error) {
+          if (error) console.log("Couldn't add recurring project")
+        });
     		FlowRouter.go("/project/"+this.currentDoc._id);
     		Materialize.toast('Updated project!', 3000, 'green');
     	}

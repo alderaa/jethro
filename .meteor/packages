@@ -8,7 +8,6 @@ accounts-password
 accounts-ui
 kadira:blaze-layout
 less
-nemo64:bootstrap
 aslagle:reactive-table
 standard-minifiers
 meteor-base
@@ -25,7 +24,6 @@ ejson
 spacebars
 check
 meteorhacks:fast-render
-rajit:bootstrap3-datepicker
 meteorhacks:kadira
 kadira:flow-router
 fortawesome:fontawesome
@@ -36,5 +34,6 @@ gildaspk:autoform-materialize
 fourseven:scss
 gildaspk:autoform-modals-materialize
 gildaspk:autoform-medium@=0.0.4
-materialize:materialize@=0.97.0
+percolate:synced-cron
+email
 poetic:materialize-scss

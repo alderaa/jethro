@@ -5,19 +5,13 @@ Template.edittask.helpers({
 		return task;
 	}
 });
-UI.registerHelper('checkedIf', function(val) {
-  return val ? 'checked' : '';
-});
 
 Template.edittask.onCreated(function(){
     this.subscribe('tasks');
     this.subscribe('projects');
 });
 Template.edittask.onRendered(function() {
-	console.log($('select').material_select);
-    setTimeout(function(){
-    	$('select').material_select();
-    }, 5000);
+   $('select').material_select();
 });
 Template.edittask.events({
 	"submit .edit-task": function (event) {
@@ -40,7 +34,7 @@ Template.edittask.events({
 	},
 	"click .not-done": function(){
       Meteor.call("markTaskNotDone",FlowRouter.getParam("taskId"));
-   } 
+    },
 });
 
 Template.newtask.helpers({
@@ -65,6 +59,13 @@ Template.newtask.events({
 });
 
 var taskHooks = {
+  before: {
+    insert: function(doc) {
+    	console.log("hello");
+    	doc.projectId = FlowRouter.getParam("projectId");
+    	return doc;
+    }
+  },
   after: {
     // Replace `formType` with the form `type` attribute to which this hook applies
     insert: function(error, result) {
@@ -77,6 +78,7 @@ var taskHooks = {
     update: function(error, result) {
     	if(!error)
     	{
+    		console.log(this);
     		FlowRouter.go("/project/"+this.currentDoc.projectId);
     		Materialize.toast('Updated Task!', 3000, 'green')
     	}

@@ -1,7 +1,15 @@
 <template name="newtask">
-	<h3>Add Task for <i>{{project.title}}</i></h3>
-	{{> quickForm collection="Tasks" id="insertTask" type="insert" doc=taskDefault}}
-	<input type="button" class="back btn btn-primary" value="Back To Project"/>
+	<h5>Add Task for <i>{{project.title}}</i></h5>
+	{{#autoForm collection="Tasks" id="insertTask" type="insert" doc=task}}
+	  {{> afQuickField name='title'}}
+	  {{> afQuickField name='order_num'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_on'}}
+	  {{> afQuickField name='completed_on'}}
+	  <input type="submit" class="btn" value="Insert"/>
+	  <input type="button" class="back btn btn-primary right blue" value="< Back To Project"/>
+	{{/autoForm}}
 </template>
 
 <template name="edittask">
@@ -13,14 +21,15 @@
       {{> afQuickField name='due_on'}}
       {{#if task.completed_on}}
       	<label>Completed On</label>
-	  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn btn-danger" value="X"/></p>
+	  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn action-btn red" value="X"/></p>
 	  {{else}}
 	  	{{> afQuickField name='completed_on'}}
 	  {{/if}}
 	  <div class="select-field">
-	  	{{> afQuickField name='assigned_to' class="browser-default" options=employees firstOption="(None Assigned)"}}
+	  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
 	  </div>
 	  <input type="submit" class="btn btn-primary" value="Update"/>
+	  <a href="/project/{{task.projectId}}" class="back btn btn-primary right blue">Back To Project</a>
 	{{/autoForm}}
 
 </template>

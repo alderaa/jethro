@@ -1,64 +1,71 @@
 <head>
   <title>Felix</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta name="viewport" content="initial-scale=1">
 </head>
 
 <template name="mainLayout"> 
+<div class="navbar-fxed">
 <nav class="blue darken-3">
-  <ul class="left hide-on-med-and-down">
-    <li><a href="/home" style="font-size: 24px;">Felix</a></li>
-    {{#if currentUser}}
-    <li><a href="/" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Checklist"><i class="fa fa-list"></i></a></li>
-    <li><a href="/projects" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Projects"><i class="fa fa-folder-open"></i></a></li>
-    {{/if}}
-  </ul>
-  <ul class="right hide-on-med-and-down">
-    {{#if currentUser}}
-      <li><a href="#" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Notifications"><i class="fa fa-inbox"></i></a></li>
-      <li role="presentation" class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
-          <i class="fa fa-user" style="color:#fff"></i>
-          <span style="color:#fff">{{currentUser.profile.firstname}}</span>
-          <span class="caret" style="color:#fff"></span>
-        </a>
-        <ul id="menu2" class="dropdown-menu" aria-labelledby="drop5">
-          <li><a href="/profile"><i class="fa fa-pencil"></i> Profile</a></li>
-          <li><a href="#" class="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
-        </ul>
-      </li>
-    {{else}}
-    <li>
-         <a id="login" href="#" data-toggle="modal" data-target="#myModal" style="color:#fff"><span class="fa fa-sign-in" aria-hidden="true"></span> Login</a>
-    </li>
+  <div class="nav-wrapper container">
+    <a href="/home" class="brand-logo ">Felix</a>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+    <ul class="left hide-on-med-and-down " style="margin-left:75px">
+      {{#if currentUser}}
+      <li><a href="/" data-toggle="tooltip"  data-tooltip="Checklist"><i class="material-icons">list</i></a></li>
+      <li><a href="/projects" data-toggle="tooltip"  data-tooltip="Projects"><i class="material-icons">description</i></a></li>
+      <li><a href="/newproject" data-toggle="tooltip" data-tooltip="Add Project"> <i class="material-icons">note_add</i></a></li>
+      {{/if}}
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      {{#if currentUser}}
+        <li><a href="#" data-toggle="tooltip" data-tooltip="Notifications"><i class="fa fa-inbox"></i></a></li>
+        <li><a href="/profile" data-toggle="tooltip" data-tooltip="Profile"><i class="fa fa-pencil"></i></a></li>
+        <li><a href="#" class="logout" data-toggle="tooltip" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
 
-    {{/if}}
-  </ul>
+      {{else}}
+      <li>
+           <a id="login" href="/login" data-toggle="modal" data-target="#myModal" style="color:#fff"><span class="fa fa-sign-in" aria-hidden="true"></span> Login</a>
+      </li>
+
+      {{/if}}
+    </ul>
+  </div>
   <ul id="slide-out" class="side-nav">
-    <li><a href="/home" style="font-size: 24px;">Felix</a></li>
     <li><a href="/"><i class="fa fa-list"></i> Checklist</a></li>
     <li><a href="/projects"><i class="fa fa-folder-open"></i> Projects</a></li>
-    <li><a href="#" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Notifications"><i class="fa fa-inbox"></i> Notifications</a></li>
+    <li><a href="#"><i class="fa fa-inbox"></i> Notifications</a></li>
       
     <li><a href="/profile"><i class="fa fa-pencil"></i> Profile</a></li>
     <li><a href="#" class="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
   </ul>
-  <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
 </nav>
+</div>
 <script>
-$(".button-collapse").sideNav();
+  $('.button-collapse').sideNav({
+      menuWidth: 300, // Default is 240
+      edge: 'left', // Choose the horizontal origin
+      closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+    }
+  );
 </script>
-  <div style="background-color: #fff;" class="container floating">
+<div class="main">
+  <div class="container z-depth-1">
 
     {{#if currentUser}}
       {{> Template.dynamic template=content}}
     {{else}}
-      {{> home}}
+      {{> other}}
     {{/if}}
 
   </div>
-  <br/>
-  <div class="text-center col-md-12"><i class="glyphicon glyphicon-copyright-mark"></i> 2015 ExcelCEO <br/> <span style="font-size:10px">Documents Set graphic by <a href="http://www.freepik.com/">Freepik</a> from <a href="http://www.flaticon.com/">Flaticon</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>. Made with <a href="http://logomakr.com" title="Logo Maker">Logo Maker</a></span></div>
-  
+</div>
+</template>
+<template name="other">
+  {{#if true}}
+    {{> login}}
+  {{else}}
+    {{> home}}
+  {{/if}}
 </template>

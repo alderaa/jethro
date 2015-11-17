@@ -68,7 +68,8 @@ Template.newproject.onRendered(function(){
       onChange: function() {
           $("input[name='recurringOptions']").val($(this).cron("value"));
       },
-      periods : ["day", "week", "month", "year"]
+      periods : ["day", "week", "month", "year"],
+      useGentleSelect: false,
     });
     $('select').material_select();
 
@@ -84,7 +85,8 @@ Template.editproject.onRendered(function(){
           $("input[name='recurringOptions']").val($(this).cron("value"));
       },
       initial: $("input[name='recurringOptions']").val(),
-      periods : ["day", "week", "month", "year"]
+      periods : ["day", "week", "month", "year"],
+      useGentleSelect: false,
     });
     $('select').material_select();
 

@@ -313,7 +313,7 @@
             var select = block["period"].find("select");
             select.bind("change.cron", event_handlers.periodChanged)
                   .data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(eo);
+            // if (o.useGentleSelect) select.gentleSelect(eo);
 
             block["dom"] = $("<span class='cron-block cron-block-dom'>"
                     + " on the <select name='cron-dom' class='browser-default'>" + str_opt_dom
@@ -322,7 +322,7 @@
                 .data("root", this);
 
             select = block["dom"].find("select").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.domOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.domOpts);
 
             block["month"] = $("<span class='cron-block cron-block-month browser-default'>"
                     + " of <select name='cron-month' class='browser-default'>" + str_opt_month
@@ -331,7 +331,7 @@
                 .data("root", this);
 
             select = block["month"].find("select").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.monthOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.monthOpts);
 
             block["mins"] = $("<span class='cron-block cron-block-mins browser-default'>"
                     + " at <select name='cron-mins' class='browser-default'>" + str_opt_mih
@@ -340,7 +340,7 @@
                 .data("root", this);
 
             select = block["mins"].find("select").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.minuteOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.minuteOpts);
 
             block["dow"] = $("<span class='cron-block cron-block-dow browser-default'>"
                     + " on <select name='cron-dow' class='browser-default'>" + str_opt_dow
@@ -349,7 +349,7 @@
                 .data("root", this);
 
             select = block["dow"].find("select").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.dowOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.dowOpts);
 
             block["time"] = $("<span class='cron-block cron-block-time browser-default'>"
                     + " at <select name='cron-time-hour' class='cron-time-hour browser-default'>" + str_opt_hid
@@ -359,9 +359,9 @@
                 .data("root", this);
 
             select = block["time"].find("select.cron-time-hour").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.timeHourOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.timeHourOpts);
             select = block["time"].find("select.cron-time-min").data("root", this);
-            if (o.useGentleSelect) select.gentleSelect(o.timeMinuteOpts);
+            // if (o.useGentleSelect) select.gentleSelect(o.timeMinuteOpts);
 
             block["controls"] = $("<span class='cron-controls'>&laquo; save "
                     + "<span class='cron-button cron-button-save'></span>"
@@ -386,7 +386,7 @@
 
             var o = this.data('options');
             var block = this.data("block");
-            var useGentleSelect = o.useGentleSelect;
+            // var useGentleSelect = o.useGentleSelect;
             var t = getCronType(cron_str, o);
             
             if (!defined(t)) { return false; }
@@ -409,20 +409,20 @@
                     var tgt = targets[i];
                     if (tgt == "time") {
                         var btgt = block[tgt].find("select.cron-time-hour").val(v["hour"]);
-                        if (useGentleSelect) btgt.gentleSelect("update");
+                        // if (useGentleSelect) btgt.gentleSelect("update");
 
                         btgt = block[tgt].find("select.cron-time-min").val(v["mins"]);
-                        if (useGentleSelect) btgt.gentleSelect("update");
+                        // if (useGentleSelect) btgt.gentleSelect("update");
                     } else {;
                         var btgt = block[tgt].find("select").val(v[tgt]);
-                        if (useGentleSelect) btgt.gentleSelect("update");
+                        // if (useGentleSelect) btgt.gentleSelect("update");
                     }
                 }
             }
             
             // trigger change event
             var bp = block["period"].find("select").val(t);
-            if (useGentleSelect) bp.gentleSelect("update");
+            // if (useGentleSelect) bp.gentleSelect("update");
             bp.trigger("change");
 
             return this;

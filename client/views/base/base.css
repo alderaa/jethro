@@ -60,10 +60,14 @@ body{
     margin-top: 2px;
     box-shadow: none;
 }
-.conv{
-}
 .conv-col{
     overflow-y: scroll;
+    position: absolute;
+    right: -15px;
+    top: 65px;
+}
+.conv-col ul li{
+  margin: 10px 0px;
 }
 .add-conv textarea.materialize-textarea
 {
@@ -121,6 +125,11 @@ switch{
     bottom: 10% !important;
     right: 7%;
 }
+.header{
+    padding-left: 25px;
+    padding-right: 40px;
+    font-weight: bold;
+}
 @media only screen and (min-width: 993px){
     #toast-container {
         min-width: 8%;
@@ -139,6 +148,15 @@ switch{
 @media only screen and (max-width: 993px){
     .container, .row .col.s9 {
         width: 100%;
+    }
+
+}
+@media only screen and (max-width: 993px){
+    .conv-col {
+      position: inherit;
+      width: 100% !important;
+      margin-top: 15px;
+      box-shadow: none;
     }
 
 }

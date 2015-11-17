@@ -14,22 +14,37 @@
 
 <template name="edittask">
 	<h3>Edit Task</h3>
-	{{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}}
-	  {{> afQuickField name='title'}}
-	  {{> afQuickField name='order_num'}}
-      {{> afQuickField name='description' rows=3}}
-      {{> afQuickField name='due_on'}}
-      {{#if task.completed_on}}
-      	<label>Completed On</label>
-	  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn action-btn red" value="X"/></p>
-	  {{else}}
-	  	{{> afQuickField name='completed_on'}}
-	  {{/if}}
-	  <div class="select-field">
-	  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
-	  </div>
-	  <input type="submit" class="btn btn-primary" value="Update"/>
-	  <a href="/project/{{task.projectId}}" class="back btn btn-primary right blue">Back To Project</a>
-	{{/autoForm}}
-
+	{{#if Template.subscriptionsReady}}
+		{{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}}
+		  {{> afQuickField name='title'}}
+		  {{> afQuickField name='order_num'}}
+	      {{> afQuickField name='description' rows=3}}
+	      {{> afQuickField name='due_on'}}
+	      {{#if task.completed_on}}
+	      	<label>Completed On</label>
+		  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn action-btn red" value="X"/></p>
+		  {{else}}
+		  	{{> afQuickField name='completed_on'}}
+		  {{/if}}
+		  <div class="select-field">
+		  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
+		  </div>
+		  <input type="submit" class="btn right" value="Update"/>
+		  <a href="/project/{{task.projectId}}" class="back btn btn-primary blue">Back To Project</a>
+		{{/autoForm}}
+	{{else}}
+		<div class="center">
+		  <div class="preloader-wrapper big active">
+		    <div class="spinner-layer spinner-blue-only">
+		      <div class="circle-clipper left">
+		        <div class="circle"></div>
+		      </div><div class="gap-patch">
+		        <div class="circle"></div>
+		      </div><div class="circle-clipper right">
+		        <div class="circle"></div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	{{/if}}	
 </template>

@@ -1,23 +1,24 @@
 <template name="conv">
-	<div class="col s3 bg-info conv-col hide-on-med-and-down grey lighten-2 z-depth-1">
+	<div class="col s3 conv-col grey lighten-2 z-depth-1">
 		<h5>Conversation</h5>
 		<form class="add-conv input-field">
 			<textarea name="text" class="materialize-textarea" placeholder="Add Note"></textarea>
 			<input type="submit" class="btn action-btn" value="Submit">
 		</form>
 		{{#if Template.subscriptionsReady}}
-			{{# each convs}}
-				<div class="conv">
-					<p>{{{text}}}<br/>
-					<strong>{{user}}</strong> <i>{{formatDateTime date}}</i></p>
-				</div>
-			{{/each}}
+			<ul id="convs">
+				{{# each convs}}
+			    <li>{{{text}}}<br/><i>{{user}} {{formatDateTime date}}</i></li>
+				{{/each}}
+			</ul>
 		{{else}}
 			<div class="center">
 				<p><i class="fa fa-spinner fa-spin"></i></p>
 				<p>Loading</p>
 			</div>
+
 		{{/if}}
 
+        
 	</div>
 </template>	

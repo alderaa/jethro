@@ -38,9 +38,18 @@
 				<a href="/newtask/{{project._id}}" class="btn">Add Task</a>
 			</div>
 		{{else}}
-			<div class="text-center">
-				<p><i class="fa fa-spinner fa-spin"></i></p>
-				<p>Loading</p>
+			<div class="center">
+			  <div class="preloader-wrapper big active">
+			    <div class="spinner-layer spinner-blue-only">
+			      <div class="circle-clipper left">
+			        <div class="circle"></div>
+			      </div><div class="gap-patch">
+			        <div class="circle"></div>
+			      </div><div class="circle-clipper right">
+			        <div class="circle"></div>
+			      </div>
+			    </div>
+			  </div>
 			</div>
 		{{/if}}
 		</div>
@@ -83,16 +92,32 @@
 </template>
 
 <template name="editproject">
-	<h3>Edit Project</h3>
-	{{> quickForm collection="Projects" id="updateProject" type="update" doc=project}}
-	<a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
-	<div class="row">
-		{{#if project.recurring}}
-		<div class="col s12" id="cron">
+	{{#if Template.subscriptionsReady}}
+		<h3>Edit Project</h3>
+		{{> quickForm collection="Projects" id="updateProject" type="update" doc=project}}
+		<a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
+		<div class="row">
+			{{#if project.recurring}}
+				<div class="col s12" id="cron">
+				</div>
+			{{else}}
+				<div class="col s12" id="cron" style="display:none">
+				</div>
+			{{/if}}
 		</div>
-		{{else}}
-		<div class="col s12" id="cron" style="display:none">
+	{{else}}
+		<div class="center">
+		  <div class="preloader-wrapper big active">
+		    <div class="spinner-layer spinner-blue-only">
+		      <div class="circle-clipper left">
+		        <div class="circle"></div>
+		      </div><div class="gap-patch">
+		        <div class="circle"></div>
+		      </div><div class="circle-clipper right">
+		        <div class="circle"></div>
+		      </div>
+		    </div>
+		  </div>
 		</div>
-		{{/if}}
-	</div>
+	{{/if}}	
 </template>

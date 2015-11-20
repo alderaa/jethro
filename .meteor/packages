@@ -37,3 +37,4 @@ gildaspk:autoform-medium@=0.0.4
 percolate:synced-cron
 email
 poetic:materialize-scss
+gquemart:meteor-reactive-fullcalendar

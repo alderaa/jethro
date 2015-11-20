@@ -22,10 +22,34 @@ html {
     background-color:#efefef;
     opacity: .8;
 }   
+nav li .btn, nav li .btn:hover{
+  background: none;box-shadow: none; height:61px;
+}
 #toast-container {
     min-width: 8%;
     bottom: 10% !important;
     right: 7%;
+}
+#notif-dropdown{
+    width: 280px !important;
+
+}
+nav .dropdown-content li {
+    width: 280px !important;
+    clear: both;
+    color: rgba(0, 0, 0, 0.87);
+    cursor: pointer;
+    line-height: 1.5rem;
+    width: 100%;
+    text-align: left;
+    text-transform: none;
+    font-size: 12px;
+}
+nav .dropdown-content li > a, .dropdown-content li > span {
+    font-size: 15px;
+    color: #26a69a;
+    display: block;
+    padding: .5rem .5rem;
 }
 .row {
     margin-left: auto;

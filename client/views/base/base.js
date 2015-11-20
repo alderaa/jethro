@@ -31,9 +31,13 @@ Template.registerHelper( "isloginPage", function() {
   return (window.location.pathname == '/login')
 });
 
+Template.mainLayout.onCreated( function(){
+  this.subscribe("notifs");
+});
 Template.mainLayout.rendered = function(){
 	$(function () { 
     $("[data-toggle='tooltip']").tooltip({delay: 0}); 
+    $(".dropdown-button").dropdown();
   });
 
 };
@@ -44,11 +48,28 @@ Template.dashboard.rendered = function(){
   });
 
 };
+Template.mainLayout.helpers({
+  "notifs": function(){
+    var notifs =  Notifs.find({"user":Meteor.user()._id}).fetch().reverse();
+    return notifs;
+  },
+  "newNotifCount": function(){
+    var count =  Notifs.find({"user":Meteor.user()._id,"seen":false}).count();
+    if(count === 0)
+    {
+      count = "";
+    }
+    return count;
+  },
 
+});
 Template.mainLayout.events({
 	"click .logout": function(){
 		Meteor.logout();
-	}
+	},
+  "click #notifs": function(){
+    Meteor.call("seenNotifs");
+  }
 });
 
 Template.registerHelper( "employees" , function(){

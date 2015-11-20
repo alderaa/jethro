@@ -44,5 +44,10 @@ Meteor.publish("sendRecurringEmail", function () {
   		"profile.company": { $in: ["Felix"]}
   });
 });
-
+Meteor.publish("notifs", function () {
+	var notifs =  Notifs.find({
+		"user": this.userId
+	});
+	return notifs;
+});
 SyncedCron.start();

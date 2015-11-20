@@ -1,0 +1,1 @@
+App.setPreference('Orientation', 'all', 'ios');

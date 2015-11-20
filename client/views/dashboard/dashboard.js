@@ -17,10 +17,13 @@ function tasksCursor()
     {
           tasks.push(projectTasks[t]);
           var ind = tasks.length-1;
-          var assigned = Meteor.users.findOne({"_id":tasks[ind].assigned_to});
           var project = Projects.findOne({"_id":tasks[ind].projectId});
           var owner = Meteor.users.findOne({"_id":project.owner});
-          tasks[ind].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
+          if(tasks[ind].assigned_to)
+          {
+            var assigned = Meteor.users.findOne({"_id":tasks[ind].assigned_to});
+            tasks[ind].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
+          }
           tasks[ind].owner = owner.profile.firstname + " " + owner.profile.lastname;
           tasks[ind].projectTitle = project.title;
     }
@@ -48,7 +51,6 @@ Template.dashboard.events({
       Meteor.call("deleteProject",this._id);
     },
    "click .done": function(){
-      Meteor.call("markTaskDone",this._id);
-
+      Meteor.call("markTaskDone",this._id,this.title,this.projectId);
    } 
 });

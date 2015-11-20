@@ -43,7 +43,7 @@
 			<h3>Checklist</h3>
 			<h4 class="center">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</h4>
 			{{#if tasks}}
-				<p style="padding-left: 15px;padding-right: 40px;font-weight:bold">Title <span class="right">Due On</span></p>
+				<p class="header">Title <span class="right">Due On</span></p>
 				<ul class="collapsible popout" data-collapsible="accordion">
 				{{#each tasks}}
 					<li>
@@ -61,6 +61,7 @@
 
 			<h4 class="center" style="margin-top:30px">Active Projects</h4>
 			{{#if projects}}
+				<p class="header">Title <span class="right">Due On</span></p>
 				<ul class="collapsible popout" data-collapsible="accordion">
 				{{#each projects}}
 					<li>

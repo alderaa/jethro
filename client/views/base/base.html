@@ -16,11 +16,19 @@
       <li><a href="/" data-toggle="tooltip"  data-tooltip="Checklist"><i class="material-icons">list</i></a></li>
       <li><a href="/projects" data-toggle="tooltip"  data-tooltip="Projects"><i class="material-icons">description</i></a></li>
       <li><a href="/newproject" data-toggle="tooltip" data-tooltip="Add Project"> <i class="material-icons">note_add</i></a></li>
+      <li><a href="/calendar" data-toggle="tooltip" data-tooltip="Calendar"> <i class="material-icons">perm_contact_calendar</i></a></li>
       {{/if}}
     </ul>
     <ul class="right hide-on-med-and-down">
       {{#if currentUser}}
-        <li><a href="#" data-toggle="tooltip" data-tooltip="Notifications"><i class="fa fa-inbox"></i></a></li>
+        <li>
+            <a id="notifs" class="btn dropdown-button action-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
+            <ul id="notif-dropdown" class="dropdown-content">
+              {{#each notifs}}
+                <li><a href="{{url}}">{{text}}<br/>{{formatDateTime date}}</a></li>
+              {{/each}}
+            </ul>
+        </li>
         <li><a href="/profile" data-toggle="tooltip" data-tooltip="Profile"><i class="fa fa-pencil"></i></a></li>
         <li><a href="#" class="logout" data-toggle="tooltip" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
 

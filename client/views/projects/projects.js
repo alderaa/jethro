@@ -39,7 +39,7 @@ Template.project.events({
 		Meteor.call("addConv", conv);
 	},
 	"click .done": function(){
-      Meteor.call("markTaskDone",this._id);
+      Meteor.call("markTaskDone",this._id,this.title,this.projectId);
    } 
 });
 

@@ -1,29 +1,39 @@
 <template name="home">
-<style>
-.modal-footer {
-    padding: 15px;
-    text-align: right;
-    border-top: none; 
-}
-</style>
-<div class="center-align row">
-	<h1><img src="logo.png" style="margin-top: -30px;"/> Project Management</h1>
-	<h4>Project management shouldn't be complicated</h4>
-	<div class="col s3">
-		<h1 style="font-size:40px"><i class="fa fa-list-alt"></i></h1>
-		<h4>Simple User Interface</h4>
+	{{#unless currentUser}}
+	<div class="center-align row home-text">
+		<div style="width:100%;position:absolute;top:65px; left:0px; padding:20px;" class="s12 blue lighten-3">
+			<div class="container">
+				<div class="row">
+					<div class="col s12 m6">
+						<h3>Felix Project Manager</h3>
+						<h5>Manage all your daily tasks with a click of a button</h5>
+					</div>
+					<div class="col s12 m6">
+						<img src="/spmapp.png" style="width:100%"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="margin-top:510px">
+			<div class="col m3 s12">
+				<h1 style="font-size:40px"><i class="fa fa-list-alt"></i></h1>
+				<h5>Simple User Interface</h5>
+			</div>
+			<div class="col m3 s12">
+				<h1 style="font-size:40px"><i class="fa fa-inbox"></i></h1>
+				<h5>Go Emailess</h5>
+			</div>
+			<div class="col m3 s12 text-center">
+				<h1 style="font-size:40px"><i class="fa fa-calendar"></i></h1>
+				<h5>Create Recurring Projects</h5>
+			</div>
+			<div class="col m3 s12 text-center">
+				<h1 style="font-size:40px;"><i class="fa fa-download"></i></h1>
+				<h5>Generate Great Reports</h5>
+			</div>
+		</div>
 	</div>
-	<div class="col s3">
-		<h1 style="font-size:40px"><i class="fa fa-inbox"></i></h1>
-		<h4>Go Emailess</h4>
-	</div>
-	<div class="col s3 text-center">
-		<h1 style="font-size:40px"><i class="fa fa-calendar"></i></h1>
-		<h4>Create Recurring Projects</h4>
-	</div>
-	<div class="col s3 text-center">
-		<h1 style="font-size:40px;"><i class="fa fa-download"></i></h1>
-		<h4>Generate Great Reports</h4>
-	</div>
-</div>
+	{{else}}
+		{{> dashboard}}
+	{{/unless}}
 </template>

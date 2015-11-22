@@ -18,6 +18,9 @@ html {
     height: 100%;
     font-size: 15px;
 }
+.header{
+  padding: 0px 36px;
+}
 .collapsible-header:hover {
     background-color:#efefef;
     opacity: .8;
@@ -31,11 +34,11 @@ nav li .btn, nav li .btn:hover{
     right: 7%;
 }
 #notif-dropdown{
-    width: 280px !important;
+    width: 400px !important;
 
 }
 nav .dropdown-content li {
-    width: 280px !important;
+    width: 380px !important;
     clear: both;
     color: rgba(0, 0, 0, 0.87);
     cursor: pointer;
@@ -78,10 +81,6 @@ body{
    color: #999;  
 }
 .main .container{
-    border-radius: 5px;
-    padding: 15px 10px;
-    padding-top:5px;
-    margin-top: 2px;
     box-shadow: none;
 }
 .conv-col{
@@ -140,20 +139,26 @@ switch{
 .panel-footer{
     margin-top:20px;
 }
+.fixed li a i {
+  margin-top: 17px;
+}
 .fa-spin{
   font-size:30px;
   margin-top: 30px;
 }
+
+.navbar, .main, footer {
+    padding-left: 240px;
+}
+nav .brand-logo{
+  left: 10px;
+}
 #toast-container {
     min-width: 8%;
     bottom: 10% !important;
-    right: 7%;
+    left: 7%;
 }
-.header{
-    padding-left: 25px;
-    padding-right: 40px;
-    font-weight: bold;
-}
+
 @media only screen and (min-width: 993px){
     #toast-container {
         min-width: 8%;
@@ -170,15 +175,26 @@ switch{
     }
 }
 @media only screen and (max-width: 993px){
-    .container, .row .col.s9 {
-        width: 100%;
+    .navbar, .main, footer {
+      padding-left: 0;
     }
-
+    nav .brand-logo{
+      left: 100px;
+    }
 }
-@media only screen and (max-width: 993px){
+@media only screen and (max-width: 600px){
+  nav ul a {
+    padding: 12px 15px;
+  }
+  #notif-dropdown{
+    position: absolute;
+    left: 0px !important;
+    top: 61px !important;
+  }
+}
+@media only screen and (max-width: 720px){
     .conv-col {
       position: inherit;
-      width: 100% !important;
       margin-top: 15px;
       box-shadow: none;
     }

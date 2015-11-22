@@ -6,74 +6,66 @@
 </head>
 
 <template name="mainLayout"> 
-<div class="navbar-fxed">
+{{#unless currentUser}}
+<style>
+  .navbar, .main, footer {
+    padding-left: 0;
+  }
+</style>
+{{/unless}}
+<div class="navbar">
 <nav class="blue darken-3">
-  <div class="nav-wrapper container">
+  <div class="nav-wrapper">
     <a href="/home" class="brand-logo ">Felix</a>
     <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-    <ul class="left hide-on-med-and-down " style="margin-left:75px">
-      {{#if currentUser}}
-      <li><a href="/" data-toggle="tooltip"  data-tooltip="Checklist"><i class="material-icons">list</i></a></li>
-      <li><a href="/projects" data-toggle="tooltip"  data-tooltip="Projects"><i class="material-icons">description</i></a></li>
-      <li><a href="/newproject" data-toggle="tooltip" data-tooltip="Add Project"> <i class="material-icons">note_add</i></a></li>
-      <li><a href="/calendar" data-toggle="tooltip" data-tooltip="Calendar"> <i class="material-icons">perm_contact_calendar</i></a></li>
-      {{/if}}
-    </ul>
-    <ul class="right hide-on-med-and-down">
+    <ul class="right">
       {{#if currentUser}}
         <li>
-            <a id="notifs" class="btn dropdown-button action-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
+            <a id="notifs" class="dropdown-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
             <ul id="notif-dropdown" class="dropdown-content">
               {{#each notifs}}
                 <li><a href="{{url}}">{{text}}<br/>{{formatDateTime date}}</a></li>
               {{/each}}
             </ul>
         </li>
-        <li><a href="/profile" data-toggle="tooltip" data-tooltip="Profile"><i class="fa fa-pencil"></i></a></li>
-        <li><a href="#" class="logout" data-toggle="tooltip" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
+        <li><a href="/profile" class="tooltipped" data-tooltip="Profile"><i class="material-icons">perm_identity</i></a></li>
+        <li><a href="#" class="logout tooltipped" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
 
       {{else}}
       <li>
-           <a id="login" href="/login" data-toggle="modal" data-target="#myModal" style="color:#fff"><span class="fa fa-sign-in" aria-hidden="true"></span> Login</a>
+           <a data-toggle="modal" data-target="#myModal" class="modal-trigger" href="#login" aria-hidden="true"><span class="fa fa-sign-in"></span> Login</a>
       </li>
 
       {{/if}}
     </ul>
   </div>
-  <ul id="slide-out" class="side-nav">
-    <li><a href="/"><i class="fa fa-list"></i> Checklist</a></li>
-    <li><a href="/projects"><i class="fa fa-folder-open"></i> Projects</a></li>
-    <li><a href="#"><i class="fa fa-inbox"></i> Notifications</a></li>
-      
-    <li><a href="/profile"><i class="fa fa-pencil"></i> Profile</a></li>
-    <li><a href="#" class="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+  {{#if currentUser}}
+  <ul id="slide-out" class="side-nav fixed">
+    <li class="blue darken-3"><a class="white-text">Menu</a></li>
+    <li><a href="/"><i class="material-icons left">list</i> Checklist</a></li>
+    <li><a href="/projects"><i class="material-icons left">description</i> Projects</a></li>
+    <li><a href="/newproject"><i class="material-icons left">note_add</i> Add Project</a></li>
+    <li><a href="/calendar"><i class="material-icons left">perm_contact_calendar</i> Calendar</a></li>
+    
   </ul>
+  {{/if}}
 </nav>
 </div>
-<script>
-  $('.button-collapse').sideNav({
-      menuWidth: 300, // Default is 240
-      edge: 'left', // Choose the horizontal origin
-      closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
-    }
-  );
-</script>
 <div class="main">
-  <div class="container z-depth-1">
-
+  <div class="container">
     {{#if currentUser}}
       {{> Template.dynamic template=content}}
     {{else}}
-      {{> other}}
+      {{> home}}
     {{/if}}
-
   </div>
 </div>
-</template>
-<template name="other">
-  {{#if true}}
-    {{> login}}
-  {{else}}
-    {{> home}}
-  {{/if}}
+  <div id="login" class="modal">
+    <div class="modal-content">
+      {{> login}}
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+    </div>
+  </div>
 </template>

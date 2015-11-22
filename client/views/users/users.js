@@ -1,4 +1,10 @@
 Template.login.events({
+  'keypress input': function(e,t){
+    if(e.charCode == 13)
+    {
+      $("#login").click();
+    }
+  },
   'submit #login' : function(e, t){
     e.preventDefault();
     // retrieve the input field values
@@ -14,8 +20,8 @@ Template.login.events({
           toastr.error("Bad username or password","Error");
         else
         {
-          $('.modal-backdrop ').hide();
-          FlowRouter.go("/");
+          $("body").hide();
+          window.location = "http://localhost:3000/";
         }
       });
       return false; 

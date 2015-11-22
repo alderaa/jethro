@@ -22,7 +22,7 @@
 			margin-top:10px;
 		}
 	</style>
-	<div class="col s8">
+	<div class="row">
 		<h3>Register</h3>
 		<form id="register-form" action="action">
 			<div class="col s12">
@@ -54,24 +54,23 @@
     </div>
 </template>
 <template name="profile">
-	<div class="col s8">
+	<div class="row">
 		<h3>Profile</h3>
-		<div class="col s12">
-			<div class="col s4">
+			<div class="col s4 l2">
 				<label>Name</label>
 				<p>{{user.profile.firstname}} {{user.profile.lastname}}</p>
 			</div>
-			<div class="col s4">
+			<div class="col s4 l2">
 				<label>Birthday</label>
 				<p>{{formatDate user.profile.birthday}}</p>
 			</div>
-			<div class="col s4">
+			<div class="col s4 l2">
 	        	<label>Email</label>
 	        	{{#each user.emails}}
 	       			<p>{{this.address}}</p>
 	       		{{/each}}
 	        </div>
-	        <div class="col s4">
+	        <div class="col s12">
 	        	<label>Companies</label>
 	        	<ul style="list-style-type:none;padding-left:2px">
 	        	{{#each user.profile.company}}
@@ -79,7 +78,7 @@
 	       		{{/each}}
 	       		</ul>
 	        </div>
-		</div>
+
         
     </div>
 </template>

@@ -18,36 +18,25 @@ Template.registerHelper("today",function(value){
 Template.registerHelper("selectedIfEquals",function(left,right){
   return left==right ? "selected":"";
 });
-
-Template.registerHelper( "isReady", function(sub) {
-      if(sub) {
-        return FlowRouter.subsReady(sub);
-      } else {
-        return FlowRouter.subsReady();
-      }
-});
-
-Template.registerHelper( "isloginPage", function() {
-  return (window.location.pathname == '/login')
+Template.registerHelper("currentEmail",function(){
+  return Meteor.user().emails[0].address;
 });
 
 Template.mainLayout.onCreated( function(){
   this.subscribe("notifs");
 });
-Template.mainLayout.rendered = function(){
-	$(function () { 
-    $("[data-toggle='tooltip']").tooltip({delay: 0}); 
+Template.mainLayout.onRendered(function(){
+  $(function(){
     $(".dropdown-button").dropdown();
+    $(".tooltop").dropdown();
+    $("#slide-out li a").click(function(){
+      $('.button-collapse').sideNav('hide');
+    });
+    $('.button-collapse').sideNav();
+    $('.tooltipped').tooltip({delay: 50});
   });
+});
 
-};
-
-Template.dashboard.rendered = function(){
-  $(function () { 
-    $("[data-toggle='tooltip']").tooltip({delay: 0}); 
-  });
-
-};
 Template.mainLayout.helpers({
   "notifs": function(){
     var notifs =  Notifs.find({"user":Meteor.user()._id}).fetch().reverse();

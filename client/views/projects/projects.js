@@ -75,6 +75,20 @@ Template.newproject.onRendered(function(){
 
 });
 
+Template.requestToProject.onCreated(function(){
+    this.subscribe("requests");
+});
+
+Template.requestToProject.helpers({
+  request:function(){
+    return Requests.findOne({_id:FlowRouter.getParam("requestId")});
+  }
+})
+
+/**************************************
+Edit Project Template
+***************************************/
+
 Template.editproject.onRendered(function(){
     $("#cron").appendTo($("#recurring").parent().parent());
     $("#recurring").click(function(){
@@ -91,9 +105,7 @@ Template.editproject.onRendered(function(){
     $('select').material_select();
 
 });
-/**************************************
-Edit Project Template
-***************************************/
+
 Template.editproject.onCreated(function(){
 	 this.subscribe('projects');
 });
@@ -124,7 +136,20 @@ var projHooks = {
         Meteor.call('scheduleRecurringProject', result, true, function (error) {
           if (error) console.log("Couldn't add recurring project")
         });
-    		FlowRouter.go("/projects");
+        if(this.formId === 'insertReqToProject')
+        {
+            var notif = {
+                url: '/project/'+this.docId,
+                text: "Request '" + this.currentDoc.title + "' made into project",
+            }
+            if(this.currentDoc.requestor == Meteor.userId)
+            {
+              notif.user = this.currentDoc.requestor;
+            }
+            Meteor.call("addNotif", notif);
+            Meteor.call("deleteRequest", FlowRouter.getParam('requestId'));
+        }
+    		FlowRouter.go("/project/"+this.docId);
     		Materialize.toast('Added project!', 3000, 'green');
     	}
     },
@@ -140,4 +165,4 @@ var projHooks = {
     },
   },
 };
-AutoForm.addHooks(['insertProject','updateProject'], projHooks);
+AutoForm.addHooks(['insertProject','updateProject','insertReqToProject'], projHooks);

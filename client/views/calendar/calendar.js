@@ -1,27 +1,33 @@
-Template.cal.helpers({
-	calendarOptions: {
-	events: function(start, end, timezone, callback) {
-                //console.log(start);
-                //console.log(end);
-                //console.log(timezone);
-                var events = [];
-                // Get only events from one document of the Calendars collection
-                // events is a field of the Calendars collection document
-                // var calendar = Calendars.findOne(
-                //     { "_id":"myCalendarId" },
-                //     { "fields": { 'events': 1 } }
-                // );
-                // // events need to be an array of subDocuments:
-                // // each event field named as fullcalendar Event Object property is automatically used by fullcalendar
-                // if (calendar && calendar.events) {
-                //     calendar.events.forEach(function (event) {
-                //         eventDetails = {};
-                //         for(key in event)
-                //             eventDetails[key] = event[key];
-                //         events.push(eventDetails);
-                //     });
-                // }
-                callback(events);
-            },
+function getEvents(){
+    var projs = Projects.find({"owner":Meteor.userId()}).fetch();
+    console.log(projs);
+    var events = [];
+    for(p in projs)
+    {
+        var event = {
+            title: "Project '"+projs[p].title+ "' is due",
+            start: projs[p].due_on,
         }
+        events.push(event);
+    } 
+    return events;
+
+};
+Template.cal.onCreated(function(){
+     this.subscribe('projects');
+});
+Template.cal.helpers({
+    calendarOptions: {
+        events: function(start, end, timezone, callback) {
+            //console.log(start);
+            //console.log(end);
+            //console.log(timezone);
+            var events = getEvents();
+ 
+            // events need to be an array of subDocuments:
+            // each event field named as fullcalendar Event Object property is automatically used by fullcalendar
+        
+            callback(events);
+        },
+    }
 });

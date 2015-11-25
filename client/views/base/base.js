@@ -26,7 +26,6 @@ Template.mainLayout.onCreated( function(){
   this.subscribe("notifs");
 });
 Template.mainLayout.onRendered(function(){
-  $(function(){
     $(".dropdown-button").dropdown();
     $(".tooltop").dropdown();
     $("#slide-out li a").click(function(){
@@ -34,7 +33,7 @@ Template.mainLayout.onRendered(function(){
     });
     $('.button-collapse').sideNav();
     $('.tooltipped').tooltip({delay: 50});
-  });
+
 });
 
 Template.mainLayout.helpers({

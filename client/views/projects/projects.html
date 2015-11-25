@@ -91,6 +91,15 @@
 	</div>
 </template>
 
+<template name="requestToProject">
+	<h3>Create Project from Request</h3>
+	{{> quickForm collection="Projects" id="insertReqToProject" type="insert" doc=request}}
+	<div class="row">
+		<div class="col s12" id="cron" style="display:none">
+		</div>
+	</div>
+</template>
+
 <template name="editproject">
 	{{#if Template.subscriptionsReady}}
 		<h3>Edit Project</h3>

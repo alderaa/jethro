@@ -1,6 +1,7 @@
 Template.dashboard.onCreated(function(){
     this.subscribe('projects');
     this.subscribe('tasks');
+    this.subscribe('requests');
 });
 function projCursor(){
     var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}});
@@ -30,11 +31,24 @@ function tasksCursor()
   }
   return tasks;
 }
+function requestsCursor()
+{
+    var requests = Requests.find({"owner": Meteor.userId()}, {sort: {createdAt: -1}}).fetch();
+    for(r in requests){
+      var requestor = Meteor.users.findOne({"_id":requests[r].requestor});
+      requests[r].requestor = requestor.profile.firstname + " " + requestor.profile.lastname;
+    }
+    return requests;
+}
 Template.dashboard.onRendered(function(){
+    $(".collapsible").collapsible({
+        accordion: true
+    });
 });
 Template.dashboard.helpers({
   tasks: tasksCursor,
   projects: projCursor,
+  requests: requestsCursor
 });
 Template.taskBody.onRendered(function(){
     $(".collapsible").collapsible({
@@ -42,6 +56,11 @@ Template.taskBody.onRendered(function(){
     });
 });
 Template.projectBody.onRendered(function(){
+    $(".collapsible").collapsible({
+        accordion: true
+    });
+});
+Template.requestBody.onRendered(function(){
     $(".collapsible").collapsible({
         accordion: true
     });

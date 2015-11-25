@@ -78,7 +78,6 @@ var taskHooks = {
     update: function(error, result) {
     	if(!error)
     	{
-    		console.log(this);
     		FlowRouter.go("/project/"+this.currentDoc.projectId);
     		Materialize.toast('Updated Task!', 3000, 'green')
     	}

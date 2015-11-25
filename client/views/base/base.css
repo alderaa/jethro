@@ -28,11 +28,7 @@ html {
 nav li .btn, nav li .btn:hover{
   background: none;box-shadow: none; height:61px;
 }
-#toast-container {
-    min-width: 8%;
-    bottom: 10% !important;
-    right: 7%;
-}
+
 #notif-dropdown{
     width: 400px !important;
 
@@ -124,6 +120,13 @@ nav a:hover, nav a:focus{
     top: 44px;
     left: -81px;
 }
+.fc-event-time, .fc-time{
+   display : none;
+}
+.fc-day-grid-event>.fc-content {
+    white-space: normal;
+    overflow: hidden;
+}
 .flexbox {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -153,26 +156,9 @@ switch{
 nav .brand-logo{
   left: 10px;
 }
-#toast-container {
-    min-width: 8%;
-    bottom: 10% !important;
-    left: 7%;
-}
 
 @media only screen and (min-width: 993px){
-    #toast-container {
-        min-width: 8%;
-        bottom: 10% !important; 
-        right: 7%;
-        display: block;
-        position: fixed;
-        z-index: 1001;
-    }
-    #toast-container {
-        min-width: 8%;
-         bottom: 10% !important;
-        right: 7%;
-    }
+
 }
 @media only screen and (max-width: 993px){
     .navbar, .main, footer {

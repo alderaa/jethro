@@ -38,6 +38,11 @@ Meteor.publish("convs", function () {
 
 	});
 });
+Meteor.publish("requests", function () {
+	return Requests.find({
+
+	});
+});
 Meteor.publish("sendRecurringEmail", function () {
   return Meteor.users.find({
   		// "profile.company": { $in: [Meteor.user().currentCompany]}

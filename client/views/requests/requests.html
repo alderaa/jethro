@@ -1,6 +1,13 @@
 <template name="newrequest">
 	<h3>Add a Project Request</h3>
-	{{> quickForm collection="Requests" id="insertRequest" type="insert"}}
+	{{#autoForm collection="Requests" id="insertRequest" type="insert"}}
+	  {{> afQuickField name='title'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='owner' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_on'}}
+	  {{> afQuickField name='notes'}}
+	  <input type="submit" class="btn" value="Insert"/>
+	{{/autoForm}}
 </template>
 <template name="myRequestBody">
 	<div class="card white darken-3">

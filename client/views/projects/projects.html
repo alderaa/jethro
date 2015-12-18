@@ -1,3 +1,20 @@
+<template name="projectBody">
+	<div class="card white darken-3">
+        <div class="card-content">
+              <div class="row">
+              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+                <div class="col s6">
+                	Status: {{status}}<br/>
+                	Notes:<br/>{{notes}}
+                </div>
+              </div>
+        </div>
+        <div class="card-action">
+        	{{>editProjectLink}}
+        </div>
+     </div>
+</template>
+
 <template name="project">
 	<div class="row col">
 		<div class="col s12 m9">
@@ -61,7 +78,7 @@
 	<div class="col s12">
 		<h3>My Projects</h3>
 		<p class="header">Title <span class="right">Due On</span></p>
-		<ul class="collapsible popout" data-collapsible="accordion">
+		<ul class="collapsible popout">
 			{{#each projects}}
 				<li>
 			      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
@@ -84,7 +101,17 @@
 
 <template name="newproject">
 	<h3>Add a Project</h3>
-	{{> quickForm collection="Projects" id="insertProject" type="insert"}}
+	{{#autoForm collection="Projects" id="insertProject" type="insert" doc=request}}
+	  {{> afQuickField name='title'}}
+	  {{> afQuickField name='status'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_on'}}
+	  {{> afQuickField name='notes'}}
+	  {{> afQuickField name='recurring'}}
+	  {{> afQuickField name='recurringOptions'}}
+	  <input type="submit" class="btn" value="Insert"/>
+	{{/autoForm}}
 	<div class="row">
 		<div class="col s12" id="cron" style="display:none">
 		</div>
@@ -93,7 +120,17 @@
 
 <template name="requestToProject">
 	<h3>Create Project from Request</h3>
-	{{> quickForm collection="Projects" id="insertReqToProject" type="insert" doc=request}}
+	{{#autoForm collection="Projects" id="insertReqToProject" type="insert" doc=request}}
+	  {{> afQuickField name='title'}}
+	  {{> afQuickField name='status'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_on'}}
+	  {{> afQuickField name='notes'}}
+	  {{> afQuickField name='recurring'}}
+	  {{> afQuickField name='recurringOptions'}}
+	  <input type="submit" class="btn" value="Insert"/>
+	{{/autoForm}}
 	<div class="row">
 		<div class="col s12" id="cron" style="display:none">
 		</div>
@@ -103,8 +140,18 @@
 <template name="editproject">
 	{{#if Template.subscriptionsReady}}
 		<h3>Edit Project</h3>
-		{{> quickForm collection="Projects" id="updateProject" type="update" doc=project}}
-		<a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
+		{{#autoForm collection="Projects" id="updateProject" type="update" doc=project}}
+		  {{> afQuickField name='title'}}
+		  {{> afQuickField name='status'}}
+	      {{> afQuickField name='description' rows=3}}
+	      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
+	      {{> afQuickField name='due_on'}}
+		  {{> afQuickField name='notes'}}
+		  {{> afQuickField name='recurring'}}
+		  {{> afQuickField name='recurringOptions'}}
+		  <input type="submit" class="btn right" value="Update"/>
+		  <a href="/project/{{project._id}}" class="btn left blue">Back To Project</a>
+		{{/autoForm}}
 		<div class="row">
 			{{#if project.recurring}}
 				<div class="col s12" id="cron">

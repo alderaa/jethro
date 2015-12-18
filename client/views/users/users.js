@@ -10,45 +10,33 @@ Template.login.events({
     // retrieve the input field values
     var email = event.target.email.value;
     var password = event.target.password.value;
-    
+    var company = event.target.company.value;
       // Trim and validate your fields here.... 
 
       // If validation passes, supply the appropriate fields to the
       // Meteor.loginWithPassword() function.
       Meteor.loginWithPassword(email, password, function(err){
         if (err)
-          toastr.error("Bad username or password","Error");
+           Materialize.toast("Bad username or password", 3000, 'red');
         else
         {
+          Meteor.call('setCompany',company);
           $("body").hide();
-          window.location = "http://localhost:3000/";
+          window.location = Meteor.absoluteUrl();
         }
       });
       return false; 
     }
 });
-
-Template.register.events({
-  'submit #register-form' : function(e, t) {
-    e.preventDefault();
-    var options = {
-        email: event.target.email.value,
-        password: event.target.password.value,
-        profile: {
-            firstname: event.target.firstname.value,
-            lastname:  event.target.lastname.value,
-            birthday:  event.target.birthday.value,
-        },
-    };
-    Accounts.createUser( options , function(err){
-        if( err ){
-          toastr.error(err.message)
-        }
-         
-    });
+Template.register.onRendered(function() {
+   $('select').removeClass('browser-default');
+   $('select').material_select();
+});
+Template.register.helpers({
+  userSchema: function() {
+    return UsersSchema;
   }
 });
-
 Template.profile.helpers({
   "user": function(){
       return Meteor.user();

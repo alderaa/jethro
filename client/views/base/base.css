@@ -58,6 +58,13 @@ nav .dropdown-content li > a, .dropdown-content li > span {
 body{
     background-color: #fcfcfc;
 }
+.header-span{
+    width: 30%;
+    display: inline-block;
+}
+.header .header-span{
+      cursor: pointer;
+}
 .collapsible-body .card{
     box-shadow: none;
 }

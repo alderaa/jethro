@@ -8,6 +8,9 @@ Template.registerHelper('formatDate', function(date) {
   if(date)
     return moment(Date.parse(date)).format('MM/DD/YYYY');
 });
+Template.registerHelper("ifEquals",function(a, b){
+  return a == b;
+});
 Template.registerHelper("checkedIf",function(value){
   return value ? "checked":"";
 });

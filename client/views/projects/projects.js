@@ -2,12 +2,12 @@
 Project Template
 ***************************************/
 Template.project.onCreated(function(){
-	this.subscribe('projects');
+	  this.subscribe('projects');
     this.subscribe('tasks');
 });
 function taskCursor(){
     var projectId = FlowRouter.getParam("projectId");
-    var tasks =  Tasks.find({projectId:projectId}, {$sort:{order_num: -1}}).fetch();
+    var tasks =  new ReactiveArray(Tasks.find({projectId:projectId}, {$sort:{order_num: -1}}).fetch());
     for (t in tasks)
     {
       var assigned = Meteor.users.findOne({"_id":tasks[t].assigned_to});
@@ -19,6 +19,14 @@ function taskCursor(){
 
 Template.project.onRendered(function(){
   $(".conv-col").height($("body").height());
+  this.autorun(function(){
+    taskCursor().depend();
+    Tracker.afterFlush(function(){
+      this.$(".collapsible").collapsible({
+        accordion: false
+      });
+    }.bind(this));
+  }.bind(this));
 });
 Template.project.helpers({
 	project: function () {
@@ -26,7 +34,9 @@ Template.project.helpers({
 		var project = Projects.findOne({_id:projectId});
 		return project;
 	},
-	todo: taskCursor
+	todo: function(){
+    return taskCursor().list();
+  }
 });
 Template.project.events({
 	"submit .add-conv" : function(event){
@@ -53,8 +63,13 @@ function projectsCursor(){
     var projects = Projects.find({"owner": Meteor.user()._id}, {sort: {createdAt: -1}});
     return projects;
 }
-Template.projects.onRendered(function(){
+
+Template.projectBody.onRendered(function(){
+  console.log("rendering")
+  $(".collapsible").collapsible({
+  });
 });
+
 Template.projects.helpers({
 	projects: projectsCursor
 });
@@ -142,7 +157,7 @@ var projHooks = {
                 url: '/project/'+this.docId,
                 text: "Request '" + this.currentDoc.title + "' made into project",
             }
-            if(this.currentDoc.requestor == Meteor.userId)
+            if(this.currentDoc.requestor == Meteor.userId())
             {
               notif.user = this.currentDoc.requestor;
             }

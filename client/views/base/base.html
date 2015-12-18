@@ -47,7 +47,9 @@
     <li><a href="/myrequests"><i class="material-icons left">question_answer</i>My Project Requests</a></li>
     <li><a href="/newproject"><i class="material-icons left">note_add</i> Add Project</a></li>
     <li><a href="/calendar"><i class="material-icons left">perm_contact_calendar</i> Calendar</a></li>
-    
+    {{#if isInRole 'admin' currentUser.profile.activeCompany}}
+    <li><a href="/admin"><i class="material-icons left">supervisor_account</i>Admin</a></li>
+    {{/if}}
   </ul>
   {{/if}}
 </nav>

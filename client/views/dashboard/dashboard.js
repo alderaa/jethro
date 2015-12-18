@@ -17,7 +17,7 @@ function tasksCursor()
 {
     var filter = {sort: {}};
     filter.sort[Session.get('sortTaskby')] = Session.get('sortTaskOrder');
-    var tasks = Tasks.find({'assigned_to':Meteor.userId()}, filter);
+    var tasks = Tasks.find({'assigned_to':Meteor.userId(),'completed_on':{$exists:false}}, filter);
     return tasks;
 }
 function requestsCursor()

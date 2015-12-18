@@ -38,3 +38,6 @@ email
 gquemart:meteor-reactive-fullcalendar
 materialize:materialize
 alanning:roles
+cfs:standard-packages
+cfs:filesystem
+harrison:babyparse

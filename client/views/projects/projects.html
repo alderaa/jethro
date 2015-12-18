@@ -1,119 +1,23 @@
-<template name="project">
-	<div class="row col">
-		<div class="col s12 m9">
-		{{#if Template.subscriptionsReady}}
-			<div class="row">
-				<h4>Project: {{project.title}} <a href="/editproject/{{project._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a></h4>
-
-				<div>
-					<ul class="collection z-depth-1">
-				      	<li class="collection-item"><span class="title">Due On:</span><p>{{formatDate project.due_on}}</p></li>
-						<li class="collection-item"><span class="title">Completed On:</span><p>{{formatDate project.completed_on}}</p></li>
-						<li class="collection-item"><span class="title">Notes:</span><p>{{project.notes}}</p></li>
-				    </ul>
-				</div>
-			</div>
-			<div class="row">
-				<h5>Tasks</h5>
-				<p class="header">Title <span class="right">Due On</span></p>
-				<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each todo}}
+<template name="projects">
+	{{#if Template.subscriptionsReady}}
+		<div class="col s12">
+			<h3>My Projects</h3>
+			<p class="header">Title <span class="right">Due On</span></p>
+			<ul class="collapsible popout" data-collapsible="accordion">
+				{{#each projects}}
 					<li>
-					  {{#if completed_on}}
-					  	<div class="collapsible-header green white-text">#{{order_num}} {{title}} 
-				      	<span class="right">{{>dueon}}</span>
-				        <span class="right" style="margin-right:10px">Done</span>
-				      </div>
-					  {{else}}
-					      <div class="collapsible-header">#{{order_num}} {{title}} 
-					      	<span class="right">{{>dueon}}</span>
-					      </div>
-				      {{/if}}
+				      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
 				      <div class="collapsible-body">
-							{{>taskBody}}
+				      	{{>projectBody}}
 				      </div>
 				    </li>
 				{{/each}}
 				</ul>
-				<a href="/newtask/{{project._id}}" class="btn">Add Task</a>
-			</div>
-		{{else}}
-			<div class="center">
-			  <div class="preloader-wrapper big active">
-			    <div class="spinner-layer spinner-blue-only">
-			      <div class="circle-clipper left">
-			        <div class="circle"></div>
-			      </div><div class="gap-patch">
-			        <div class="circle"></div>
-			      </div><div class="circle-clipper right">
-			        <div class="circle"></div>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-		{{/if}}
+			<p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 		</div>
-		{{> conv}}
-	</div>
-</template>
-
-<template name="projects">
-	<div class="col s12">
-		<h3>My Projects</h3>
-		<p class="header">Title <span class="right">Due On</span></p>
-		<ul class="collapsible popout" data-collapsible="accordion">
-			{{#each projects}}
-				<li>
-			      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
-			      <div class="collapsible-body">
-			      	{{>projectBody}}
-			      </div>
-			    </li>
-			{{/each}}
-			</ul>
-		<p><a href="/newproject" class="btn btn-info">Add Project</a></p>
-	</div>
-</template>
-
-<template name="taskActions">
-	<a href="/edittask/{{_id}}" class="btn action-btn blue lighten-1">Edit</a>
-	{{#unless completed_on}}
-		<a href="#" class="btn btn-success action-btn done"><i class="material-icons">done</i></a>
-	{{/unless}}
-</template>
-
-<template name="newproject">
-	<h3>Add a Project</h3>
-	{{> quickForm collection="Projects" id="insertProject" type="insert"}}
-	<div class="row">
-		<div class="col s12" id="cron" style="display:none">
-		</div>
-	</div>
-</template>
-
-<template name="requestToProject">
-	<h3>Create Project from Request</h3>
-	{{> quickForm collection="Projects" id="insertReqToProject" type="insert" doc=request}}
-	<div class="row">
-		<div class="col s12" id="cron" style="display:none">
-		</div>
-	</div>
-</template>
-
-<template name="editproject">
-	{{#if Template.subscriptionsReady}}
-		<h3>Edit Project</h3>
-		{{> quickForm collection="Projects" id="updateProject" type="update" doc=project}}
-		<a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
-		<div class="row">
-			{{#if project.recurring}}
-				<div class="col s12" id="cron">
-				</div>
-			{{else}}
-				<div class="col s12" id="cron" style="display:none">
-				</div>
-			{{/if}}
-		</div>
+		<script>
+			$(".collapsible").collapsible();
+		</script>
 	{{else}}
 		<div class="center">
 		  <div class="preloader-wrapper big active">
@@ -128,5 +32,12 @@
 		    </div>
 		  </div>
 		</div>
-	{{/if}}	
+	{{/if}}
+</template>
+
+<template name="taskActions">
+	<a href="/edittask/{{_id}}" class="btn action-btn blue lighten-1">Edit</a>
+	{{#unless completed_on}}
+		<a href="#" class="btn btn-success action-btn done"><i class="material-icons">done</i></a>
+	{{/unless}}
 </template>

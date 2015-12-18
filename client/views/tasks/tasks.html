@@ -1,3 +1,21 @@
+<template name="taskBody">
+	<div class="card white darken-3">
+        <div class="card-content">
+              <div class="row">
+              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+                <div class="col s6">
+                	Assigned to <strong>{{assigned_to}}</strong>
+                </div>
+              </div>
+        </div>
+        <div class="card-action">
+        	{{>taskLink}}
+        	{{>projectLink}}
+        	{{>Actions}}
+        </div>
+     </div>
+</template>
+
 <template name="newtask">
 	<h5>Add Task for <i>{{project.title}}</i></h5>
 	{{#autoForm collection="Tasks" id="insertTask" type="insert" doc=task}}

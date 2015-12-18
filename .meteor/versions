@@ -2,6 +2,7 @@ accounts-base@1.2.2
 accounts-password@1.1.4
 accounts-ui@1.1.6
 accounts-ui-unstyled@1.1.8
+alanning:roles@1.2.14
 aldeed:autoform@5.7.1
 aldeed:collection2@2.5.0
 aldeed:simple-schema@1.3.3
@@ -36,7 +37,6 @@ ejson@1.0.7
 email@1.0.8
 fastclick@1.0.7
 fortawesome:fontawesome@4.4.0
-fourseven:scss@3.4.1
 geojson-utils@1.0.4
 gildaspk:autoform-materialize@0.0.25
 gildaspk:autoform-medium@0.0.4
@@ -55,6 +55,7 @@ less@2.5.1
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+materialize:materialize@0.97.3
 mediumeditor:mediumeditor@5.2.0
 meteor@1.1.10
 meteor-base@1.0.1
@@ -79,7 +80,6 @@ npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ordered-dict@1.0.4
 percolate:synced-cron@1.3.0
-poetic:materialize-scss@1.3.5
 promise@0.5.1
 raix:handlebar-helpers@0.2.5
 random@1.0.5

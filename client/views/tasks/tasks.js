@@ -61,8 +61,9 @@ Template.newtask.events({
 var taskHooks = {
   before: {
     insert: function(doc) {
-    	console.log("hello");
     	doc.projectId = FlowRouter.getParam("projectId");
+      	var proj = Projects.findOne({'_id':doc.projectId});
+    	doc.projectTitle = proj.title;
     	return doc;
     }
   },
@@ -71,7 +72,7 @@ var taskHooks = {
     insert: function(error, result) {
     	if(!error)
     	{
-    		FlowRouter.go("/project/"+this.currentDoc.projectId);
+    		FlowRouter.go("/project/"+FlowRouter.getParam("projectId"));
     		Materialize.toast('Added Task!', 3000, 'green')
     	}
     },

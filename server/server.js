@@ -11,10 +11,11 @@ Meteor.startup(function () {
 	            firstname: "Aaron",
 	            lastname:  "Alder",
 	            birthday:  new Date("01/05/1990"),
-	            company: ["Felix"]
 	        },
 	    };
-	    Accounts.createUser(options);
+	    var id = Accounts.createUser(options);
+	    Roles.addUsersToRoles(id, ['super-admin'], Roles.GLOBAL_GROUP);
+	    Roles.addUsersToRoles(id, ['super-admin', 'employee', 'admin'], 'felix');
 	}
 	Projects.find().forEach(function(proj) {
 		if(proj.recurring)
@@ -24,35 +25,5 @@ Meteor.startup(function () {
 	        });
 		}
 	});
+	SyncedCron.start();
 });
-Meteor.publish("projects", function () {
-	return Projects.find({
-	});
-});
-Meteor.publish("tasks", function () {
-	return Tasks.find({
-	});
-});
-Meteor.publish("convs", function () {
-	return Convs.find({
-
-	});
-});
-Meteor.publish("requests", function () {
-	return Requests.find({
-
-	});
-});
-Meteor.publish("sendRecurringEmail", function () {
-  return Meteor.users.find({
-  		// "profile.company": { $in: [Meteor.user().currentCompany]}
-  		"profile.company": { $in: ["Felix"]}
-  });
-});
-Meteor.publish("notifs", function () {
-	var notifs =  Notifs.find({
-		"user": this.userId
-	});
-	return notifs;
-});
-SyncedCron.start();

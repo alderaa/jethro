@@ -31,10 +31,10 @@ aldeed:collection2
 momentjs:moment
 aldeed:autoform
 gildaspk:autoform-materialize
-fourseven:scss
 gildaspk:autoform-modals-materialize
 gildaspk:autoform-medium@=0.0.4
 percolate:synced-cron
 email
-poetic:materialize-scss
 gquemart:meteor-reactive-fullcalendar
+materialize:materialize
+alanning:roles

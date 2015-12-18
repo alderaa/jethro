@@ -3,33 +3,22 @@ Template.dashboard.onCreated(function(){
     this.subscribe('tasks');
     this.subscribe('requests');
 });
+Session.set('sortProjby', "created_on");
+Session.set('sortProjOrder', "1");
+Session.set('sortTaskby', "order_num");
+Session.set('sortTaskOrder', "1");
 function projCursor(){
-    var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}});
+    var filter = {sort: {}};
+    filter.sort[Session.get('sortProjby')] = Session.get('sortProjOrder');
+    var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, filter);    
     return projects;
 }
 function tasksCursor()
 {
-  var tasks = [];
-  var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, {sort: {createdAt: -1}}).fetch();
-  for ( var p in projects)
-  {
-    var projectTasks = Tasks.find({"projectId":projects[p]._id, "completed_on": {$exists:false}},{sort: {order_num: -1}}).fetch();
-    for (var t in projectTasks)
-    {
-          tasks.push(projectTasks[t]);
-          var ind = tasks.length-1;
-          var project = Projects.findOne({"_id":tasks[ind].projectId});
-          var owner = Meteor.users.findOne({"_id":project.owner});
-          if(tasks[ind].assigned_to)
-          {
-            var assigned = Meteor.users.findOne({"_id":tasks[ind].assigned_to});
-            tasks[ind].assigned_to = assigned.profile.firstname + " " + assigned.profile.lastname;
-          }
-          tasks[ind].owner = owner.profile.firstname + " " + owner.profile.lastname;
-          tasks[ind].projectTitle = project.title;
-    }
-  }
-  return tasks;
+    var filter = {sort: {}};
+    filter.sort[Session.get('sortTaskby')] = Session.get('sortTaskOrder');
+    var tasks = Tasks.find({'assigned_to':Meteor.userId()}, filter);
+    return tasks;
 }
 function requestsCursor()
 {
@@ -40,36 +29,37 @@ function requestsCursor()
     }
     return requests;
 }
-Template.dashboard.onRendered(function(){
-    $(".collapsible").collapsible({
-        accordion: true
-    });
-});
 Template.dashboard.helpers({
   tasks: tasksCursor,
   projects: projCursor,
   requests: requestsCursor
 });
-Template.taskBody.onRendered(function(){
-    $(".collapsible").collapsible({
-        accordion: true
-    });
-});
-Template.projectBody.onRendered(function(){
-    $(".collapsible").collapsible({
-        accordion: true
-    });
-});
-Template.requestBody.onRendered(function(){
-    $(".collapsible").collapsible({
-        accordion: true
-    });
-});
 Template.dashboard.events({
   "click .delete": function () {
       Meteor.call("deleteProject",this._id);
-    },
-   "click .done": function(){
+  },
+  "click .done": function(){
       Meteor.call("markTaskDone",this._id,this.title,this.projectId);
-   } 
+  },
+  "click .projTitle": function(){
+      Session.set('sortProjby','title');
+      Session.set('sortProjOrder', -Session.get('sortProjOrder'));
+  },
+  "click .projTaskTitle": function(){
+      Session.set('sortTaskby','projectTitle');
+      Session.set('sortTaskOrder', -Session.get('sortProjOrder'));
+  },
+  "click .projDueDate": function(){
+      Session.set('sortProjby','due_on');
+      Session.set('sortProjOrder', -Session.get('sortProjOrder'));
+  }, 
+  "click .taskDueDate": function(){
+      Session.set('sortTaskby','due_on');
+      Session.set('sortTaskOrder', -Session.get('sortTaskOrder'));
+  },
+  "click .taskTitle": function(){
+      Session.set('sortTaskby','title');
+      Session.set('sortTaskOrder', -Session.get('sortTaskOrder'));
+  }
+
 });

@@ -1,14 +1,17 @@
 Template.adminmenu.events({
   'change .modEmps': function(event, template) {
     FS.Utility.eachFile(event, function(file) {
+      file = new FS.File(file);
+      file.owner = Meteor.userId();
       Docs.insert(file, function (err, fileObj) {
          if(err)
          {
-         	Materialize.toast('File Upload Failed', 10000, 'red');
+         	  $(".modEmps").val("");
          }
          else
          {
-         	console.log(fileObj);
+            $(".modEmps").val("");
+            Materialize.toast('Employees updated successfully!', 3000, 'green');
          }
       });
     });

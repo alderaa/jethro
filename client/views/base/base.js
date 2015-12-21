@@ -36,7 +36,14 @@ Template.mainLayout.onRendered(function(){
     });
     $('.button-collapse').sideNav();
     $('.tooltipped').tooltip({delay: 50});
-
+    $('.modal-trigger').leanModal();
+    if(Meteor.user())
+    {
+      if(!Meteor.user().profile.activeCompany)
+      {
+        $('#modal1').openModal();
+      }
+    }
 });
 
 Template.mainLayout.helpers({
@@ -57,6 +64,7 @@ Template.mainLayout.helpers({
 Template.mainLayout.events({
 	"click .logout": function(){
 		Meteor.logout();
+    window.location = Meteor.absoluteUrl();
 	},
   "click #notifs": function(){
     Meteor.call("seenNotifs");

@@ -42,6 +42,7 @@ var projHooks = {
       if(Meteor.userId()){
         doc.owner = Meteor.userId();
         doc.created_on = new Date();
+        doc.company = Meteor.user().profile.activeCompany;
         return doc;
       }
     }

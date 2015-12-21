@@ -21,6 +21,9 @@
     <ul class="right">
       {{#if currentUser}}
         <li>
+           <a class="modal-trigger tooltipped valign-wrapper" href="#modal1" data-tooltip="Change Company"><i class="material-icons" style="display:inline-block">business</i> <span class="valign">{{currentUser.profile.activeCompany}}</span></a>
+        </li>
+        <li>
             <a id="notifs" class="dropdown-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
             <ul id="notif-dropdown" class="dropdown-content">
               {{#each notifs}}
@@ -33,7 +36,7 @@
 
       {{else}}
       <li>
-           <a data-toggle="modal" data-target="#myModal" class="modal-trigger" href="#login" aria-hidden="true"><span class="fa fa-sign-in"></span> Login</a>
+           <a data-toggle="modal" class="modal-trigger" href="#login" aria-hidden="true"><span class="fa fa-sign-in"></span> Login</a>
       </li>
 
       {{/if}}
@@ -57,18 +60,31 @@
 <div class="main">
   <div class="container">
     {{#if currentUser}}
-      {{> Template.dynamic template=content}}
+      {{#unless currentUser.profile.activeCompany}}
+          <h5 class="red-text">Company not set, please <a class="modal-trigger btn red" href="#modal1">Set Company</a></h5>
+      {{else}}
+        {{> Template.dynamic template=content}}
+      {{/unless}}
     {{else}}
       {{> home}}
     {{/if}}
   </div>
 </div>
-  <div id="login" class="modal">
-    <div class="modal-content">
-      {{> login}}
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-    </div>
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    {{> switchcompany}}
   </div>
+  <div class="modal-footer">
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+  </div>
+</div>
+<div id="login" class="modal">
+  <div class="modal-content">
+    {{> login}}
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+  </div>
+</div>
 </template>

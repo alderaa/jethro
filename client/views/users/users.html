@@ -43,7 +43,7 @@
 	        <div class="col s12">
 	        	<label>Companies</label>
 	        	<ul style="list-style-type:none;padding-left:2px">
-	        	{{#each user.profile.company}}
+	        	{{#each user.profile.companies}}
 	       			<li>{{this}}</li>
 	       		{{/each}}
 	       		</ul>
@@ -51,4 +51,15 @@
 
         
     </div>
+</template>
+<template name="switchcompany">
+	<div>
+		<h4>Change Company</h4>
+		<select id="switch">
+			<option value=''>Choose Company</option>
+			{{#each companies}}
+				<option value="{{this}}" {{selectedIfEquals this currentUser.profile.activeCompany}}>{{this}}</option> 
+			{{/each}}
+		</select>
+	</div>
 </template>

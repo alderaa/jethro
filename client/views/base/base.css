@@ -33,6 +33,9 @@ nav li .btn, nav li .btn:hover{
     width: 400px !important;
 
 }
+.preloader-wrapper{
+  margin-top:20px;
+}
 nav .dropdown-content li {
     width: 380px !important;
     clear: both;

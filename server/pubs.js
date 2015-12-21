@@ -1,6 +1,12 @@
 Meteor.publish("projects", function () {
-	return Projects.find({
-	});
+	var user = Meteor.users.findOne({'_id':this.userId})
+	if(user)
+	{
+		return Projects.find({
+			'company': user.profile.activeCompany
+		});
+	}
+	else return [];
 });
 Meteor.publish("tasks", function () {
 	return Tasks.find({
@@ -16,12 +22,6 @@ Meteor.publish("requests", function () {
 
 	});
 });
-Meteor.publish("sendRecurringEmail", function () {
-  return Meteor.users.find({
-  		// "profile.company": { $in: [Meteor.user().currentCompany]}
-  		"profile.company": { $in: ["Felix"]}
-  });
-});
 Meteor.publish("notifs", function () {
 	var notifs =  Notifs.find({
 		"user": this.userId
@@ -31,9 +31,8 @@ Meteor.publish("notifs", function () {
 Meteor.publish("allUsers", function () {
 	if(this.userId) {
         var user = Meteor.users.findOne(this.userId);
-		var company = 'roles.'+user.profile.activeCompany;
-		console.log(company);
-		return Meteor.users.find({company:'employee'});
+		var company = user.profile.activeCompany;
+		return Roles.getUsersInRole('employee', company);
 	}
 	else
 	{

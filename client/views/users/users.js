@@ -23,8 +23,8 @@ Template.login.events({
         }
         else
         {
+          $('body').hide();
           Meteor.call('setCompany',company);
-          $("body").hide();
           window.location = Meteor.absoluteUrl();
         }
       });
@@ -45,3 +45,18 @@ Template.profile.helpers({
       return Meteor.user();
   }
 });
+Template.switchcompany.onRendered(function(){
+  $('select').material_select();
+});
+Template.switchcompany.helpers({
+  'companies': function()
+  {
+    return Roles.getGroupsForUser(Meteor.userId());
+  }
+})
+Template.switchcompany.events({
+  'change select': function(e){
+    Meteor.call('setCompany',$('select').val());
+    window.location = Meteor.absoluteUrl();
+  }
+})

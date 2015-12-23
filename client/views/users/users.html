@@ -26,30 +26,28 @@
 <template name="profile">
 	<div class="row">
 		<h3>Profile</h3>
-			<div class="col s4 l2">
-				<label>Name</label>
-				<p>{{user.profile.firstname}} {{user.profile.lastname}}</p>
-			</div>
-			<div class="col s4 l2">
-				<label>Birthday</label>
-				<p>{{formatDate user.profile.birthday}}</p>
-			</div>
-			<div class="col s4 l2">
-	        	<label>Email</label>
-	        	{{#each user.emails}}
-	       			<p>{{this.address}}</p>
-	       		{{/each}}
-	        </div>
-	        <div class="col s12">
-	        	<label>Companies</label>
-	        	<ul style="list-style-type:none;padding-left:2px">
-	        	{{#each user.profile.companies}}
-	       			<li>{{this}}</li>
-	       		{{/each}}
-	       		</ul>
-	        </div>
-
-        
+		<div class="col s4 l2">
+			<label>Name</label>
+			<p>{{user.profile.firstname}} {{user.profile.lastname}}</p>
+		</div>
+		<div class="col s4 l2">
+			<label>Birthday</label>
+			<p>{{formatDate user.profile.birthday}}</p>
+		</div>
+		<div class="col s4 l2">
+        	<label>Email</label>
+        	{{#each user.emails}}
+       			<p>{{this.address}}</p>
+       		{{/each}}
+        </div>
+        <div class="col s12">
+        	<label>Companies</label>
+        	<ul style="list-style-type:none;padding-left:2px">
+        	{{#each user.profile.companies}}
+       			<li>{{this}}</li>
+       		{{/each}}
+       		</ul>
+        </div>        
     </div>
 </template>
 <template name="switchcompany">
@@ -62,4 +60,8 @@
 			{{/each}}
 		</select>
 	</div>
+	{{#unless Template.subscriptionsReady}}
+		<script>
+		</script>
+	{{/unless}}
 </template>

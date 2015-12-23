@@ -89,6 +89,8 @@ body{
 .main .container{
     box-shadow: none;
 }
+.file-path{
+}
 .conv-col{
     overflow-y: scroll;
     position: absolute;

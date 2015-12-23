@@ -48,7 +48,7 @@ Meteor.methods({
 	    		'profile.lastname': doc.profile.lastname,
 	    		'profile.birthday': new Date(doc.profile.birthday),
 	    	}});
-	    	Roles.addUsersToRoles(userId, ['employee'], doc.group);
+	    	Roles.addUsersToRoles(emailAlreadyExist._id, ['employee'], doc.group);
 	    	Roles.addUsersToRoles(emailAlreadyExist._id, doc.roles, doc.group);
 	    }
 	}

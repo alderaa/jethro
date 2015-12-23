@@ -46,12 +46,16 @@ Template.profile.helpers({
   }
 });
 Template.switchcompany.onRendered(function(){
-  $('select').material_select();
+    $('#switch').on('optionsChanged',function(){
+      $('select').material_select();
+    });
 });
 Template.switchcompany.helpers({
   'companies': function()
   {
-    return Roles.getGroupsForUser(Meteor.userId());
+      var groups = Roles.getGroupsForUser(Meteor.userId());
+      setTimeout(function(){$("#switch").trigger("optionsChanged")},200);
+      return groups;
   }
 })
 Template.switchcompany.events({

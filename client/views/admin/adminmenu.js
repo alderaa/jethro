@@ -11,6 +11,7 @@ Template.adminmenu.events({
          else
          {
             $(".modEmps").val("");
+            $(".file-path").val("");
             Materialize.toast('Employees updated successfully!', 3000, 'green');
          }
       });

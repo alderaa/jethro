@@ -43,6 +43,9 @@ Template.register.helpers({
 Template.profile.helpers({
   "user": function(){
       return Meteor.user();
+  },
+  "companies": function(){
+      return Roles.getGroupsForUser(Meteor.userId());
   }
 });
 Template.switchcompany.onRendered(function(){

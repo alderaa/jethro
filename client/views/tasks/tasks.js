@@ -14,24 +14,6 @@ Template.edittask.onRendered(function() {
    $('select').material_select();
 });
 Template.edittask.events({
-	"submit .edit-task": function (event) {
-	  // Prevent default browser form submit
-	  event.preventDefault();
-	  var proj = 
-	  {
-	  	title : event.target.title.value,
-	  	description : event.target.description.value,
-	  	due_on : event.target.due_on.value,
-	  	completed_on : event.target.completed_on.value,
-	  	assigned_to : event.target.assigned_to.value,
-	  	order_num : event.target.order_num.value,
-	  	notes : event.target.notes.value
-	  };
-	  var taskId = FlowRouter.getParam("taskId");
-	  var projectId = Template.edittask.__helpers.get('task').call().projectId;
-	  FlowRouter.go("/project/"+projectId);
-	  Meteor.call("updateTask", taskId, proj);
-	},
 	"click .not-done": function(){
       Meteor.call("markTaskNotDone",FlowRouter.getParam("taskId"));
     },
@@ -58,12 +40,53 @@ Template.newtask.events({
 	}
 });
 
+Template.newissue.onCreated(function(){
+   this.subscribe('tasks'); 
+});
+Template.editissue.onCreated(function(){
+   this.subscribe('tasks'); 
+});
+
+Template.editissue.events({
+	"click .not-done": function(){
+      Meteor.call("markTaskNotDone",FlowRouter.getParam("taskId"));
+    },
+});
+
+Template.editissue.helpers({
+	'issue': function () {
+		var taskId = FlowRouter.getParam("taskId"); 
+		var task = Tasks.findOne({_id:taskId});
+		return task;
+	}
+});
+
+Template.issues.onCreated(function(){
+    this.subscribe("tasks");
+})
+
+Template.issues.helpers({
+    'issues': function(){
+        var issues = Tasks.find({"assigned_to":Meteor.userId(),"isIssue":true, 'completed_on':{$exists:false}},{sort:{due_on:-1}}).fetch();
+        for(var i in issues){
+            if(issues[i].assigned_to != undefined)
+            {
+                var assgn =  Meteor.users.findOne({_id:issues[i].assigned_to}).profile;
+                if(Meteor.userId() == issues[i].assigned_to){
+                    issues[i].canEdit = true;
+                }
+                issues[i].assigned_to = assgn.firstname+" "+assgn.lastname;
+            }
+        }  
+        return issues;
+    }
+})
 var taskHooks = {
   before: {
     insert: function(doc) {
-    	doc.projectId = FlowRouter.getParam("projectId");
-      	var proj = Projects.findOne({'_id':doc.projectId});
-    	doc.projectTitle = proj.title;
+        doc.projectId = FlowRouter.getParam("projectId");
+        var proj = Projects.findOne({'_id':doc.projectId});
+        doc.projectTitle = proj.title;
     	return doc;
     }
   },
@@ -73,7 +96,7 @@ var taskHooks = {
     	if(!error)
     	{
     		FlowRouter.go("/project/"+FlowRouter.getParam("projectId"));
-    		Materialize.toast('Added Task!', 3000, 'green')
+    		Materialize.toast('Added Task!', 3000, 'green');
     	}
     },
     update: function(error, result) {
@@ -85,4 +108,25 @@ var taskHooks = {
     },
   },
 };
+var issueHooks = {
+    before: {
+        insert: function(doc){      
+            doc.projectId = 0;
+            doc.projectTitle = "Don't Forget Me Issue";
+            doc.assigned_by = Meteor.userId();
+            return doc;
+        }
+    },
+    after:{
+        insert: function(error, result){
+            FlowRouter.go("/");
+    		Materialize.toast('Added Issue!', 3000, 'green');
+        },
+        update: function(error, result){
+            FlowRouter.go("/");
+    		Materialize.toast('Updated Issue!', 3000, 'green');
+        }
+    }
+}
 AutoForm.addHooks(['insertTask','updateTask'], taskHooks);
+AutoForm.addHooks(['insertIssue','updateIssue'], issueHooks);

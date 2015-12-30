@@ -9,7 +9,7 @@ Template.registerHelper('formatDate', function(date) {
     return moment(Date.parse(date)).format('MM/DD/YYYY');
 });
 Template.registerHelper("ifEquals",function(a, b){
-  return a == b;
+  return a === b;
 });
 Template.registerHelper("checkedIf",function(value){
   return value ? "checked":"";
@@ -29,13 +29,6 @@ Template.mainLayout.onCreated( function(){
   this.subscribe("notifs");
 });
 Template.mainLayout.onRendered(function(){
-    $(".dropdown-button").dropdown();
-    $(".tooltop").dropdown();
-    $("#slide-out li a").click(function(){
-      $('.button-collapse').sideNav('hide');
-    });
-    $('.button-collapse').sideNav();
-    $('.tooltipped').tooltip({delay: 50});
     $('.modal-trigger').leanModal();
     if(Meteor.user())
     {
@@ -45,14 +38,22 @@ Template.mainLayout.onRendered(function(){
       }
     }
 });
-
-Template.mainLayout.helpers({
+Template.nav.onRendered(function(){
+    $(".dropdown-button").dropdown();
+    $(".tooltop").dropdown();
+    $("#slide-out li a").click(function(){
+      $('.button-collapse').sideNav('hide');
+    });
+    $('.button-collapse').sideNav();
+    $('.tooltipped').tooltip({delay: 50});
+});
+Template.nav.helpers({
   "notifs": function(){
-    var notifs =  Notifs.find({"user":Meteor.user()._id}).fetch().reverse();
+    var notifs =  Notifs.find({"notify":Meteor.userId()}).fetch().reverse();
     return notifs;
   },
   "newNotifCount": function(){
-    var count =  Notifs.find({"user":Meteor.user()._id,"seen":false}).count();
+    var count =  Notifs.find({"notify":Meteor.user()._id,"seen":false}).count();
     if(count === 0)
     {
       count = "";
@@ -61,7 +62,7 @@ Template.mainLayout.helpers({
   },
 
 });
-Template.mainLayout.events({
+Template.nav.events({
 	"click .logout": function(){
 		Meteor.logout();
     window.location = Meteor.absoluteUrl();

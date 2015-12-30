@@ -1,17 +1,3 @@
-/*!
- * Start Bootstrap - Landing Page Bootstrap Theme (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
-@font-face {
-  font-family: 'MyWebFont';
-  src: url('webfont.eot'); /* IE9 Compat Modes */
-  src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('webfont.woff2') format('woff2'), /* Super Modern Browsers */
-       url('webfont.woff') format('woff'), /* Pretty Modern Browsers */
-       url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
-       url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
-}
 body,
 html {
     width: 100%;
@@ -24,7 +10,33 @@ html {
 .collapsible-header:hover {
     background-color:#efefef;
     opacity: .8;
-}   
+}  
+.home-text{
+    padding: 0px 10px;
+}
+.home.row {
+    background-image: url('/bg-5-full.jpg');
+    padding: 40px 0px;
+    margin-top: 0px;
+    min-height: 60vh;
+}
+.home i{
+    font-size: 10vh;
+    margin-right:30px;
+}
+.home i.circle{
+    background: #0168a2;
+    padding: 50px;
+    border-radius: 100%;
+    color: #eeeeee;
+}
+.bio{
+    margin-top:20px;
+}
+.row grey{
+    padding-top:10px;
+    min-height: 100px;
+}
 nav li .btn, nav li .btn:hover{
   background: none;box-shadow: none; height:61px;
 }
@@ -37,7 +49,7 @@ nav li .btn, nav li .btn:hover{
   margin-top:20px;
 }
 nav .dropdown-content li {
-    width: 380px !important;
+    width: 400px !important;
     clear: both;
     color: rgba(0, 0, 0, 0.87);
     cursor: pointer;
@@ -58,12 +70,22 @@ nav .dropdown-content li > a, .dropdown-content li > span {
     margin-right: auto;
     margin-bottom: 5px;
 }
-body{
-    background-color: #fcfcfc;
+.main{
+    min-height:81vh;
 }
 .header-span{
     width: 30%;
     display: inline-block;
+}
+.col.s6 .header-span{
+    width:120px;
+    font-weight: bold;
+}
+.copy{
+    margin-left:30px;
+}
+.excel-logo{
+    width:120px
 }
 .header .header-span{
       cursor: pointer;
@@ -185,8 +207,12 @@ switch{
   margin-top: 30px;
 }
 
-.navbar, .main, footer {
+.navbar-fixed, .main, footer {
     padding-left: 240px;
+}
+.nav-wrapper ul.right{
+    position: absolute;
+    right: 240px;
 }
 nav .brand-logo{
   left: 10px;
@@ -196,12 +222,16 @@ nav .brand-logo{
 
 }
 @media only screen and (max-width: 993px){
-    .navbar, .main, footer {
+    .navbar-fixed, .main, footer {
       padding-left: 0;
     }
     nav .brand-logo{
       left: 100px;
     }
+     .nav-wrapper ul.right{
+        position: absolute;
+        right: 0px;
+ }
 }
 @media only screen and (max-width: 600px){
   nav ul a {
@@ -212,6 +242,12 @@ nav .brand-logo{
     left: 0px !important;
     top: 61px !important;
   }
+  .conv-col.m3.s12{
+    overflow-y: scroll;
+    position: relative;
+    left: 0;
+    top: 0;
+    }
 }
 @media only screen and (max-width: 720px){
     .conv-col {

@@ -4,59 +4,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta name="viewport" content="initial-scale=1">
 </head>
-
 <template name="mainLayout"> 
-{{#unless currentUser}}
-<style>
-  .navbar, .main, footer {
-    padding-left: 0;
-  }
-</style>
-{{/unless}}
-<div class="navbar">
-<nav class="blue darken-3">
-  <div class="nav-wrapper">
-    <a href="/home" class="brand-logo ">Felix</a>
-    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-    <ul class="right">
-      {{#if currentUser}}
-        <li>
-           <a class="modal-trigger tooltipped valign-wrapper" href="#modal1" data-tooltip="Change Company"><i class="material-icons" style="display:inline-block">business</i> <span class="valign">{{currentUser.profile.activeCompany}}</span></a>
-        </li>
-        <li>
-            <a id="notifs" class="dropdown-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
-            <ul id="notif-dropdown" class="dropdown-content">
-              {{#each notifs}}
-                <li><a href="{{url}}">{{text}}<br/>{{formatDateTime date}}</a></li>
-              {{/each}}
-            </ul>
-        </li>
-        <li><a href="/profile" class="tooltipped" data-tooltip="Profile"><i class="fa fa-user"></i></a></li>
-        <li><a href="#" class="logout tooltipped" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
-
-      {{else}}
-      <li>
-           <a data-toggle="modal" class="modal-trigger" href="#login" aria-hidden="true"><span class="fa fa-sign-in"></span> Login</a>
-      </li>
-
-      {{/if}}
-    </ul>
-  </div>
-  {{#if currentUser}}
-  <ul id="slide-out" class="side-nav fixed">
-    <li class="blue darken-3"><a class="white-text">{{currentEmail}}</a></li>
-    <li><a href="/"><i class="material-icons left">list</i> Checklist</a></li>
-    <li><a href="/projects"><i class="material-icons left">description</i> Projects</a></li>
-    <li><a href="/myrequests"><i class="material-icons left">question_answer</i>My Project Requests</a></li>
-    <li><a href="/newproject"><i class="material-icons left">note_add</i> Add Project</a></li>
-    <li><a href="/calendar"><i class="material-icons left">perm_contact_calendar</i> Calendar</a></li>
-    {{#if isInRole 'admin' currentUser.profile.activeCompany}}
-    <li><a href="/admin"><i class="material-icons left">supervisor_account</i>Admin</a></li>
-    {{/if}}
-  </ul>
-  {{/if}}
-</nav>
-</div>
+    {{> nav}}
 <div class="main">
   <div class="container">
     {{#if currentUser}}
@@ -64,6 +13,16 @@
           <h5 class="red-text">Company not set, please <a class="modal-trigger btn red" href="#modal1">Set Company</a></h5>
       {{else}}
         {{> Template.dynamic template=content}}
+        <div class="fixed-action-btn horizontal" style="bottom: 80px; right: 24px;">
+            <a class="btn-floating btn-large red">
+            <i class="large material-icons">add</i>
+            </a>
+            <ul>
+                <li><a class="btn-floating blue" href="/newproject"><i class="material-icons">note_add</i></a></li>
+                <li><a class="btn-floating teal" href="/newrequest"><i class="material-icons">question_answer</i></a></li>
+                <li><a class="btn-floating yellow darken-1" href="/newissue"><i class="material-icons">report_problem</i></a></li>
+            </ul>
+        </div>
       {{/unless}}
     {{else}}
       {{> home}}
@@ -87,4 +46,5 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   </div>
 </div>
+{{> footer}}
 </template>

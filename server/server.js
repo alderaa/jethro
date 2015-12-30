@@ -1,5 +1,5 @@
 Meteor.startup(function () {
-	// process.env.MAIL_URL="smtp://aaron.m.alder%40gmail.com:5AjAQFFGU9NXcBb@smtp.gmail.com:465/"; 
+	process.env.MAIL_URL="smtp://aaron.m.alder%40gmail.com:5AjAQFFGU9NXcBb@smtp.gmail.com:465/"; 
 	var admin = Meteor.users.findOne({emails: { $elemMatch: { address: "felix@excelceo.com" } }});
 	if(admin == undefined)
 	{
@@ -36,6 +36,7 @@ Meteor.methods({
 		if(!emailAlreadyExist)
 		{
 	    	var userId =  Accounts.createUser(doc);
+            console.log(Meteor.users.findOne({_id:userId}));
 	    	Roles.addUsersToRoles(userId, ['employee'], doc.group);
 	    	Roles.addUsersToRoles(userId, doc.roles, doc.group);
 	    	Accounts.sendEnrollmentEmail(userId);

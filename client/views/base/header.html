@@ -1,0 +1,65 @@
+<template name="nav">
+{{#unless currentUser}}
+<style>
+  .navbar-fixed, .main, footer {
+    padding-left: 0;
+  }
+  .nav-wrapper ul.right {
+    position: absolute;
+    right: 0px;
+    }
+  .nav-wrapper ul.left{
+      margin-left:100px;
+  }  
+</style>
+{{/unless}}
+<div class="navbar-fixed">
+<nav class="blue darken-3">
+  <div class="nav-wrapper">
+    <a href="/home" class="brand-logo ">Felix</a>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+    {{#unless currentUser}}
+    <ul class="left">
+        <li><a href="#about">About Us</a></li>
+    </ul>
+    {{/unless}}
+    <ul class="right">
+      {{#if currentUser}}
+        <li>
+           <a class="modal-trigger tooltipped valign-wrapper" href="#modal1" data-tooltip="Change Company"><i class="material-icons" style="display:inline-block">business</i> <span class="valign">{{currentUser.profile.activeCompany}}</span></a>
+        </li>
+        <li>
+            <a id="notifs" class="dropdown-button" href="#!" data-beloworigin="true" data-activates="notif-dropdown"><i class="fa fa-inbox"><span style="font-size:20px"> {{newNotifCount}}</span></i></a>
+            <ul id="notif-dropdown" class="dropdown-content">
+              {{#each notifs}}
+                <li><a href="{{url}}">{{text}}<br/>{{formatDateTime date}}</a></li>
+              {{/each}}
+            </ul>
+        </li>
+        <li><a href="/profile" class="tooltipped" data-tooltip="Profile"><i class="fa fa-user"></i></a></li>
+        <li><a href="#" class="logout tooltipped" data-tooltip="Logout"><i class="fa fa-sign-out"></i></a></li>
+
+      {{else}}
+      <li>
+           <a data-toggle="modal" class="modal-trigger" href="#login" aria-hidden="true"><span class="fa fa-sign-in"></span> Login</a>
+      </li>
+
+      {{/if}}
+    </ul>
+  </div>
+  {{#if currentUser}}
+  <ul id="slide-out" class="side-nav fixed">
+    <li class="blue darken-3"><a class="white-text">{{currentEmail}}</a></li>
+    <li><a href="/"><i class="material-icons left">list</i> Checklist</a></li>
+    <li><a href="/projects"><i class="material-icons left blue-text">description</i> Projects</a></li>
+    <li><a href="/myrequests"><i class="material-icons left teal-text">question_answer</i>My Project Requests</a></li>
+    <li><a href="/issues"><i class="material-icons left orange-text text-lighten-1">report_problem</i> Issues</a></li>
+    <li><a href="/calendar"><i class="material-icons left purple-text">perm_contact_calendar</i> Calendar</a></li>
+    {{#if isInRole 'admin' currentUser.profile.activeCompany}}
+    <li><a href="/admin"><i class="material-icons left red-text">supervisor_account</i>Admin</a></li>
+    {{/if}}
+  </ul>
+  {{/if}}
+</nav>
+</div>
+</template>

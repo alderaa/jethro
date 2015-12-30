@@ -8,7 +8,6 @@ accounts-password
 accounts-ui
 kadira:blaze-layout
 less
-aslagle:reactive-table
 standard-minifiers
 meteor-base
 mobile-experience

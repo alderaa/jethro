@@ -1,37 +1,69 @@
 <template name="home">
 	{{#unless currentUser}}
+    <script>
+       $(function(){
+          $(".container").removeClass("container"); 
+          $('.scrollspy').scrollSpy();
+       });
+    </script>
 	<div class="center-align row home-text">
-		<div style="width:100%;position:absolute;top:65px; left:0px; padding:20px;" class="s12 blue lighten-3">
-			<div class="container">
-				<div class="row">
-					<div class="col s12 m6">
-						<h3>Felix Project Manager</h3>
-						<h5>Manage all your daily tasks with a click of a button</h5>
-					</div>
-					<div class="col s12 m6">
-						<img src="/spmapp.png" style="width:100%"/>
-					</div>
-				</div>
-			</div>
+		<div class="row blue lighten-3 home z-depth-1">
+            <div class="col s12">
+                <i class="fa fa-files-o circle"></i>
+                <i class="fa fa-long-arrow-right"></i>
+                <i class="fa fa-list-alt circle"></i>
+            </div>
+            <div class="col s12">
+                <h3>Felix Project Manager</h3>
+                <h5>Manage all your daily tasks with a click of a button</h5>
+                <a href="#more" class="btn btn-large">Learn More</a>
+            </div>
 		</div>
-		<div class="row" style="margin-top:510px">
-			<div class="col m3 s12">
-				<h1 style="font-size:40px"><i class="fa fa-list-alt"></i></h1>
+		<div class="row section scrollspy" id="more">
+			<div class="col m4 s12">
+                <h1><i class="fa fa-list-alt"></i></h1> 
 				<h5>Simple User Interface</h5>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
 			</div>
-			<div class="col m3 s12">
-				<h1 style="font-size:40px"><i class="fa fa-inbox"></i></h1>
+			<div class="col m4 s12">
+				<h1><i class="fa fa-inbox"></i></h1>
 				<h5>Go Emailess</h5>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
 			</div>
-			<div class="col m3 s12 text-center">
-				<h1 style="font-size:40px"><i class="fa fa-calendar"></i></h1>
+			<div class="col m4 s12 text-center">
+				<h1><i class="fa fa-calendar"></i></h1>
 				<h5>Create Recurring Projects</h5>
-			</div>
-			<div class="col m3 s12 text-center">
-				<h1 style="font-size:40px;"><i class="fa fa-download"></i></h1>
-				<h5>Generate Great Reports</h5>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
 			</div>
 		</div>
+        <hr/>
+        <div class="row section scrollspy left-align" id="about">
+            <div class="col s12">
+                <h3>About Us</h3>
+                <div class="col s6 m3 center-align">
+                    <img style="border-radius:100%" src="cline.jpg"/>
+                    <h4>Jim Cline</h4>
+                </div>
+                <div class="col s6 bio">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+            </div>
+            <div class="col s12">
+                <div class="col s6 offset-m3 bio">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+                <div class="col s6 m3 center-align">
+                    <img style="border-radius:100%" src="alder.jpg"/>
+                    <h4>Aaron Alder</h4>
+                </div>
+            </div>
+        </div>
 	</div>
 	{{else}}
 		{{> dashboard}}

@@ -24,7 +24,7 @@ Meteor.publish("requests", function () {
 });
 Meteor.publish("notifs", function () {
 	var notifs =  Notifs.find({
-		"user": this.userId
+		"notify": this.userId
 	});
 	return notifs;
 });

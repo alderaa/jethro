@@ -5,12 +5,19 @@
               	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
                 <div class="col s6">
                 	Assigned to <strong>{{assigned_to}}</strong>
+                    {{#if ifEquals "0" projectId}}
+                    <br/>Identified by <strong>{{assigned_by}}</strong>
+                    {{/if}}
                 </div>
               </div>
         </div>
         <div class="card-action">
-        	{{>taskLink}}
-        	{{>projectLink}}
+            {{#if ifEquals "0" projectId}}
+        	    {{>issueLink}}
+            {{else}}
+                {{>taskLink}}
+                {{>projectLink}}
+            {{/if}}
         	{{>Actions}}
         </div>
      </div>
@@ -25,6 +32,7 @@
       {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
       {{> afQuickField name='due_on'}}
 	  {{> afQuickField name='completed_on'}}
+      {{> afQuickField name='isIssue' value="0"}}
 	  <input type="submit" class="btn" value="Insert"/>
 	  <input type="button" class="back btn btn-primary right blue" value="< Back To Project"/>
 	{{/autoForm}}

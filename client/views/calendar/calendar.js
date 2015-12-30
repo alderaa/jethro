@@ -12,13 +12,19 @@ function getEvents(){
         events.push(event);
     } 
     var tasks = Tasks.find({'assigned_to':Meteor.userId(),'completed_on':{$exists:false}}).fetch();
-    for(t in tasks)
+    for(var t in tasks)
     {
         var event = {
             title: "Task '"+tasks[t].title+ "' is due",
             start: tasks[t].due_on,
             url: "/project/"+tasks[t].projectId,
             className: "green"
+        }
+        if(tasks[t].isIssue)
+        {
+           event.className = "orange";
+           event.title = "Issue '"+tasks[t].title+ "' is due";
+           event.url = "/editissue/"+tasks[t]._id;
         }
         events.push(event);
     } 

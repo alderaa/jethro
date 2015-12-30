@@ -12,7 +12,7 @@ Template.myRequestBody.onRendered(function(){
 });
 Template.myrequests.helpers({
     "requests": function(){
-        var requests = Requests.find({"owner": Meteor.userId()}, {sort: {createdAt: -1}}).fetch();
+        var requests = Requests.find({"requestor": Meteor.userId()}, {sort: {createdAt: -1}}).fetch();
         for(r in requests){
           var owner = Meteor.users.findOne({"_id":requests[r].owner});
           requests[r].ownerName = owner.profile.firstname + " " + owner.profile.lastname;

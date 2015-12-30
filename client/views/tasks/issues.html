@@ -1,0 +1,99 @@
+<template name="issues">
+    {{#if Template.subscriptionsReady}}
+        <h3>Issues</h3>
+        <h5>Unresolved Issues Assigned to Me</h5>
+        {{#if issues}}
+            <p class="header">
+                <a class="taskTitle header-span">Title</a>
+                <a class="taskProjectTitle header-span">Project Title</a>
+                <a class="taskDueDate right">Due On</a>
+            </p>
+            <ul class="collapsible popout" data-collapsible="accordion">
+            {{#each issues}}
+                <li>
+                    <div class="collapsible-header">
+                    <span class="header-span">
+                            {{title}}
+                            <i class="material-icons right orange-text text-lighten-1">report_problem</i>
+                    </span> 
+                    <span class="header-span">{{projectTitle}}</span>
+                    <span class="right">{{>dueon}}</span>
+                    </div>				      
+                    <div class="collapsible-body">
+                    {{>taskBody}}
+                    </div>
+                </li>
+            {{/each}}
+            </ul>
+            <script>
+				$(".collapsible").collapsible();
+			</script>
+        {{else}}
+            <h5 class="center green-text">You have no issues!</h5>
+        {{/if}}
+        <a href="/newissue" class="btn orange darken-1">Add Issue</a>
+    {{else}}
+        <div class="center">
+                <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                    <div class="circle"></div>
+                    </div><div class="gap-patch">
+                    <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                    </div>
+                </div>
+                </div>
+            <p>Loading Checklist</p>
+        </div>
+    {{/if}}
+</template>
+<template name="newissue">
+    <h3>Add Don't Forget Issue</h3>
+	{{#autoForm collection="Tasks" id="insertIssue" type="insert" doc=task}}
+	  {{> afQuickField name='title'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_on'}}
+	  {{> afQuickField name='completed_on'}}
+      {{> afQuickField name='isIssue' value="1"}}
+	  <input type="submit" class="btn right" value="Add Issue"/>
+	  <a href="/" class="btn btn-primary left blue">Back To Checklist</a>
+	{{/autoForm}}
+</template>
+<template name="editissue">
+	<h3>Edit Issue</h3>
+	{{#if Template.subscriptionsReady}}
+		{{#autoForm collection="Tasks" id="updateIssue" type="update" doc=issue}}
+		  {{> afQuickField name='title'}}
+	      {{> afQuickField name='description' rows=3}}
+	      {{> afQuickField name='due_on'}}
+	      {{#if issue.completed_on}}
+	      	<label>Completed On</label>
+		  	<p>{{formatDate issue.completed_on}} <input type="button" class="not-done btn action-btn red" value="X"/></p>
+		  {{else}}
+		  	{{> afQuickField name='completed_on'}}
+		  {{/if}}
+		  <div class="select-field">
+		  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
+		  </div>
+		  <input type="submit" class="btn leftt" value="Update"/>
+		  <a href="/" class="btn btn-primary right blue">Back To Checklist</a>
+		{{/autoForm}}
+	{{else}}
+		<div class="center">
+		  <div class="preloader-wrapper big active">
+		    <div class="spinner-layer spinner-blue-only">
+		      <div class="circle-clipper left">
+		        <div class="circle"></div>
+		      </div><div class="gap-patch">
+		        <div class="circle"></div>
+		      </div><div class="circle-clipper right">
+		        <div class="circle"></div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	{{/if}}	
+</template>

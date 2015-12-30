@@ -53,15 +53,13 @@
 <template name="switchcompany">
 	<div>
 		<h4>Change Company</h4>
-		<select id="switch">
-			<option value=''>Choose Company</option>
-			{{#each companies}}
-				<option value="{{this}}" {{selectedIfEquals this currentUser.profile.activeCompany}}>{{this}}</option> 
-			{{/each}}
-		</select>
+        {{#each companies}}
+            {{#if ifEquals this currentUser.profile.activeCompany}}
+            <input name="companies" type="radio" id="{{this}}"  checked="checked"/> 
+            {{else}}
+            <input name="companies" type="radio" id="{{this}}"/> 
+            {{/if}}
+            <label for="{{this}}">{{this}}</label>
+        {{/each}}
 	</div>
-	{{#unless Template.subscriptionsReady}}
-		<script>
-		</script>
-	{{/unless}}
 </template>

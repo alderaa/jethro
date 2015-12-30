@@ -49,9 +49,6 @@ Template.profile.helpers({
   }
 });
 Template.switchcompany.onRendered(function(){
-    $('#switch').on('optionsChanged',function(){
-      $('select').material_select();
-    });
 });
 Template.switchcompany.helpers({
   'companies': function()
@@ -62,8 +59,9 @@ Template.switchcompany.helpers({
   }
 })
 Template.switchcompany.events({
-  'change select': function(e){
-    Meteor.call('setCompany',$('select').val());
+  'click input[name="companies"]': function(e){
+    var comp = this.toString();
+    Meteor.call('setCompany',comp);
     window.location = Meteor.absoluteUrl();
   }
 })

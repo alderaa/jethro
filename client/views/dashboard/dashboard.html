@@ -19,7 +19,12 @@
 				{{#each tasks}}
 					<li>
 				      <div class="collapsible-header">
-				      	<span class="header-span">{{title}}</span> 
+				      	<span class="header-span">
+                              {{title}}
+                              {{#if ifEquals "0" projectId}}
+        	                   <i class="material-icons right orange-text text-lighten-1">report_problem</i>
+                              {{/if}}
+                        </span> 
 				      	<span class="header-span">{{projectTitle}}</span>
 				      	<span class="right">{{>dueon}}</span>
 				      </div>				      
@@ -105,6 +110,9 @@
 
 <template name="taskLink">
 	<a href="/edittask/{{_id}}" class="btn light-blue white-text">Edit</a>
+</template>
+<template name="issueLink">
+	<a href="/editissue/{{_id}}" class="btn light-blue white-text">Edit</a>
 </template>
 
 <template name="Actions">

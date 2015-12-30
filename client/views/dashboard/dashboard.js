@@ -10,14 +10,27 @@ Session.set('sortTaskOrder', "1");
 function projCursor(){
     var filter = {sort: {}};
     filter.sort[Session.get('sortProjby')] = Session.get('sortProjOrder');
-    var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, filter);    
+    var projects = Projects.find({"owner": Meteor.user()._id, "status":"Active"}, filter).fetch();    
+    for(var i in projects){
+        var req =  Meteor.users.findOne({_id:projects[i].requestor}).profile;
+        projects[i].requestor = req.firstname+" "+req.lastname;
+    }
     return projects;
 }
 function tasksCursor()
 {
     var filter = {sort: {}};
     filter.sort[Session.get('sortTaskby')] = Session.get('sortTaskOrder');
-    var tasks = Tasks.find({'assigned_to':Meteor.userId(),'completed_on':{$exists:false}}, filter);
+    var tasks = Tasks.find({'assigned_to':Meteor.userId(),'completed_on':{$exists:false}}, filter).fetch();
+    for(var i in tasks){
+        if(tasks[i].assigned_to){
+            var assgn =  Meteor.users.findOne({_id:tasks[i].assigned_to}).profile;
+            if(Meteor.userId() == tasks[i].assigned_to){
+                tasks[i].canEdit = true;
+            }
+            tasks[i].assigned_to = assgn.firstname+" "+assgn.lastname;
+        }
+    }   
     return tasks;
 }
 function requestsCursor()

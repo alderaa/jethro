@@ -43,3 +43,7 @@ Template.project.events({
       document.getElementById(this._id).click();
    } 
 });
+
+Template.projectBody.onRendered(function(){
+   $(".collapsible").collapsible();
+});

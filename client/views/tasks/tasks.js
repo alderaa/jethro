@@ -1,3 +1,7 @@
+Template.taskBody.onRendered(function(){
+   $(".collapsible").collapsible();
+});
+
 Template.edittask.helpers({
 	task: function () {
 		var taskId = FlowRouter.getParam("taskId"); 

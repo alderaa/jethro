@@ -55,8 +55,8 @@
 		  <div class="select-field">
 		  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
 		  </div>
-		  <input type="submit" class="btn right" value="Update"/>
-		  <a href="/project/{{task.projectId}}" class="back btn btn-primary blue">Back To Project</a>
+		  <input type="submit" class="btn left" value="Update"/>
+		  <a href="/project/{{task.projectId}}" class="right back btn btn-primary blue">Back To Project</a>
 		{{/autoForm}}
 	{{else}}
 		<div class="center">

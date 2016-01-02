@@ -1,7 +1,6 @@
 <template name="projects">
 	{{#if Template.subscriptionsReady}}
 		<div class="col s12">
-			<h3>My Projects</h3>
 			<p class="header">Title <span class="right">Due On</span></p>
 			<ul class="collapsible popout" data-collapsible="accordion">
 				{{#each projects}}
@@ -13,7 +12,6 @@
 				    </li>
 				{{/each}}
 				</ul>
-			<p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 		</div>
 		<script>
 			$(".collapsible").collapsible();
@@ -33,6 +31,33 @@
 		  </div>
 		</div>
 	{{/if}}
+</template>
+
+<template name="active">
+    <h3>Active Projects</h3>
+    {{>projects projects=active}}
+    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
+    <p><a href="/projects/completed">View Completed Projects</a></p>
+    <p><a href="/projects/hold">View Projects On Hold</a></p>
+    <p><a href="/projects/maintain">View Projects In Maintenance</a></p>
+</template>
+
+<template name="maintain">
+    <h3>Projects in Maintenance</h3>
+    {{>projects projects=maintain}}
+    <p><a href="/projects" class="btn blue">Back to Projects</a></p>
+</template>
+
+<template name="hold">
+    <h3>Projects on Hold</h3>
+    {{>projects projects=hold}}
+    <p><a href="/projects" class="btn blue">Back to Projects</a></p>
+</template>
+
+<template name="completed">
+    <h3>Completed Projects</h3>
+    {{>projects projects=completed}}
+    <p><a href="/projects" class="btn blue">Back to Projects</a></p>
 </template>
 
 <template name="taskActions">

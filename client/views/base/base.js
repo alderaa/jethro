@@ -38,6 +38,11 @@ Template.mainLayout.onRendered(function(){
       }
     }
 });
+Template.mainLayout.events({
+   "click .fixed-action-btn ul li a" : function(){
+       $('.fixed-action-btn').closeFAB();
+   }
+});
 Template.nav.onRendered(function(){
     $(".dropdown-button").dropdown();
     $(".tooltop").dropdown();
@@ -65,11 +70,11 @@ Template.nav.helpers({
 Template.nav.events({
 	"click .logout": function(){
 		Meteor.logout();
-    window.location = Meteor.absoluteUrl();
+        window.location = Meteor.absoluteUrl();
 	},
   "click #notifs": function(){
     Meteor.call("seenNotifs");
-  }
+  },
 });
 
 Template.registerHelper( "employees" , function(){

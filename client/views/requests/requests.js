@@ -5,6 +5,11 @@ Template.newrequest.onCreated(function(){
 Template.myrequests.onCreated(function(){
     this.subscribe('requests');
 });
+Template.requestBody.onRendered(function(){
+    $(".collapsible").collapsible({
+        accordion: true
+    });
+});
 Template.myRequestBody.onRendered(function(){
     $(".collapsible").collapsible({
         accordion: true

@@ -8,8 +8,8 @@
 	      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
 	      {{> afQuickField name='due_on'}}
 		  {{> afQuickField name='notes'}}
-		  <input type="submit" class="btn right" value="Update"/>
-		  <a href="/project/{{project._id}}" class="btn left blue">Back To Project</a>
+		  <input type="submit" class="btn left" value="Update"/>
+		  <a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
 		{{/autoForm}}
 	{{else}}
 		<div class="center">

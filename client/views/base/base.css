@@ -11,24 +11,39 @@ html {
     background-color:#efefef;
     opacity: .8;
 }  
-.home-text{
-    padding: 0px 10px;
-}
 .home.row {
     background-image: url('/bg-5-full.jpg');
-    padding: 40px 0px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
     margin-top: 0px;
     min-height: 60vh;
 }
 .home i{
-    font-size: 10vh;
+    font-size: 45px;
     margin-right:30px;
 }
 .home i.circle{
     background: #0168a2;
-    padding: 50px;
+    padding: 25px;
     border-radius: 100%;
     color: #eeeeee;
+}
+
+.home .s12 {
+    padding: 10px 0px;
+}
+
+.fa-rotate-30 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    -webkit-transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+.fa-rotate-30-neg {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    -webkit-transform: rotate(-30deg);
+    -ms-transform: rotate(-30deg);
+    transform: rotate(-30deg);
 }
 .bio{
     margin-top:20px;
@@ -157,13 +172,13 @@ nav ul a {
     padding: 0 15px;
     cursor: pointer;
 }
-.side-nav.fixed a {
+.side-nav a,.side-nav.fixed a {
     display: block;
     padding: 0 0px;
     color: #444;
 }
 
-.side-nav.fixed a:hover {
+.side-nav a:hover,.side-nav.fixed a:hover {
     background: transparent;;
 }
 .floating {
@@ -207,7 +222,7 @@ switch{
   margin-top: 30px;
 }
 
-.navbar-fixed, .main, footer {
+.padded {
     padding-left: 240px;
 }
 .nav-wrapper ul.right{

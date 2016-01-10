@@ -5,7 +5,7 @@ Template.dashboard.onCreated(function(){
 });
 Session.set('sortProjby', "created_on");
 Session.set('sortProjOrder', "1");
-Session.set('sortTaskby', "order_num");
+Session.set('sortTaskby', "due_on");
 Session.set('sortTaskOrder', "1");
 function projCursor(){
     var filter = {sort: {}};
@@ -29,6 +29,10 @@ function tasksCursor()
                 tasks[i].canEdit = true;
             }
             tasks[i].assigned_to = assgn.firstname+" "+assgn.lastname;
+        }
+        if(tasks[i].assigned_by){
+            var assigned_by =  Meteor.users.findOne({_id:tasks[i].assigned_by}).profile;
+            tasks[i].assigned_by = assigned_by.firstname+" "+assigned_by.lastname;
         }
     }   
     return tasks;

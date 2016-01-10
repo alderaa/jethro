@@ -1,510 +1,1497 @@
-/*
- * jQuery gentleSelect plugin (version 0.1.4.1)
- * http://shawnchin.github.com/jquery-cron
- *
- * Copyright (c) 2010-2013 Shawn Chin.
- * Dual licensed under the MIT or GPL Version 2 licenses.
- *
- * Requires:
- * - jQuery
- *
- * Usage:
- *  (JS)
- *
- *  // initialise like this
- *  var c = $('#cron').cron({
- *    initial: '9 10 * * *', # Initial value. default = "* * * * *"
- *    url_set: '/set/', # POST expecting {"cron": "12 10 * * 6"}
- *  });
- *
- *  // you can update values later
- *  c.cron("value", "1 2 3 4 *");
- *
- * // you can also get the current value using the "value" option
- * alert(c.cron("value"));
- *
- *  (HTML)
- *  <div id='cron'></div>
- *
- * Notes:
- * At this stage, we only support a subset of possible cron options.
- * For example, each cron entry can only be digits or "*", no commas
- * to denote multiple entries. We also limit the allowed combinations:
- * - Every minute : * * * * *
- * - Every hour   : ? * * * *
- * - Every day    : ? ? * * *
- * - Every week   : ? ? * * ?
- * - Every month  : ? ? ? * *
- * - Every year   : ? ? ? ? *
- */
-(function($) {
+$.widget( "cron.cronbase", {
 
-    var defaults = {
-        initial : "* * * * *",
-        minuteOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 30,
-            columns   : 4,
-            rows      : undefined,
-            title     : "Minutes Past the Hour"
-        },
-        timeHourOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 20,
-            columns   : 2,
-            rows      : undefined,
-            title     : "Time: Hour"
-        },
-        domOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 30,
-            columns   : undefined,
-            rows      : 10,
-            title     : "Day of Month"
-        },
-        monthOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 100,
-            columns   : 2,
-            rows      : undefined,
-            title     : undefined
-        },
-        dowOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : undefined,
-            columns   : undefined,
-            rows      : undefined,
-            title     : undefined
-        },
-        timeMinuteOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 20,
-            columns   : 4,
-            rows      : undefined,
-            title     : "Time: Minute"
-        },
-        effectOpts : {
-            openSpeed      : 400,
-            closeSpeed     : 400,
-            openEffect     : "slide",
-            closeEffect    : "slide",
-            hideOnMouseOut : true
-        },
-        periods : ["minute", "hour", "day", "week", "month", "year"],
-        url_set : undefined,
-        customValues : undefined,
-        onChange: undefined, // callback function each time value changes
-        useGentleSelect: false
+	_buildSelectTime: function(container, clz, min, max, inc, callback) {
+		var select = $("<select class='browser-default'></select>");
+		select.addClass(clz);
+		
+		for (var i = min, limit = max; i <= limit; i+=inc) {
+			var option = $('<option/>');
+			option.attr({ 'value': i }).text(padded_length_num(i));
+			select.append(option);
+		}
+
+		//select the first.
+		select.children().first().attr("selected", "selected");
+
+		if(callback !== undefined) {
+			this._on(select, {
+				change: callback
+			});
+		}
+
+		container.append(select);
+		select.chosen({width: "60px"});
+
+		return select;
+    },
+
+    _buildSelectDay: function(container, clz, min, max, multi, callback) {
+		var select = $("<select class='browser-default'></select>");
+		if(multi) {
+			select.attr("multiple", "");
+		}
+		select.addClass(clz);
+
+		for (var i = min, limit = max; i <= limit; i++) {
+			var option = $('<option/>');
+			option.attr({ 'value': i }).text(ordinal_suffix_of(i));
+			select.append(option);
+		}
+
+		//select the first.
+		select.children().first().attr("selected", "selected");
+
+		if(callback !== undefined) {
+			this._on(select, {
+				change: callback
+			});
+		}
+
+		container.append(select);
+		select.chosen({width: "70px"});
+
+		return select;
+    },
+
+    _buildSelect: function(container, clz, map, multi, callback ) {
+		var select = $("<select class='browser-default'></select>");
+		if(multi == true) {
+			select.attr("multiple", "");
+		}
+		select.addClass(clz);
+		
+		$.each( map, function( key, value ) {
+		  var option = $('<option/>');
+		  option.attr({ 'value': value }).text(key);
+		  select.append(option);
+		});
+		
+		//select the first.
+		select.children().first().attr("selected", "selected");
+
+		if(callback !== undefined) {
+			this._on(select, {
+				change: callback
+			});
+		}
+
+		container.append(select);
+		select.chosen({width: "100px"});
+
+		return select;
+    },
+
+});
+
+$.widget( "cron.cronselector", $.cron.cronbase, {
+	options: {
+		targetInput: null
+	},
+
+	types: {
+			"": "",
+			// "Minute": "cronminuteselector", 
+			// "Hour": "cronhourselector",
+			"Day": "crondayselector",
+			"Week": "cronweekselector",
+			"Month": "cronmonthselector",
+			"Year": "cronyearselector",
+	},
+
+	_create: function() {
+		var main = $("<div class='cron-selector'></div>");
+		main.append("<div class='cron-text'>Every:</div>");
+
+		//build a select for the types, and register the callback.
+		var selector = this._buildSelect(main, "cron-type-select", this.types, false, this._setCronType);
+
+		var container = $("<div class='cron-container'></div>");
+		main.append(container);
+
+		this.element.append(main);
+	}, 
+
+	_setCronType: function(event) {
+		this._setInnerContent(event.target.value);
+	},
+
+	_setInnerContent: function(option) {
+		var container = this.element.find(".cron-container");
+		var newContainer = $("<div class='cron-container'></div>");
+		container.replaceWith(newContainer);
+
+		var result = newContainer[option]({
+			targetInput: this.options.targetInput
+		});
+	}
+
+});
+
+
+$.widget( "cron.cronvalue", $.cron.cronbase, {
+	options: {
+		targetInput: null
+	},
+
+	_buildTimePanel: function() {
+		this._buildSelectTime(this.element, 'cron-hour', 1, 12, 1, this.broadcastEvent);
+		this.element.append("<div class='cron-text'>:</div>");
+		this._buildSelectTime(this.element, 'cron-minute', 0, 59, 1, this.broadcastEvent);
+		this.element.append("<div class='cron-text'> </div>");
+		this._buildSelect(this.element, 'cron-ampm', {"AM": "am", "PM": "pm",}, false, this.broadcastEvent);
+	},
+
+	registry: {
+		day: 'cron-hour',
+		month: 'cron-month', 
+		dayOfWeek: 'cron-day-of-week',
+		dayOfMonth: 'cron-day-of-month',
+		hour: 'cron-hour',
+		minute: 'cron-minute',
+		ampm: 'cron-ampm'
+	},
+
+	_findRegisteredElement: function(elementId) {
+		var ref = this.element.find("select."+this.registry[elementId]);
+
+		if(ref.length > 0) {
+			return ref;
+		}
+		return undefined;
+	}, 
+
+	dayOfWeek: function() {
+		if(this._findRegisteredElement('dayOfWeek') == undefined) {
+			return "*";
+		}
+		else {
+			return this._findRegisteredElement('dayOfWeek').val();
+		}
+	},
+
+	month: function() {
+		if(this._findRegisteredElement('month') == undefined) {
+			return "*";
+		}
+		else {
+			return this._findRegisteredElement('month').val();
+		}
+	},
+	dayOfMonth: function() {
+		if(this._findRegisteredElement('dayOfMonth') == undefined) {
+			return "*";
+		}
+		else {
+			return this._findRegisteredElement('dayOfMonth').val();
+		}
+	},
+	hour: function() {
+		if(this._findRegisteredElement('hour') == undefined) {
+			return "*";
+		}
+		else {
+			var ampmVal = "am";
+			if(this._findRegisteredElement('ampm') != undefined) {
+				ampmVal = this._findRegisteredElement('ampm').val();
+				
+				if(ampmVal == "pm") {
+					return (parseInt(this._findRegisteredElement('hour').val())+12);
+				}
+			}
+			return this._findRegisteredElement('hour').val();
+		}
+	},
+	minute: function() {
+		if(this._findRegisteredElement('minute') == undefined) {
+			return "*";
+		}
+		else {
+			return this._findRegisteredElement('minute').val();
+		}
+	},
+	cronValue: function() {
+		return this.minute()+" "+this.hour()+" "+this.dayOfMonth()+" "+this.month()+" "+this.dayOfWeek();
+	},
+	broadcastEvent: function() {
+		var self = this;
+		if(this.options.targetInput != undefined) {
+			$(this.options.targetInput).each(function(){
+				$(this).val(self.cronValue()); 
+			});
+			
+		}
+	},
+});
+
+
+// $.widget( "cron.cronminuteselector", $.cron.cronvalue, {
+// 	_create: function() {
+// 		this.broadcastEvent();
+// 	},
+// });
+
+// $.widget( "cron.cronhourselector", $.cron.cronvalue, {
+
+// 	_create: function() {
+// 		this.element.append("<div class='cron-text'>at</div>");
+// 		this._buildSelectTime(this.element, 'cron-minute', 0, 59, 1, this.broadcastEvent);
+// 		this.element.append("<div class='cron-text'>minutes past the hour.</div>");
+// 		this.broadcastEvent();
+// 	},
+// });
+
+
+$.widget( "cron.crondayselector", $.cron.cronvalue, {
+	_create: function() {
+		this.element.append("<div class='cron-text'>at</div>");
+		this._buildTimePanel();
+		this.broadcastEvent();
+	},
+});
+
+$.widget( "cron.cronweekselector", $.cron.cronvalue, {
+	day: {
+		"Sunday": "0",
+		"Monday": "1", 
+		"Tuesday": "2",
+		"Wednesday": "3",
+		"Thursday": "4",
+		"Friday": "5", 
+		"Saturday": "6", 
+	},
+
+	_create: function() {
+		this.element.append("<div class='cron-text'>on</div>");
+		this._buildSelect(this.element, 'cron-day-of-week', this.day, true, this.broadcastEvent);
+		this.element.append("<div class='cron-text'>at</div>");
+		this._buildTimePanel();
+		this.broadcastEvent();
+	},
+});
+
+
+
+$.widget( "cron.cronmonthselector", $.cron.cronvalue, {
+	_create: function() {
+		this.element.append("<div class='cron-text'>on the</div>");
+		this._buildSelectDay(this.element, 'cron-day-of-month', 1, 31, true, this.broadcastEvent);
+		this.element.append("<div class='cron-text'>day at</div>");
+		this._buildTimePanel();
+		this.broadcastEvent();
+	},
+});
+
+$.widget( "cron.cronyearselector", $.cron.cronvalue, {
+	months: {
+			"January": "1",
+			"February": "2",
+			"March": "3",
+			"April": "4",
+			"May": "5",
+			"June": "6",
+			"July": "7",
+			"August": "8",
+			"September": "9",
+			"October": "10",
+			"November": "11",
+			"December": "12",
+	},
+	_create: function() {
+		this.element.append("<div class='cron-text'>on the</div>");
+		this._buildSelectDay(this.element, 'cron-day-of-month', 1, 31, true, this.broadcastEvent);
+		this.element.append("<div class='cron-text'>of</div>");
+		this._buildSelect(this.element, 'cron-month', this.months, true, this.broadcastEvent);	
+		this.element.append("<div class='cron-text'>at</div>");
+		this._buildTimePanel();
+		this.broadcastEvent();
+	},
+});
+
+
+function padded_length_num(i) {
+    var len = (""+i).length;
+    if(len < 2) {
+    	i = "0"+i;
+    }
+    return i;
+}
+
+function ordinal_suffix_of(i) {
+    var j = i % 10;
+    if (j == 1 && i != 11) {
+        return i + "st";
+    }
+    if (j == 2 && i != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && i != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+// Chosen, a Select Box Enhancer for jQuery and Prototype
+// by Patrick Filler for Harvest, http://getharvest.com
+//
+// Version 1.0.0
+// Full source at https://github.com/harvesthq/chosen
+// Copyright (c) 2011 Harvest http://getharvest.com
+
+// MIT License, https://github.com/harvesthq/chosen/blob/master/LICENSE.md
+// This file is generated by `grunt build`, do not edit it by hand.
+(function() {
+  var $, AbstractChosen, Chosen, SelectParser, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  SelectParser = (function() {
+    function SelectParser() {
+      this.options_index = 0;
+      this.parsed = [];
+    }
+
+    SelectParser.prototype.add_node = function(child) {
+      if (child.nodeName.toUpperCase() === "OPTGROUP") {
+        return this.add_group(child);
+      } else {
+        return this.add_option(child);
+      }
     };
 
-    // -------  build some static data -------
+    SelectParser.prototype.add_group = function(group) {
+      var group_position, option, _i, _len, _ref, _results;
 
-    // options for minutes in an hour
-    var str_opt_mih = "";
-    for (var i = 0; i < 60; i++) {
-        var j = (i < 10)? "0":"";
-        str_opt_mih += "<option value='"+i+"'>" + j +  i + "</option>\n";
-    }
-
-    // options for hours in a day
-    var str_opt_hid = "";
-    for (var i = 0; i < 24; i++) {
-        var j = (i < 10)? "0":"";
-        str_opt_hid += "<option value='"+i+"'>" + j + i + "</option>\n";
-    }
-
-    // options for days of month
-    var str_opt_dom = "";
-    for (var i = 1; i < 32; i++) {
-        if (i == 1 || i == 21 || i == 31) { var suffix = "st"; }
-        else if (i == 2 || i == 22) { var suffix = "nd"; }
-        else if (i == 3 || i == 23) { var suffix = "rd"; }
-        else { var suffix = "th"; }
-        str_opt_dom += "<option value='"+i+"'>" + i + suffix + "</option>\n";
-    }
-
-    // options for months
-    var str_opt_month = "";
-    var months = ["January", "February", "March", "April",
-                  "May", "June", "July", "August",
-                  "September", "October", "November", "December"];
-    for (var i = 0; i < months.length; i++) {
-        str_opt_month += "<option value='"+(i+1)+"'>" + months[i] + "</option>\n";
-    }
-
-    // options for day of week
-    var str_opt_dow = "";
-    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-                "Friday", "Saturday"];
-    for (var i = 0; i < days.length; i++) {
-        str_opt_dow += "<option value='"+i+"'>" + days[i] + "</option>\n";
-    }
-
-    // display matrix
-    var toDisplay = {
-        "minute" : [],
-        "hour"   : ["mins"],
-        "day"    : ["time"],
-        "week"   : ["dow", "time"],
-        "month"  : ["dom", "time"],
-        "year"   : ["dom", "month", "time"]
+      group_position = this.parsed.length;
+      this.parsed.push({
+        array_index: group_position,
+        group: true,
+        label: this.escapeExpression(group.label),
+        children: 0,
+        disabled: group.disabled
+      });
+      _ref = group.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        _results.push(this.add_option(option, group_position, group.disabled));
+      }
+      return _results;
     };
 
-    var combinations = {
-        "minute" : /^(\*\s){4}\*$/,                    // "* * * * *"
-        "hour"   : /^\d{1,2}\s(\*\s){3}\*$/,           // "? * * * *"
-        "day"    : /^(\d{1,2}\s){2}(\*\s){2}\*$/,      // "? ? * * *"
-        "week"   : /^(\d{1,2}\s){2}(\*\s){2}\d{1,2}$/, // "? ? * * ?"
-        "month"  : /^(\d{1,2}\s){3}\*\s\*$/,           // "? ? ? * *"
-        "year"   : /^(\d{1,2}\s){4}\*$/                // "? ? ? ? *"
-    };
-
-    // ------------------ internal functions ---------------
-    function defined(obj) {
-        if (typeof obj == "undefined") { return false; }
-        else { return true; }
-    }
-
-    function undefinedOrObject(obj) {
-        return (!defined(obj) || typeof obj == "object")
-    }
-
-    function getCronType(cron_str, opts) {
-        // if customValues defined, check for matches there first
-        if (defined(opts.customValues)) {
-            for (key in opts.customValues) {
-                if (cron_str == opts.customValues[key]) { return key; }
-            }
-        }
-
-        // check format of initial cron value
-        var valid_cron = /^((\d{1,2}|\*)\s){4}(\d{1,2}|\*)$/
-        if (typeof cron_str != "string" || !valid_cron.test(cron_str)) {
-            $.error("cron: invalid initial value");
-            return undefined;
-        }
-
-        // check actual cron values
-        var d = cron_str.split(" ");
-        //            mm, hh, DD, MM, DOW
-        var minval = [ 0,  0,  1,  1,  0];
-        var maxval = [59, 23, 31, 12,  6];
-        for (var i = 0; i < d.length; i++) {
-            if (d[i] == "*") continue;
-            var v = parseInt(d[i]);
-            if (defined(v) && v <= maxval[i] && v >= minval[i]) continue;
-
-            $.error("cron: invalid value found (col "+(i+1)+") in " + o.initial);
-            return undefined;
-        }
-
-        // determine combination
-        for (var t in combinations) {
-            if (combinations[t].test(cron_str)) { return t; }
-        }
-
-        // unknown combination
-        $.error("cron: valid but unsupported cron format. sorry.");
-        return undefined;
-    }
-
-    function hasError(c, o) {
-        if (!defined(getCronType(o.initial, o))) { return true; }
-        if (!undefinedOrObject(o.customValues)) { return true; }
-
-        // ensure that customValues keys do not coincide with existing fields
-        if (defined(o.customValues)) {
-            for (key in o.customValues) {
-                if (combinations.hasOwnProperty(key)) {
-                    $.error("cron: reserved keyword '" + key +
-                            "' should not be used as customValues key.");
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    function getCurrentValue(c) {
-        var b = c.data("block");
-        var min = hour = day = month = dow = "*";
-        var selectedPeriod = b["period"].find("select").val();
-        switch (selectedPeriod) {
-            case "minute":
-                break;
-
-            case "hour":
-                min = b["mins"].find("select").val();
-                break;
-
-            case "day":
-                min  = b["time"].find("select.cron-time-min").val();
-                hour = b["time"].find("select.cron-time-hour").val();
-                break;
-
-            case "week":
-                min  = b["time"].find("select.cron-time-min").val();
-                hour = b["time"].find("select.cron-time-hour").val();
-                dow  =  b["dow"].find("select").val();
-                break;
-
-            case "month":
-                min  = b["time"].find("select.cron-time-min").val();
-                hour = b["time"].find("select.cron-time-hour").val();
-                day  = b["dom"].find("select").val();
-                break;
-
-            case "year":
-                min  = b["time"].find("select.cron-time-min").val();
-                hour = b["time"].find("select.cron-time-hour").val();
-                day  = b["dom"].find("select").val();
-                month = b["month"].find("select").val();
-                break;
-
-            default:
-                // we assume this only happens when customValues is set
-                return selectedPeriod;
-        }
-        return [min, hour, day, month, dow].join(" ");
-    }
-
-    // -------------------  PUBLIC METHODS -----------------
-
-    var methods = {
-        init : function(opts) {
-
-            // init options
-            var options = opts ? opts : {}; /* default to empty obj */
-            var o = $.extend([], defaults, options);
-            var eo = $.extend({}, defaults.effectOpts, options.effectOpts);
-            $.extend(o, {
-                minuteOpts     : $.extend({}, defaults.minuteOpts, eo, options.minuteOpts),
-                domOpts        : $.extend({}, defaults.domOpts, eo, options.domOpts),
-                monthOpts      : $.extend({}, defaults.monthOpts, eo, options.monthOpts),
-                dowOpts        : $.extend({}, defaults.dowOpts, eo, options.dowOpts),
-                timeHourOpts   : $.extend({}, defaults.timeHourOpts, eo, options.timeHourOpts),
-                timeMinuteOpts : $.extend({}, defaults.timeMinuteOpts, eo, options.timeMinuteOpts)
-            });
-
-            // error checking
-            if (hasError(this, o)) { return this; }
-
-            // ---- define select boxes in the right order -----
-                // options for period
-            var str_opt_period = "";
-            for (var i = 0; i < o.periods.length; i++) {
-                str_opt_period += "<option value='" + o.periods[i] + "'>" + o.periods[i] + "</option>\n";
-            }
-
-            var block = [], custom_periods = "", cv = o.customValues;
-            if (defined(cv)) { // prepend custom values if specified
-                for (var key in cv) {
-                    custom_periods += "<option value='" + cv[key] + "'>" + key + "</option>\n";
-                }
-            }
-
-            block["period"] = $("<span class='cron-period'>"
-                    + "Every <select name='cron-period' class='browser-default'>" + custom_periods
-                    + str_opt_period + "</select> </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            var select = block["period"].find("select");
-            select.bind("change.cron", event_handlers.periodChanged)
-                  .data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(eo);
-
-            block["dom"] = $("<span class='cron-block cron-block-dom'>"
-                    + " on the <select name='cron-dom' class='browser-default'>" + str_opt_dom
-                    + "</select> </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            select = block["dom"].find("select").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.domOpts);
-
-            block["month"] = $("<span class='cron-block cron-block-month browser-default'>"
-                    + " of <select name='cron-month' class='browser-default'>" + str_opt_month
-                    + "</select> </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            select = block["month"].find("select").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.monthOpts);
-
-            block["mins"] = $("<span class='cron-block cron-block-mins browser-default'>"
-                    + " at <select name='cron-mins' class='browser-default'>" + str_opt_mih
-                    + "</select> minutes past the hour </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            select = block["mins"].find("select").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.minuteOpts);
-
-            block["dow"] = $("<span class='cron-block cron-block-dow browser-default'>"
-                    + " on <select name='cron-dow' class='browser-default'>" + str_opt_dow
-                    + "</select> </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            select = block["dow"].find("select").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.dowOpts);
-
-            block["time"] = $("<span class='cron-block cron-block-time browser-default'>"
-                    + " at <select name='cron-time-hour' class='cron-time-hour browser-default'>" + str_opt_hid
-                    + "</select>:<select name='cron-time-min' class='cron-time-min browser-default'>" + str_opt_mih
-                    + " </span>")
-                .appendTo(this)
-                .data("root", this);
-
-            select = block["time"].find("select.cron-time-hour").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.timeHourOpts);
-            select = block["time"].find("select.cron-time-min").data("root", this);
-            // if (o.useGentleSelect) select.gentleSelect(o.timeMinuteOpts);
-
-            block["controls"] = $("<span class='cron-controls'>&laquo; save "
-                    + "<span class='cron-button cron-button-save'></span>"
-                    + " </span>")
-                .appendTo(this)
-                .data("root", this)
-                .find("span.cron-button-save")
-                    .bind("click.cron", event_handlers.saveClicked)
-                    .data("root", this)
-                    .end();
-
-            this.find("select").bind("change.cron-callback", event_handlers.somethingChanged);
-            this.data("options", o).data("block", block); // store options and block pointer
-            this.data("current_value", o.initial); // remember base value to detect changes
-
-            return methods["value"].call(this, o.initial); // set initial value
-        },
-
-        value : function(cron_str) {
-            // when no args, act as getter
-            if (!cron_str) { return getCurrentValue(this); }
-
-            var o = this.data('options');
-            var block = this.data("block");
-            // var useGentleSelect = o.useGentleSelect;
-            var t = getCronType(cron_str, o);
-            
-            if (!defined(t)) { return false; }
-            
-            if (defined(o.customValues) && o.customValues.hasOwnProperty(t)) {
-                t = o.customValues[t];
-            } else {
-                var d = cron_str.split(" ");
-                var v = {
-                    "mins"  : d[0],
-                    "hour"  : d[1],
-                    "dom"   : d[2],
-                    "month" : d[3],
-                    "dow"   : d[4]
-                };
-
-                // update appropriate select boxes
-                var targets = toDisplay[t];
-                for (var i = 0; i < targets.length; i++) {
-                    var tgt = targets[i];
-                    if (tgt == "time") {
-                        var btgt = block[tgt].find("select.cron-time-hour").val(v["hour"]);
-                        // if (useGentleSelect) btgt.gentleSelect("update");
-
-                        btgt = block[tgt].find("select.cron-time-min").val(v["mins"]);
-                        // if (useGentleSelect) btgt.gentleSelect("update");
-                    } else {;
-                        var btgt = block[tgt].find("select").val(v[tgt]);
-                        // if (useGentleSelect) btgt.gentleSelect("update");
-                    }
-                }
-            }
-            
-            // trigger change event
-            var bp = block["period"].find("select").val(t);
-            // if (useGentleSelect) bp.gentleSelect("update");
-            bp.trigger("change");
-
-            return this;
-        }
-
-    };
-
-    var event_handlers = {
-        periodChanged : function() {
-            var root = $(this).data("root");
-            var block = root.data("block"),
-                opt = root.data("options");
-            var period = $(this).val();
-
-            root.find("span.cron-block").hide(); // first, hide all blocks
-            if (toDisplay.hasOwnProperty(period)) { // not custom value
-                var b = toDisplay[$(this).val()];
-                for (var i = 0; i < b.length; i++) {
-                    block[b[i]].show();
-                }
-            }
-        },
-
-        somethingChanged : function() {
-            root = $(this).data("root");
-            // if AJAX url defined, show "save"/"reset" button
-            if (defined(root.data("options").url_set)) {
-                if (methods.value.call(root) != root.data("current_value")) { // if changed
-                    root.addClass("cron-changed");
-                    root.data("block")["controls"].fadeIn();
-                } else { // values manually reverted
-                    root.removeClass("cron-changed");
-                    root.data("block")["controls"].fadeOut();
-                }
-            } else {
-                root.data("block")["controls"].hide();
-            }
-
-            // chain in user defined event handler, if specified
-            var oc = root.data("options").onChange;
-            if (defined(oc) && $.isFunction(oc)) {
-                oc.call(root);
-            }
-        },
-
-        saveClicked : function() {
-            var btn  = $(this);
-            var root = btn.data("root");
-            var cron_str = methods.value.call(root);
-
-            if (btn.hasClass("cron-loading")) { return; } // in progress
-            btn.addClass("cron-loading");
-
-            $.ajax({
-                type : "POST",
-                url  : root.data("options").url_set,
-                data : { "cron" : cron_str },
-                success : function() {
-                    root.data("current_value", cron_str);
-                    btn.removeClass("cron-loading");
-                    // data changed since "save" clicked?
-                    if (cron_str == methods.value.call(root)) {
-                        root.removeClass("cron-changed");
-                        root.data("block").controls.fadeOut();
-                    }
-                },
-                error : function() {
-                    alert("An error occured when submitting your request. Try again?");
-                    btn.removeClass("cron-loading");
-                }
-            });
-        }
-    };
-
-    $.fn.cron = function(method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || ! method) {
-            return methods.init.apply(this, arguments);
+    SelectParser.prototype.add_option = function(option, group_position, group_disabled) {
+      if (option.nodeName.toUpperCase() === "OPTION") {
+        if (option.text !== "") {
+          if (group_position != null) {
+            this.parsed[group_position].children += 1;
+          }
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            value: option.value,
+            text: option.text,
+            html: option.innerHTML,
+            selected: option.selected,
+            disabled: group_disabled === true ? group_disabled : option.disabled,
+            group_array_index: group_position,
+            classes: option.className,
+            style: option.style.cssText
+          });
         } else {
-            $.error( 'Method ' +  method + ' does not exist on jQuery.cron' );
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            empty: true
+          });
         }
+        return this.options_index += 1;
+      }
     };
 
-})(jQuery);
+    SelectParser.prototype.escapeExpression = function(text) {
+      var map, unsafe_chars;
+
+      if ((text == null) || text === false) {
+        return "";
+      }
+      if (!/[\&\<\>\"\'\`]/.test(text)) {
+        return text;
+      }
+      map = {
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "`": "&#x60;"
+      };
+      unsafe_chars = /&(?!\w+;)|[\<\>\"\'\`]/g;
+      return text.replace(unsafe_chars, function(chr) {
+        return map[chr] || "&amp;";
+      });
+    };
+
+    return SelectParser;
+
+  })();
+
+  SelectParser.select_to_array = function(select) {
+    var child, parser, _i, _len, _ref;
+
+    parser = new SelectParser();
+    _ref = select.childNodes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      parser.add_node(child);
+    }
+    return parser.parsed;
+  };
+
+  AbstractChosen = (function() {
+    function AbstractChosen(form_field, options) {
+      this.form_field = form_field;
+      this.options = options != null ? options : {};
+      if (!AbstractChosen.browser_is_supported()) {
+        return;
+      }
+      this.is_multiple = this.form_field.multiple;
+      this.set_default_text();
+      this.set_default_values();
+      this.setup();
+      this.set_up_html();
+      this.register_observers();
+    }
+
+    AbstractChosen.prototype.set_default_values = function() {
+      var _this = this;
+
+      this.click_test_action = function(evt) {
+        return _this.test_active_click(evt);
+      };
+      this.activate_action = function(evt) {
+        return _this.activate_field(evt);
+      };
+      this.active_field = false;
+      this.mouse_on_container = false;
+      this.results_showing = false;
+      this.result_highlighted = null;
+      this.result_single_selected = null;
+      this.allow_single_deselect = (this.options.allow_single_deselect != null) && (this.form_field.options[0] != null) && this.form_field.options[0].text === "" ? this.options.allow_single_deselect : false;
+      this.disable_search_threshold = this.options.disable_search_threshold || 0;
+      this.disable_search = this.options.disable_search || false;
+      this.enable_split_word_search = this.options.enable_split_word_search != null ? this.options.enable_split_word_search : true;
+      this.group_search = this.options.group_search != null ? this.options.group_search : true;
+      this.search_contains = this.options.search_contains || false;
+      this.single_backstroke_delete = this.options.single_backstroke_delete != null ? this.options.single_backstroke_delete : true;
+      this.max_selected_options = this.options.max_selected_options || Infinity;
+      this.inherit_select_classes = this.options.inherit_select_classes || false;
+      this.display_selected_options = this.options.display_selected_options != null ? this.options.display_selected_options : true;
+      return this.display_disabled_options = this.options.display_disabled_options != null ? this.options.display_disabled_options : true;
+    };
+
+    AbstractChosen.prototype.set_default_text = function() {
+      if (this.form_field.getAttribute("data-placeholder")) {
+        this.default_text = this.form_field.getAttribute("data-placeholder");
+      } else if (this.is_multiple) {
+        this.default_text = this.options.placeholder_text_multiple || this.options.placeholder_text || AbstractChosen.default_multiple_text;
+      } else {
+        this.default_text = this.options.placeholder_text_single || this.options.placeholder_text || AbstractChosen.default_single_text;
+      }
+      return this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || AbstractChosen.default_no_result_text;
+    };
+
+    AbstractChosen.prototype.mouse_enter = function() {
+      return this.mouse_on_container = true;
+    };
+
+    AbstractChosen.prototype.mouse_leave = function() {
+      return this.mouse_on_container = false;
+    };
+
+    AbstractChosen.prototype.input_focus = function(evt) {
+      var _this = this;
+
+      if (this.is_multiple) {
+        if (!this.active_field) {
+          return setTimeout((function() {
+            return _this.container_mousedown();
+          }), 50);
+        }
+      } else {
+        if (!this.active_field) {
+          return this.activate_field();
+        }
+      }
+    };
+
+    AbstractChosen.prototype.input_blur = function(evt) {
+      var _this = this;
+
+      if (!this.mouse_on_container) {
+        this.active_field = false;
+        return setTimeout((function() {
+          return _this.blur_test();
+        }), 100);
+      }
+    };
+
+    AbstractChosen.prototype.results_option_build = function(options) {
+      var content, data, _i, _len, _ref;
+
+      content = '';
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        if (data.group) {
+          content += this.result_add_group(data);
+        } else {
+          content += this.result_add_option(data);
+        }
+        if (options != null ? options.first : void 0) {
+          if (data.selected && this.is_multiple) {
+            this.choice_build(data);
+          } else if (data.selected && !this.is_multiple) {
+            this.single_set_selected_text(data.text);
+          }
+        }
+      }
+      return content;
+    };
+
+    AbstractChosen.prototype.result_add_option = function(option) {
+      var classes, style;
+
+      if (!option.search_match) {
+        return '';
+      }
+      if (!this.include_option_in_results(option)) {
+        return '';
+      }
+      classes = [];
+      if (!option.disabled && !(option.selected && this.is_multiple)) {
+        classes.push("active-result");
+      }
+      if (option.disabled && !(option.selected && this.is_multiple)) {
+        classes.push("disabled-result");
+      }
+      if (option.selected) {
+        classes.push("result-selected");
+      }
+      if (option.group_array_index != null) {
+        classes.push("group-option");
+      }
+      if (option.classes !== "") {
+        classes.push(option.classes);
+      }
+      style = option.style.cssText !== "" ? " style=\"" + option.style + "\"" : "";
+      return "<li class=\"" + (classes.join(' ')) + "\"" + style + " data-option-array-index=\"" + option.array_index + "\">" + option.search_text + "</li>";
+    };
+
+    AbstractChosen.prototype.result_add_group = function(group) {
+      if (!(group.search_match || group.group_match)) {
+        return '';
+      }
+      if (!(group.active_options > 0)) {
+        return '';
+      }
+      return "<li class=\"group-result\">" + group.search_text + "</li>";
+    };
+
+    AbstractChosen.prototype.results_update_field = function() {
+      this.set_default_text();
+      if (!this.is_multiple) {
+        this.results_reset_cleanup();
+      }
+      this.result_clear_highlight();
+      this.result_single_selected = null;
+      this.results_build();
+      if (this.results_showing) {
+        return this.winnow_results();
+      }
+    };
+
+    AbstractChosen.prototype.results_toggle = function() {
+      if (this.results_showing) {
+        return this.results_hide();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.results_search = function(evt) {
+      if (this.results_showing) {
+        return this.winnow_results();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.winnow_results = function() {
+      var escapedSearchText, option, regex, regexAnchor, results, results_group, searchText, startpos, text, zregex, _i, _len, _ref;
+
+      this.no_results_clear();
+      results = 0;
+      searchText = this.get_search_text();
+      escapedSearchText = searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      regexAnchor = this.search_contains ? "" : "^";
+      regex = new RegExp(regexAnchor + escapedSearchText, 'i');
+      zregex = new RegExp(escapedSearchText, 'i');
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        option.search_match = false;
+        results_group = null;
+        if (this.include_option_in_results(option)) {
+          if (option.group) {
+            option.group_match = false;
+            option.active_options = 0;
+          }
+          if ((option.group_array_index != null) && this.results_data[option.group_array_index]) {
+            results_group = this.results_data[option.group_array_index];
+            if (results_group.active_options === 0 && results_group.search_match) {
+              results += 1;
+            }
+            results_group.active_options += 1;
+          }
+          if (!(option.group && !this.group_search)) {
+            option.search_text = option.group ? option.label : option.html;
+            option.search_match = this.search_string_match(option.search_text, regex);
+            if (option.search_match && !option.group) {
+              results += 1;
+            }
+            if (option.search_match) {
+              if (searchText.length) {
+                startpos = option.search_text.search(zregex);
+                text = option.search_text.substr(0, startpos + searchText.length) + '</em>' + option.search_text.substr(startpos + searchText.length);
+                option.search_text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
+              }
+              if (results_group != null) {
+                results_group.group_match = true;
+              }
+            } else if ((option.group_array_index != null) && this.results_data[option.group_array_index].search_match) {
+              option.search_match = true;
+            }
+          }
+        }
+      }
+      this.result_clear_highlight();
+      if (results < 1 && searchText.length) {
+        this.update_results_content("");
+        return this.no_results(searchText);
+      } else {
+        this.update_results_content(this.results_option_build());
+        return this.winnow_results_set_highlight();
+      }
+    };
+
+    AbstractChosen.prototype.search_string_match = function(search_string, regex) {
+      var part, parts, _i, _len;
+
+      if (regex.test(search_string)) {
+        return true;
+      } else if (this.enable_split_word_search && (search_string.indexOf(" ") >= 0 || search_string.indexOf("[") === 0)) {
+        parts = search_string.replace(/\[|\]/g, "").split(" ");
+        if (parts.length) {
+          for (_i = 0, _len = parts.length; _i < _len; _i++) {
+            part = parts[_i];
+            if (regex.test(part)) {
+              return true;
+            }
+          }
+        }
+      }
+    };
+
+    AbstractChosen.prototype.choices_count = function() {
+      var option, _i, _len, _ref;
+
+      if (this.selected_option_count != null) {
+        return this.selected_option_count;
+      }
+      this.selected_option_count = 0;
+      _ref = this.form_field.options;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        if (option.selected) {
+          this.selected_option_count += 1;
+        }
+      }
+      return this.selected_option_count;
+    };
+
+    AbstractChosen.prototype.choices_click = function(evt) {
+      evt.preventDefault();
+      if (!(this.results_showing || this.is_disabled)) {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.keyup_checker = function(evt) {
+      var stroke, _ref;
+
+      stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+      this.search_field_scale();
+      switch (stroke) {
+        case 8:
+          if (this.is_multiple && this.backstroke_length < 1 && this.choices_count() > 0) {
+            return this.keydown_backstroke();
+          } else if (!this.pending_backstroke) {
+            this.result_clear_highlight();
+            return this.results_search();
+          }
+          break;
+        case 13:
+          evt.preventDefault();
+          if (this.results_showing) {
+            return this.result_select(evt);
+          }
+          break;
+        case 27:
+          if (this.results_showing) {
+            this.results_hide();
+          }
+          return true;
+        case 9:
+        case 38:
+        case 40:
+        case 16:
+        case 91:
+        case 17:
+          break;
+        default:
+          return this.results_search();
+      }
+    };
+
+    AbstractChosen.prototype.container_width = function() {
+      if (this.options.width != null) {
+        return this.options.width;
+      } else {
+        return "" + this.form_field.offsetWidth + "px";
+      }
+    };
+
+    AbstractChosen.prototype.include_option_in_results = function(option) {
+      if (this.is_multiple && (!this.display_selected_options && option.selected)) {
+        return false;
+      }
+      if (!this.display_disabled_options && option.disabled) {
+        return false;
+      }
+      if (option.empty) {
+        return false;
+      }
+      return true;
+    };
+
+    AbstractChosen.browser_is_supported = function() {
+      if (window.navigator.appName === "Microsoft Internet Explorer") {
+        return document.documentMode >= 8;
+      }
+      if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+        return false;
+      }
+      if (/Android/i.test(window.navigator.userAgent)) {
+        if (/Mobile/i.test(window.navigator.userAgent)) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    AbstractChosen.default_multiple_text = "Select Some Options";
+
+    AbstractChosen.default_single_text = "Select an Option";
+
+    AbstractChosen.default_no_result_text = "No results match";
+
+    return AbstractChosen;
+
+  })();
+
+  $ = jQuery;
+
+  $.fn.extend({
+    chosen: function(options) {
+      if (!AbstractChosen.browser_is_supported()) {
+        return this;
+      }
+      return this.each(function(input_field) {
+        var $this, chosen;
+
+        $this = $(this);
+        chosen = $this.data('chosen');
+        if (options === 'destroy' && chosen) {
+          chosen.destroy();
+        } else if (!chosen) {
+          $this.data('chosen', new Chosen(this, options));
+        }
+      });
+    }
+  });
+
+  Chosen = (function(_super) {
+    __extends(Chosen, _super);
+
+    function Chosen() {
+      _ref = Chosen.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Chosen.prototype.setup = function() {
+      this.form_field_jq = $(this.form_field);
+      this.current_selectedIndex = this.form_field.selectedIndex;
+      return this.is_rtl = this.form_field_jq.hasClass("chosen-rtl");
+    };
+
+    Chosen.prototype.set_up_html = function() {
+      var container_classes, container_props;
+
+      container_classes = ["chosen-container"];
+      container_classes.push("chosen-container-" + (this.is_multiple ? "multi" : "single"));
+      if (this.inherit_select_classes && this.form_field.className) {
+        container_classes.push(this.form_field.className);
+      }
+      if (this.is_rtl) {
+        container_classes.push("chosen-rtl");
+      }
+      container_props = {
+        'class': container_classes.join(' '),
+        'style': "width: " + (this.container_width()) + ";",
+        'title': this.form_field.title
+      };
+      if (this.form_field.id.length) {
+        container_props.id = this.form_field.id.replace(/[^\w]/g, '_') + "_chosen";
+      }
+      this.container = $("<div />", container_props);
+      if (this.is_multiple) {
+        this.container.html('<ul class="chosen-choices"><li class="search-field"><input type="text" value="' + this.default_text + '" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results"></ul></div>');
+      } else {
+        this.container.html('<a class="chosen-single chosen-default" tabindex="-1"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" /></div><ul class="chosen-results"></ul></div>');
+      }
+      this.form_field_jq.hide().after(this.container);
+      this.dropdown = this.container.find('div.chosen-drop').first();
+      this.search_field = this.container.find('input').first();
+      this.search_results = this.container.find('ul.chosen-results').first();
+      this.search_field_scale();
+      this.search_no_results = this.container.find('li.no-results').first();
+      if (this.is_multiple) {
+        this.search_choices = this.container.find('ul.chosen-choices').first();
+        this.search_container = this.container.find('li.search-field').first();
+      } else {
+        this.search_container = this.container.find('div.chosen-search').first();
+        this.selected_item = this.container.find('.chosen-single').first();
+      }
+      this.results_build();
+      this.set_tab_index();
+      this.set_label_behavior();
+      return this.form_field_jq.trigger("chosen:ready", {
+        chosen: this
+      });
+    };
+
+    Chosen.prototype.register_observers = function() {
+      var _this = this;
+
+      this.container.bind('mousedown.chosen', function(evt) {
+        _this.container_mousedown(evt);
+      });
+      this.container.bind('mouseup.chosen', function(evt) {
+        _this.container_mouseup(evt);
+      });
+      this.container.bind('mouseenter.chosen', function(evt) {
+        _this.mouse_enter(evt);
+      });
+      this.container.bind('mouseleave.chosen', function(evt) {
+        _this.mouse_leave(evt);
+      });
+      this.search_results.bind('mouseup.chosen', function(evt) {
+        _this.search_results_mouseup(evt);
+      });
+      this.search_results.bind('mouseover.chosen', function(evt) {
+        _this.search_results_mouseover(evt);
+      });
+      this.search_results.bind('mouseout.chosen', function(evt) {
+        _this.search_results_mouseout(evt);
+      });
+      this.search_results.bind('mousewheel.chosen DOMMouseScroll.chosen', function(evt) {
+        _this.search_results_mousewheel(evt);
+      });
+      this.form_field_jq.bind("chosen:updated.chosen", function(evt) {
+        _this.results_update_field(evt);
+      });
+      this.form_field_jq.bind("chosen:activate.chosen", function(evt) {
+        _this.activate_field(evt);
+      });
+      this.form_field_jq.bind("chosen:open.chosen", function(evt) {
+        _this.container_mousedown(evt);
+      });
+      this.search_field.bind('blur.chosen', function(evt) {
+        _this.input_blur(evt);
+      });
+      this.search_field.bind('keyup.chosen', function(evt) {
+        _this.keyup_checker(evt);
+      });
+      this.search_field.bind('keydown.chosen', function(evt) {
+        _this.keydown_checker(evt);
+      });
+      this.search_field.bind('focus.chosen', function(evt) {
+        _this.input_focus(evt);
+      });
+      if (this.is_multiple) {
+        return this.search_choices.bind('click.chosen', function(evt) {
+          _this.choices_click(evt);
+        });
+      } else {
+        return this.container.bind('click.chosen', function(evt) {
+          evt.preventDefault();
+        });
+      }
+    };
+
+    Chosen.prototype.destroy = function() {
+      $(document).unbind("click.chosen", this.click_test_action);
+      if (this.search_field[0].tabIndex) {
+        this.form_field_jq[0].tabIndex = this.search_field[0].tabIndex;
+      }
+      this.container.remove();
+      this.form_field_jq.removeData('chosen');
+      return this.form_field_jq.show();
+    };
+
+    Chosen.prototype.search_field_disabled = function() {
+      this.is_disabled = this.form_field_jq[0].disabled;
+      if (this.is_disabled) {
+        this.container.addClass('chosen-disabled');
+        this.search_field[0].disabled = true;
+        if (!this.is_multiple) {
+          this.selected_item.unbind("focus.chosen", this.activate_action);
+        }
+        return this.close_field();
+      } else {
+        this.container.removeClass('chosen-disabled');
+        this.search_field[0].disabled = false;
+        if (!this.is_multiple) {
+          return this.selected_item.bind("focus.chosen", this.activate_action);
+        }
+      }
+    };
+
+    Chosen.prototype.container_mousedown = function(evt) {
+      if (!this.is_disabled) {
+        if (evt && evt.type === "mousedown" && !this.results_showing) {
+          evt.preventDefault();
+        }
+        if (!((evt != null) && ($(evt.target)).hasClass("search-choice-close"))) {
+          if (!this.active_field) {
+            if (this.is_multiple) {
+              this.search_field.val("");
+            }
+            $(document).bind('click.chosen', this.click_test_action);
+            this.results_show();
+          } else if (!this.is_multiple && evt && (($(evt.target)[0] === this.selected_item[0]) || $(evt.target).parents("a.chosen-single").length)) {
+            evt.preventDefault();
+            this.results_toggle();
+          }
+          return this.activate_field();
+        }
+      }
+    };
+
+    Chosen.prototype.container_mouseup = function(evt) {
+      if (evt.target.nodeName === "ABBR" && !this.is_disabled) {
+        return this.results_reset(evt);
+      }
+    };
+
+    Chosen.prototype.search_results_mousewheel = function(evt) {
+      var delta, _ref1, _ref2;
+
+      delta = -((_ref1 = evt.originalEvent) != null ? _ref1.wheelDelta : void 0) || ((_ref2 = evt.originialEvent) != null ? _ref2.detail : void 0);
+      if (delta != null) {
+        evt.preventDefault();
+        if (evt.type === 'DOMMouseScroll') {
+          delta = delta * 40;
+        }
+        return this.search_results.scrollTop(delta + this.search_results.scrollTop());
+      }
+    };
+
+    Chosen.prototype.blur_test = function(evt) {
+      if (!this.active_field && this.container.hasClass("chosen-container-active")) {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.close_field = function() {
+      $(document).unbind("click.chosen", this.click_test_action);
+      this.active_field = false;
+      this.results_hide();
+      this.container.removeClass("chosen-container-active");
+      this.clear_backstroke();
+      this.show_search_field_default();
+      return this.search_field_scale();
+    };
+
+    Chosen.prototype.activate_field = function() {
+      this.container.addClass("chosen-container-active");
+      this.active_field = true;
+      this.search_field.val(this.search_field.val());
+      return this.search_field.focus();
+    };
+
+    Chosen.prototype.test_active_click = function(evt) {
+      if (this.container.is($(evt.target).closest('.chosen-container'))) {
+        return this.active_field = true;
+      } else {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.results_build = function() {
+      this.parsing = true;
+      this.selected_option_count = null;
+      this.results_data = SelectParser.select_to_array(this.form_field);
+      if (this.is_multiple) {
+        this.search_choices.find("li.search-choice").remove();
+      } else if (!this.is_multiple) {
+        this.single_set_selected_text();
+        if (this.disable_search || this.form_field.options.length <= this.disable_search_threshold) {
+          this.search_field[0].readOnly = true;
+          this.container.addClass("chosen-container-single-nosearch");
+        } else {
+          this.search_field[0].readOnly = false;
+          this.container.removeClass("chosen-container-single-nosearch");
+        }
+      }
+      this.update_results_content(this.results_option_build({
+        first: true
+      }));
+      this.search_field_disabled();
+      this.show_search_field_default();
+      this.search_field_scale();
+      return this.parsing = false;
+    };
+
+    Chosen.prototype.result_do_highlight = function(el) {
+      var high_bottom, high_top, maxHeight, visible_bottom, visible_top;
+
+      if (el.length) {
+        this.result_clear_highlight();
+        this.result_highlight = el;
+        this.result_highlight.addClass("highlighted");
+        maxHeight = parseInt(this.search_results.css("maxHeight"), 10);
+        visible_top = this.search_results.scrollTop();
+        visible_bottom = maxHeight + visible_top;
+        high_top = this.result_highlight.position().top + this.search_results.scrollTop();
+        high_bottom = high_top + this.result_highlight.outerHeight();
+        if (high_bottom >= visible_bottom) {
+          return this.search_results.scrollTop((high_bottom - maxHeight) > 0 ? high_bottom - maxHeight : 0);
+        } else if (high_top < visible_top) {
+          return this.search_results.scrollTop(high_top);
+        }
+      }
+    };
+
+    Chosen.prototype.result_clear_highlight = function() {
+      if (this.result_highlight) {
+        this.result_highlight.removeClass("highlighted");
+      }
+      return this.result_highlight = null;
+    };
+
+    Chosen.prototype.results_show = function() {
+      if (this.is_multiple && this.max_selected_options <= this.choices_count()) {
+        this.form_field_jq.trigger("chosen:maxselected", {
+          chosen: this
+        });
+        return false;
+      }
+      this.container.addClass("chosen-with-drop");
+      this.form_field_jq.trigger("chosen:showing_dropdown", {
+        chosen: this
+      });
+      this.results_showing = true;
+      this.search_field.focus();
+      this.search_field.val(this.search_field.val());
+      return this.winnow_results();
+    };
+
+    Chosen.prototype.update_results_content = function(content) {
+      return this.search_results.html(content);
+    };
+
+    Chosen.prototype.results_hide = function() {
+      if (this.results_showing) {
+        this.result_clear_highlight();
+        this.container.removeClass("chosen-with-drop");
+        this.form_field_jq.trigger("chosen:hiding_dropdown", {
+          chosen: this
+        });
+      }
+      return this.results_showing = false;
+    };
+
+    Chosen.prototype.set_tab_index = function(el) {
+      var ti;
+
+      if (this.form_field.tabIndex) {
+        ti = this.form_field.tabIndex;
+        this.form_field.tabIndex = -1;
+        return this.search_field[0].tabIndex = ti;
+      }
+    };
+
+    Chosen.prototype.set_label_behavior = function() {
+      var _this = this;
+
+      this.form_field_label = this.form_field_jq.parents("label");
+      if (!this.form_field_label.length && this.form_field.id.length) {
+        this.form_field_label = $("label[for='" + this.form_field.id + "']");
+      }
+      if (this.form_field_label.length > 0) {
+        return this.form_field_label.bind('click.chosen', function(evt) {
+          if (_this.is_multiple) {
+            return _this.container_mousedown(evt);
+          } else {
+            return _this.activate_field();
+          }
+        });
+      }
+    };
+
+    Chosen.prototype.show_search_field_default = function() {
+      if (this.is_multiple && this.choices_count() < 1 && !this.active_field) {
+        this.search_field.val(this.default_text);
+        return this.search_field.addClass("default");
+      } else {
+        this.search_field.val("");
+        return this.search_field.removeClass("default");
+      }
+    };
+
+    Chosen.prototype.search_results_mouseup = function(evt) {
+      var target;
+
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target.length) {
+        this.result_highlight = target;
+        this.result_select(evt);
+        return this.search_field.focus();
+      }
+    };
+
+    Chosen.prototype.search_results_mouseover = function(evt) {
+      var target;
+
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target) {
+        return this.result_do_highlight(target);
+      }
+    };
+
+    Chosen.prototype.search_results_mouseout = function(evt) {
+      if ($(evt.target).hasClass("active-result" || $(evt.target).parents('.active-result').first())) {
+        return this.result_clear_highlight();
+      }
+    };
+
+    Chosen.prototype.choice_build = function(item) {
+      var choice, close_link,
+        _this = this;
+
+      choice = $('<li />', {
+        "class": "search-choice"
+      }).html("<span>" + item.html + "</span>");
+      if (item.disabled) {
+        choice.addClass('search-choice-disabled');
+      } else {
+        close_link = $('<a />', {
+          "class": 'search-choice-close',
+          'data-option-array-index': item.array_index
+        });
+        close_link.bind('click.chosen', function(evt) {
+          return _this.choice_destroy_link_click(evt);
+        });
+        choice.append(close_link);
+      }
+      return this.search_container.before(choice);
+    };
+
+    Chosen.prototype.choice_destroy_link_click = function(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (!this.is_disabled) {
+        return this.choice_destroy($(evt.target));
+      }
+    };
+
+    Chosen.prototype.choice_destroy = function(link) {
+      if (this.result_deselect(link[0].getAttribute("data-option-array-index"))) {
+        this.show_search_field_default();
+        if (this.is_multiple && this.choices_count() > 0 && this.search_field.val().length < 1) {
+          this.results_hide();
+        }
+        link.parents('li').first().remove();
+        return this.search_field_scale();
+      }
+    };
+
+    Chosen.prototype.results_reset = function() {
+      this.form_field.options[0].selected = true;
+      this.selected_option_count = null;
+      this.single_set_selected_text();
+      this.show_search_field_default();
+      this.results_reset_cleanup();
+      this.form_field_jq.trigger("change");
+      if (this.active_field) {
+        return this.results_hide();
+      }
+    };
+
+    Chosen.prototype.results_reset_cleanup = function() {
+      this.current_selectedIndex = this.form_field.selectedIndex;
+      return this.selected_item.find("abbr").remove();
+    };
+
+    Chosen.prototype.result_select = function(evt) {
+      var high, item, selected_index;
+
+      if (this.result_highlight) {
+        high = this.result_highlight;
+        this.result_clear_highlight();
+        if (this.is_multiple && this.max_selected_options <= this.choices_count()) {
+          this.form_field_jq.trigger("chosen:maxselected", {
+            chosen: this
+          });
+          return false;
+        }
+        if (this.is_multiple) {
+          high.removeClass("active-result");
+        } else {
+          if (this.result_single_selected) {
+            this.result_single_selected.removeClass("result-selected");
+            selected_index = this.result_single_selected[0].getAttribute('data-option-array-index');
+            this.results_data[selected_index].selected = false;
+          }
+          this.result_single_selected = high;
+        }
+        high.addClass("result-selected");
+        item = this.results_data[high[0].getAttribute("data-option-array-index")];
+        item.selected = true;
+        this.form_field.options[item.options_index].selected = true;
+        this.selected_option_count = null;
+        if (this.is_multiple) {
+          this.choice_build(item);
+        } else {
+          this.single_set_selected_text(item.text);
+        }
+        if (!((evt.metaKey || evt.ctrlKey) && this.is_multiple)) {
+          this.results_hide();
+        }
+        this.search_field.val("");
+        if (this.is_multiple || this.form_field.selectedIndex !== this.current_selectedIndex) {
+          this.form_field_jq.trigger("change", {
+            'selected': this.form_field.options[item.options_index].value
+          });
+        }
+        this.current_selectedIndex = this.form_field.selectedIndex;
+        return this.search_field_scale();
+      }
+    };
+
+    Chosen.prototype.single_set_selected_text = function(text) {
+      if (text == null) {
+        text = this.default_text;
+      }
+      if (text === this.default_text) {
+        this.selected_item.addClass("chosen-default");
+      } else {
+        this.single_deselect_control_build();
+        this.selected_item.removeClass("chosen-default");
+      }
+      return this.selected_item.find("span").text(text);
+    };
+
+    Chosen.prototype.result_deselect = function(pos) {
+      var result_data;
+
+      result_data = this.results_data[pos];
+      if (!this.form_field.options[result_data.options_index].disabled) {
+        result_data.selected = false;
+        this.form_field.options[result_data.options_index].selected = false;
+        this.selected_option_count = null;
+        this.result_clear_highlight();
+        if (this.results_showing) {
+          this.winnow_results();
+        }
+        this.form_field_jq.trigger("change", {
+          deselected: this.form_field.options[result_data.options_index].value
+        });
+        this.search_field_scale();
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Chosen.prototype.single_deselect_control_build = function() {
+      if (!this.allow_single_deselect) {
+        return;
+      }
+      if (!this.selected_item.find("abbr").length) {
+        this.selected_item.find("span").first().after("<abbr class=\"search-choice-close\"></abbr>");
+      }
+      return this.selected_item.addClass("chosen-single-with-deselect");
+    };
+
+    Chosen.prototype.get_search_text = function() {
+      if (this.search_field.val() === this.default_text) {
+        return "";
+      } else {
+        return $('<div/>').text($.trim(this.search_field.val())).html();
+      }
+    };
+
+    Chosen.prototype.winnow_results_set_highlight = function() {
+      var do_high, selected_results;
+
+      selected_results = !this.is_multiple ? this.search_results.find(".result-selected.active-result") : [];
+      do_high = selected_results.length ? selected_results.first() : this.search_results.find(".active-result").first();
+      if (do_high != null) {
+        return this.result_do_highlight(do_high);
+      }
+    };
+
+    Chosen.prototype.no_results = function(terms) {
+      var no_results_html;
+
+      no_results_html = $('<li class="no-results">' + this.results_none_found + ' "<span></span>"</li>');
+      no_results_html.find("span").first().html(terms);
+      return this.search_results.append(no_results_html);
+    };
+
+    Chosen.prototype.no_results_clear = function() {
+      return this.search_results.find(".no-results").remove();
+    };
+
+    Chosen.prototype.keydown_arrow = function() {
+      var next_sib;
+
+      if (this.results_showing && this.result_highlight) {
+        next_sib = this.result_highlight.nextAll("li.active-result").first();
+        if (next_sib) {
+          return this.result_do_highlight(next_sib);
+        }
+      } else {
+        return this.results_show();
+      }
+    };
+
+    Chosen.prototype.keyup_arrow = function() {
+      var prev_sibs;
+
+      if (!this.results_showing && !this.is_multiple) {
+        return this.results_show();
+      } else if (this.result_highlight) {
+        prev_sibs = this.result_highlight.prevAll("li.active-result");
+        if (prev_sibs.length) {
+          return this.result_do_highlight(prev_sibs.first());
+        } else {
+          if (this.choices_count() > 0) {
+            this.results_hide();
+          }
+          return this.result_clear_highlight();
+        }
+      }
+    };
+
+    Chosen.prototype.keydown_backstroke = function() {
+      var next_available_destroy;
+
+      if (this.pending_backstroke) {
+        this.choice_destroy(this.pending_backstroke.find("a").first());
+        return this.clear_backstroke();
+      } else {
+        next_available_destroy = this.search_container.siblings("li.search-choice").last();
+        if (next_available_destroy.length && !next_available_destroy.hasClass("search-choice-disabled")) {
+          this.pending_backstroke = next_available_destroy;
+          if (this.single_backstroke_delete) {
+            return this.keydown_backstroke();
+          } else {
+            return this.pending_backstroke.addClass("search-choice-focus");
+          }
+        }
+      }
+    };
+
+    Chosen.prototype.clear_backstroke = function() {
+      if (this.pending_backstroke) {
+        this.pending_backstroke.removeClass("search-choice-focus");
+      }
+      return this.pending_backstroke = null;
+    };
+
+    Chosen.prototype.keydown_checker = function(evt) {
+      var stroke, _ref1;
+
+      stroke = (_ref1 = evt.which) != null ? _ref1 : evt.keyCode;
+      this.search_field_scale();
+      if (stroke !== 8 && this.pending_backstroke) {
+        this.clear_backstroke();
+      }
+      switch (stroke) {
+        case 8:
+          this.backstroke_length = this.search_field.val().length;
+          break;
+        case 9:
+          if (this.results_showing && !this.is_multiple) {
+            this.result_select(evt);
+          }
+          this.mouse_on_container = false;
+          break;
+        case 13:
+          evt.preventDefault();
+          break;
+        case 38:
+          evt.preventDefault();
+          this.keyup_arrow();
+          break;
+        case 40:
+          evt.preventDefault();
+          this.keydown_arrow();
+          break;
+      }
+    };
+
+    Chosen.prototype.search_field_scale = function() {
+      var div, f_width, h, style, style_block, styles, w, _i, _len;
+
+      if (this.is_multiple) {
+        h = 0;
+        w = 0;
+        style_block = "position:absolute; left: -1000px; top: -1000px; display:none;";
+        styles = ['font-size', 'font-style', 'font-weight', 'font-family', 'line-height', 'text-transform', 'letter-spacing'];
+        for (_i = 0, _len = styles.length; _i < _len; _i++) {
+          style = styles[_i];
+          style_block += style + ":" + this.search_field.css(style) + ";";
+        }
+        div = $('<div />', {
+          'style': style_block
+        });
+        div.text(this.search_field.val());
+        $('body').append(div);
+        w = div.width() + 25;
+        div.remove();
+        f_width = this.container.outerWidth();
+        if (w > f_width - 10) {
+          w = f_width - 10;
+        }
+        return this.search_field.css({
+          'width': w + 'px'
+        });
+      }
+    };
+
+    return Chosen;
+
+  })(AbstractChosen);
+
+}).call(this);

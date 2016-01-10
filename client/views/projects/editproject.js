@@ -5,11 +5,17 @@ New Project Events
 Template.newproject.onRendered(function(){
     $('select').material_select();
 });
-
-Template.requestToProject.onCreated(function(){
-    this.subscribe("requests");
+Template.newproject.events({
+   'click input[name="noEvaluation"]': function(){
+       if($('input[name="noEvaluation"]').prop( "checked" ))
+       {
+           $('.collection-item input').prop('disabled', true);
+       }
+       else{
+           $('.collection-item input').prop('disabled', false);
+       }
+   } 
 });
-
 Template.requestToProject.helpers({
   request:function(){
     return Requests.findOne({_id:FlowRouter.getParam("requestId")});
@@ -27,7 +33,17 @@ Template.editproject.onRendered(function(){
 Template.editproject.onCreated(function(){
 	 this.subscribe('projects');
 });
-
+Template.editproject.events({
+   'click input[name="noEvaluation"]': function(){
+       if($('input[name="noEvaluation"]').prop( "checked" ))
+       {
+           $('.collection-item input').prop('disabled', true);
+       }
+       else{
+           $('.collection-item input').prop('disabled', false);
+       }
+   } 
+});
 Template.editproject.helpers({
 	project: function () {
 		var projectId = FlowRouter.getParam("projectId"); 
@@ -45,6 +61,14 @@ var projHooks = {
         doc.company = Meteor.user().profile.activeCompany;
         return doc;
       }
+    },
+    update: function(doc){
+        if(Meteor.userId() == this.currentDoc.owner){
+            return doc;
+        }
+        else{
+            Materialize.toast("An error occured updating your project", "red", 3000);
+        }
     }
   },
   after: {
@@ -75,10 +99,14 @@ var projHooks = {
     update: function(error, result) {
     	if(!error)
     	{
-        Meteor.call('updateRecurringProject', this.docId, true, function (error) {
-          if (error) console.log("Couldn't add recurring project")
-        });
-    		FlowRouter.go("/project/"+this.currentDoc._id);
+            var proj = Projects.findOne(this.currentDoc._id);
+            if(proj.status == "Completed")
+            {
+                FlowRouter.go("/project/survey/"+this.currentDoc._id);
+            }
+            else{ 
+    		    FlowRouter.go("/project/"+this.currentDoc._id);
+            }
     		Materialize.toast('Updated project!', 3000, 'green');
     	}
     },

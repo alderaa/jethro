@@ -3,11 +3,10 @@ Project Template
 ***************************************/
 Template.project.onCreated(function(){
 	this.subscribe('projects');
-    this.subscribe('tasks');
 });
 function taskCursor(){
     var projectId = FlowRouter.getParam("projectId");
-    var tasks =  Tasks.find({projectId:projectId}, {$sort:{order_num: -1}}).fetch();
+    var tasks =  Tasks.find({projectId:projectId}, {sort:{order_num: 1}}).fetch();
     for (t in tasks)
     {
       var assigned = Meteor.users.findOne({"_id":tasks[t].assigned_to});
@@ -18,7 +17,7 @@ function taskCursor(){
 }
 
 Template.project.onRendered(function(){
-  $(".conv-col").height($("body").height());
+  $(".conv-col").height($(".main").height());
 });
 Template.project.helpers({
 	project: function () {

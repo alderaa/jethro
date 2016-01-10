@@ -2,25 +2,20 @@ Meteor.publish("projects", function () {
 	var user = Meteor.users.findOne({'_id':this.userId})
 	if(user)
 	{
-		return Projects.find({
-			'company': user.profile.activeCompany
-		});
+        var projectCursor = Projects.find({
+            'company': user.profile.activeCompany
+        });
+        var projectIds = [];
+        projectCursor.forEach(function(u) { projectIds.push(u._id) });
+        return [
+            projectCursor,
+            Tasks.find({'projectId':{$in : projectIds}}),
+            Convs.find({'projectId':{$in : projectIds}}),
+            Roles.getUsersInRole('employee', user.profile.activeCompany),
+            Requests.find({'company':user.profile.activeCompany})
+        ];
 	}
 	else return [];
-});
-Meteor.publish("tasks", function () {
-	return Tasks.find({
-	});
-});
-Meteor.publish("convs", function () {
-	return Convs.find({
-
-	});
-});
-Meteor.publish("requests", function () {
-	return Requests.find({
-
-	});
 });
 Meteor.publish("notifs", function () {
 	var notifs =  Notifs.find({
@@ -28,14 +23,9 @@ Meteor.publish("notifs", function () {
 	});
 	return notifs;
 });
-Meteor.publish("allUsers", function () {
-	if(this.userId) {
-        var user = Meteor.users.findOne(this.userId);
-		var company = user.profile.activeCompany;
-		return Roles.getUsersInRole('employee', company);
-	}
-	else
-	{
-		return "";
-	}
+Meteor.publish("recurring", function () {
+	var dates =  Recurring.find({
+		"owner": this.userId
+	});
+	return dates;
 });

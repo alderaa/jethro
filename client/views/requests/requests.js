@@ -1,10 +1,3 @@
-Template.newrequest.onCreated(function(){
-    this.subscribe('requests');
-});
-
-Template.myrequests.onCreated(function(){
-    this.subscribe('requests');
-});
 Template.requestBody.onRendered(function(){
     $(".collapsible").collapsible({
         accordion: true
@@ -35,6 +28,7 @@ var requestHooks = {
   before: {
     insert: function(doc) {
     	doc.requestor = Meteor.userId();
+        doc.company = Meteor.user().profile.activeCompany;
     	return doc;
     }
   },

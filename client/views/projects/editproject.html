@@ -1,4 +1,6 @@
 <template name="editproject">
+    <div class="row">
+{{#if ifEquals project.owner currentUser._id}}    
 	{{#if Template.subscriptionsReady}}
 		<h3>Edit Project</h3>
 		{{#autoForm collection="Projects" id="updateProject" type="update" doc=project}}
@@ -8,6 +10,26 @@
 	      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
 	      {{> afQuickField name='due_on'}}
 		  {{> afQuickField name='notes'}}
+          {{> afQuickField name='noEvaluation' class="filled-in"}}      
+           <div class="questions">
+                <h5>Evaluation Measures</h5>  
+                <ul class="collection eval">
+                    {{#unless project.noEvaluation}}
+                    <li class="avatar collection-item"><i class="circle white black-text">1.</i>{{> afQuickField name='performance.1' value='The Project was completed on time.'}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">2.</i>{{> afQuickField name='performance.2' value='The Project was delivered error-free.'}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">3.</i>{{> afQuickField name='performance.3' value='The Project\'s deliverable was outstanding.'}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">4.</i>{{> afQuickField name='performance.4' value='Communication during the work was superb.'}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">5.</i>{{> afQuickField name='performance.5' value='Critical thinking to produce the product was excellent and creative.'}}</li>
+                    {{else}}
+                    <li class="avatar collection-item"><i class="circle white black-text">1.</i>{{> afQuickField name='performance.1' value='The Project was completed on time.' disabled="true"}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">2.</i>{{> afQuickField name='performance.2' value='The Project was delivered error-free.' disabled="true"}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">3.</i>{{> afQuickField name='performance.3' value='The Project\'s deliverable was outstanding.' disabled="true"}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">4.</i>{{> afQuickField name='performance.4' value='Communication during the work was superb.' disabled="true"}}</li>
+                    <li class="avatar collection-item"><i class="circle white black-text">5.</i>{{> afQuickField name='performance.5' value='Critical thinking to produce the product was excellent and creative.' disabled="true"}}</li>
+                    
+                    {{/unless}}
+                </ul>
+            </div>
 		  <input type="submit" class="btn left" value="Update"/>
 		  <a href="/project/{{project._id}}" class="btn right blue">Back To Project</a>
 		{{/autoForm}}
@@ -26,6 +48,10 @@
 		  </div>
 		</div>
 	{{/if}}	
+ {{else}}
+ <h2 class="red-text">Not Authorized</h2>
+ {{/if}}
+</div>
 </template>
 
 <template name="newproject">
@@ -37,6 +63,17 @@
       {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
       {{> afQuickField name='due_on'}}
 	  {{> afQuickField name='notes'}}
+      {{> afQuickField name='noEvaluation' class="filled-in"}}
+      <div class="questions">
+        <h5>Evaluation Measures</h5>  
+        <ul class="collection eval">
+            <li class="avatar collection-item"><i class="circle white black-text">1.</i>{{> afQuickField name='performance.1' value='The Project was completed on time.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">2.</i>{{> afQuickField name='performance.2' value='The Project was delivered error-free.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">3.</i>{{> afQuickField name='performance.3' value='The Project\'s deliverable was outstanding.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">4.</i>{{> afQuickField name='performance.4' value='Communication during the work was superb.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">5.</i>{{> afQuickField name='performance.5' value='Critical thinking to produce the product was excellent and creative.'}}</li>
+        </ul>
+      </div>
 	  <input type="submit" class="btn" value="Insert"/>
 	{{/autoForm}}
 </template>

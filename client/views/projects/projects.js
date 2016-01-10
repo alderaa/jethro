@@ -59,3 +59,23 @@ Template.hold.helpers({
 Template.maintain.helpers({
 	maintain: maintainCursor
 });
+Template.projectViews.onRendered(function(){
+   $('select').material_select();
+});
+Template.projectViews.events({
+   "change #viewing": function(){
+       var url = $("#viewing").val();
+       if(url === "active"){
+           FlowRouter.go("/projects");
+       }
+       else if(url === "hold"){
+           FlowRouter.go("/projects/hold");
+       }
+       else if(url === "maintain"){
+           FlowRouter.go("/projects/maintain");
+       }
+       else if(url === "completed"){
+           FlowRouter.go("/projects/completed");
+       }
+   }
+});

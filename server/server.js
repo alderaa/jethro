@@ -18,6 +18,24 @@ Meteor.startup(function () {
 	    Roles.addUsersToRoles(id, ['employee', 'admin'], 'Felix');
 	    Roles.addUsersToRoles(id, ['employee', 'admin'], 'ExcelCEO');
 	}
+    var cline = Meteor.users.findOne({emails: { $elemMatch: { address: "jim.cline@excelceo.com" } }});
+    if(cline == undefined)
+	{
+		console.log("Adding Admin")
+		var options = {
+	        email: "jim.cline@excelceo.com",
+	        password: "Soueujc1!",
+	        profile: {
+	            firstname: "Jim",
+	            lastname:  "Cline",
+	            birthday:  new Date("02/09/1961"),
+	        },
+	    };
+	    var id = Accounts.createUser(options);
+	    Roles.addUsersToRoles(id, ['super-admin'], Roles.GLOBAL_GROUP);
+	    Roles.addUsersToRoles(id, ['employee', 'admin'], 'Felix');
+	    Roles.addUsersToRoles(id, ['employee', 'admin'], 'ExcelCEO');
+	}
 	Projects.find().forEach(function(proj) {
 		if(proj.recurring)
 		{

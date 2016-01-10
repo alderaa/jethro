@@ -1,10 +1,13 @@
 <template name="project">
 	<div class="row col">
-		<div class="col s12 m9">
+		<div class="col s12 m9 project">
 		{{#if Template.subscriptionsReady}}
 			<div class="row">
-				<h4>Project: {{project.title}} <a href="/editproject/{{project._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a></h4>
-
+				<h4>Project: {{project.title}}
+                    {{#if ifEquals project.owner currentUser._id}}
+                     <a href="/editproject/{{project._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a>
+                    {{/if}}
+                </h4>    
 				<div>
 					<ul class="collection z-depth-1">
 				      	<li class="collection-item"><span class="title">Due On:</span><p>{{formatDate project.due_on}}</p></li>

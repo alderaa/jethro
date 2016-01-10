@@ -40,3 +40,4 @@ alanning:roles
 cfs:standard-packages
 cfs:filesystem
 harrison:babyparse
+nemo64:bootstrap

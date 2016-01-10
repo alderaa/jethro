@@ -1,6 +1,3 @@
-Template.conv.onCreated(function(){
-	this.subscribe('convs');
-});
 Template.conv.onRendered(function(){
 	$('.conv-button-collapse').sideNav({
       menuWidth: 300, // Default is 240

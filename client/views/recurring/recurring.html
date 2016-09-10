@@ -1,8 +1,10 @@
 <template name="recurring">
     <h3>Current Recurring Dates</h3>
-    {{#each dates}}
-    <p>{{title}} {{formatDateTime next}}</p>
-    {{/each}}
+    <div class="collection z-depth-1">
+        {{#each dates}}
+        <a href="/recurring/{{_id}}" class="collection-item">{{title}} <span class="right">{{formatDateTime next}}</span></a>
+        {{/each}}
+    </div>
     <a href="/createrecurring" class="btn">Add Recurring Date</a>
 </template>
 
@@ -16,4 +18,32 @@
       </div>
       <input type="submit" class="btn" value="Insert"/>
     {{/autoForm}}  
+</template>
+
+<template name="recurringDate">
+    <div class="row">
+        <h4>Edit Date: <i>{{rdate.title}}</i></h4>
+        <h6>Description: {{rdate.description}}</h6>
+        <h6>Next Occurence: <strong>{{formatDateTime rdate.next}}</strong></h6>
+    </div>
+    <div class="row" style="margin-top:30px">
+        <h5>Attached Project Templates</h5>
+        {{#if rdate.templates}}
+            <ul class="collection z-depth-1">
+            {{#each rdate.templates}}
+                <li class="collection-item"><div><a href="/template/{{tempId}}">{{title}}</a> - {{daysAfter}} {{dayHelper daysAfter}} After <a class="secondary-content delete" href="#"><i class="material-icons red-text">delete</i></a></div></li>
+            {{/each}}
+            </ul>
+        {{else}}
+            <p class="red-text">No templates assigned</p>
+        {{/if}}
+    </div>
+    <div class="row grey lighten-4" style="margin-top:40px;padding:10px">
+        <h5>Attach a Project Template</h5>
+        {{#autoForm id="addProjectTemp" type="update-pushArray" collection="Recurring" doc=rdate scope="templates"}}
+            {{> afQuickField name='tempId' options=availTemps}}
+            {{> afQuickField name='daysAfter'}}
+            <input type="submit" value="Add Project Template" class="btn"/>
+        {{/autoForm}}
+    </div>
 </template>

@@ -21,8 +21,8 @@ Template.registerHelper("today",function(value){
 Template.registerHelper("selectedIfEquals",function(left,right){
   return left==right ? "selected":"";
 });
-Template.registerHelper("currentEmail",function(){
-  return Meteor.user().emails[0].address;
+Template.registerHelper("currentName",function(){
+  return Meteor.user().profile.firstname +" "+Meteor.user().profile.lastname;
 });
 
 Template.mainLayout.onCreated( function(){

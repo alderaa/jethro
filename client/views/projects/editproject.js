@@ -76,22 +76,19 @@ var projHooks = {
     insert: function(error, result) {
     	if(!error)
     	{
-        Meteor.call('scheduleRecurringProject', result, true, function (error) {
-          if (error) console.log("Couldn't add recurring project")
-        });
-        if(this.formId === 'insertReqToProject')
-        {
-            var notif = {
-                url: '/project/'+this.docId,
-                text: "Request '" + this.currentDoc.title + "' made into project",
-            }
-            if(this.currentDoc.requestor == Meteor.userId())
+            if(this.formId === 'insertReqToProject')
             {
-              notif.user = this.currentDoc.requestor;
+                var notif = {
+                    url: '/project/'+this.docId,
+                    text: "Request '" + this.currentDoc.title + "' made into project",
+                }
+                if(this.currentDoc.requestor == Meteor.userId())
+                {
+                notif.user = this.currentDoc.requestor;
+                }
+                Meteor.call("addNotif", notif);
+                Meteor.call("deleteRequest", FlowRouter.getParam('requestId'));
             }
-            Meteor.call("addNotif", notif);
-            Meteor.call("deleteRequest", FlowRouter.getParam('requestId'));
-        }
     		FlowRouter.go("/project/"+this.docId);
     		Materialize.toast('Added project!', 3000, 'green');
     	}

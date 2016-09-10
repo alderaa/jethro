@@ -1,0 +1,9 @@
+{
+  "name": "myapp",
+  "scripts": {
+    "start": "meteor --settings settings.json"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.7"
+  }
+}

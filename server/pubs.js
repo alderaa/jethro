@@ -12,7 +12,7 @@ Meteor.publish("projects", function () {
             Tasks.find({'projectId':{$in : projectIds}}),
             Convs.find({'projectId':{$in : projectIds}}),
             Roles.getUsersInRole('employee', user.profile.activeCompany),
-            Requests.find({'company':user.profile.activeCompany})
+            Requests.find({'company':user.profile.activeCompany}),
         ];
 	}
 	else return [];
@@ -22,6 +22,13 @@ Meteor.publish("notifs", function () {
 		"notify": this.userId
 	});
 	return notifs;
+});
+Meteor.publish("templates",function(){
+   var user = Meteor.users.findOne({'_id':this.userId})
+   return Templates.find({
+      'owner': this.userId,
+      'company': user.profile.activeCompany
+   }); 
 });
 Meteor.publish("recurring", function () {
 	var dates =  Recurring.find({

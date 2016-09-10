@@ -1,0 +1,138 @@
+<template name="templates">
+    <h2>Templates</h2>
+    <div class="collection z-depth-1">
+        {{#each templates}}
+        <a class="collection-item" href="/template/{{_id}}">{{title}}</a>
+        {{/each}}
+    </div>
+    <a href="/createtemplate" class="btn">Add Template</a>
+</template>
+
+<template name="template">
+    <div class="row">
+    <div class="col s12 template">
+		{{#if Template.subscriptionsReady}}
+			<div class="row">
+				<h4>Template: {{template.title}}
+                    {{#if ifEquals template.owner currentUser._id}}
+                     <a href="/edittemplate/{{template._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a>
+                    {{/if}}
+                </h4>    
+				<div>
+					<ul class="collection z-depth-1">
+				      	<li class="collection-item"><span class="title"># of Days Until Due Date: <strong>{{template.due_after}}</strong></span></li>
+						<li class="collection-item"><span class="title">Notes:</span><p>{{template.notes}}</p></li>
+				    </ul>
+				</div>
+			</div>
+			<div class="row">
+				<h5>Template Tasks</h5>
+				<p class="header">Title <span class="right"># Days Due After Project Start</span></p>
+				<ul class="collapsible popout" data-collapsible="accordion">
+				{{#each template.tasks}}
+					<li id="{{task_order_num}}">
+					      <div class="collapsible-header">#{{task_order_num}} {{task_title}} 
+					      	<span class="right">
+                                  {{task_due_after}} 
+                                  <a href="#" class="right red-text delete" style="z-index:10000"><i class="material-icons">delete</i></a>
+                                  </span>
+					      </div>
+				      <div class="collapsible-body">
+							{{>templateTaskBody templateId=template._id task=this}}
+				      </div>
+				    </li>
+				{{/each}}
+				</ul>
+				<a href="/createtemplatetask/{{template._id}}" class="btn">Add Task</a>
+			</div>
+			<script>
+				$(".collapsible").collapsible();
+			</script>
+		{{else}}
+			<div class="center">
+			  <div class="preloader-wrapper big active">
+			    <div class="spinner-layer spinner-blue-only">
+			      <div class="circle-clipper left">
+			        <div class="circle"></div>
+			      </div><div class="gap-patch">
+			        <div class="circle"></div>
+			      </div><div class="circle-clipper right">
+			        <div class="circle"></div>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		{{/if}}
+		</div>
+    </div>
+</template>
+
+<template name="createtemplate">
+    <h2>Create template Template</h2>
+    {{#autoForm collection="Templates" id="insertTemplate" type="insert"}}
+	  {{> afQuickField name='title'}}
+	  {{> afQuickField name='status'}}
+      {{> afQuickField name='description' rows=3}}
+      {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
+      {{> afQuickField name='due_after'}}
+	  {{> afQuickField name='notes'}}
+      {{> afQuickField name='noEvaluation' class="filled-in"}}
+      <div class="questions">
+        <h5>Evaluation Measures</h5>  
+        <ul class="collection eval">
+            <li class="avatar collection-item"><i class="circle white black-text">1.</i>{{> afQuickField name='performance.1' value='The template was completed on time.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">2.</i>{{> afQuickField name='performance.2' value='The template was delivered error-free.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">3.</i>{{> afQuickField name='performance.3' value='The template\'s deliverable was outstanding.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">4.</i>{{> afQuickField name='performance.4' value='Communication during the work was superb.'}}</li>
+            <li class="avatar collection-item"><i class="circle white black-text">5.</i>{{> afQuickField name='performance.5' value='Critical thinking to produce the product was excellent and creative.'}}</li>
+        </ul>
+      </div>
+	  <input type="submit" class="btn" value="Insert"/>
+	{{/autoForm}}
+</template>
+
+<template name="createTemplateTask">
+    <h3>Add task to Template <i>{{template.title}}</i></h3>
+    {{#autoForm id="addTempTask" type="update-pushArray" collection="Templates" doc=template scope="tasks"}} 
+        {{> afQuickField name='task_title'}}
+        {{> afQuickField name='task_order_num'}}
+        {{> afQuickField name='task_description' rows=3}}
+        {{> afQuickField name='task_assigned_to' options=employees firstOption="(None Assigned)"}}
+        {{> afQuickField name='task_due_after'}}
+        {{> afQuickField name='task_notes'}}
+        <input type="submit" class="btn" value="Insert"/>
+        <a href='/template/{{template._id}}' class="back btn btn-primary right blue">Back To Project Template</a>
+    {{/autoForm}}
+</template>
+
+<template name="updateTemplateTask">
+    <h3>Update Task</h3>
+    {{#if Template.subscriptionsReady}}
+        {{#autoForm id="addTempTask" type="update" collection="Templates" doc=template}} 
+            {{> afQuickField name=(getTaskName 'task_title')}}
+            {{> afQuickField name=(getTaskName 'task_order_num') disabled="true"}}
+            {{> afQuickField name=(getTaskName 'task_description') rows=3}}
+            {{> afQuickField name=(getTaskName 'task_assigned_to') options=employees firstOption="(None Assigned)"}}
+            {{> afQuickField name=(getTaskName 'task_due_after')}}
+            {{> afQuickField name=(getTaskName 'task_notes')}}
+            <input type="submit" class="btn" value="Insert"/>
+            <a href='/template/{{template._id}}' class="back btn btn-primary right blue">Back To Project Template</a>
+        {{/autoForm}}
+    {{/if}}
+</template>
+
+<template name="templateTaskBody">
+	<div class="card white darken-3">
+        <div class="card-content">
+              <div class="row">
+              	<div class="col s6"><strong class="">Description:<br/></strong> {{task.task_description}}</div>
+                <div class="col s6">
+                	Assigned to <strong>{{task.task_assigned_to}}</strong>
+                </div>
+              </div>
+        </div>
+        <div class="card-action">
+            <a href="/updateTemplateTask/{{templateId}}/{{task.task_order_num}}" class="btn light-blue">Edit Task</a>
+        </div>
+     </div>
+</template>

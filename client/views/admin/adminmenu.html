@@ -1,65 +1,67 @@
 <template name="adminmenu">
-  {{#if isInRole 'admin' currentUser.profile.activeCompany}}
-  	{{#if Template.subscriptionsReady}}
-	  	<h2>Admin Menu</h2>
-	  	<div class="row" style="margin-bottom:30px">
-			<div class="col s12">
-	            <div class="col s12" style="margin-bottom:10px">
-	              	<h5>Update {{currentUser.profile.activeCompany}} Employees</h5>
-	            </div>
-	            <div class="col s12">
-	            	<strong>File Format</strong>
-	            	<div class="col s12 white z-depth-1">
-	            		<p>First Name, Last Name, Email, Birthday, Role</p>
-	            		<p>John, Doe, john.doe@example.com,01/05/1990,employee</p>
-	            	</div>
-				</div>
-	            <div class="col s12">
-	            	<form action="#">
-				    <div class="file-field input-field">
-				      <div class="btn">
-				        <span>Upload Employee CSV file</span>
-				        <input type="file" class="modEmps">
-				      </div>
-				      <div class="file-path-wrapper">
-				        <input class="file-path validate" type="text">
-				      </div>
-				    </div>
-				  </form>
-				</div>
-	        </div>
-	    </div>
-	    <div class="row">   
-			<div class="col s12">
-	              <h5>Edit Employee</h5>
-	              <select name="edituser">
-	  					<option>Select Employee</option>
-	  					{{#each employees}}
-	  					<option value="{{value}}">{{label}}</option>
-	  					{{/each}}
-	  			  </select>
-	        </div>
-	  	</div>
-	  	<script>
-	  		$("select").material_select();
-	  	</script>
-	{{else}}
-		<div class="center">
-			  <div class="preloader-wrapper big active">
-			    <div class="spinner-layer spinner-blue-only">
-			      <div class="circle-clipper left">
-			        <div class="circle"></div>
-			      </div><div class="gap-patch">
-			        <div class="circle"></div>
-			      </div><div class="circle-clipper right">
-			        <div class="circle"></div>
-			      </div>
-			    </div>
-			  </div>
-			<p>Loading Checklist</p>
-		</div>
-	{{/if}}  	
-  {{else}}
- 	<h2 class="red-text">Not Authorized</h2>	
-  {{/if}}
+    {{#if isInRole 'admin' currentUser.profile.activeCompany}} 
+        {{#if Template.subscriptionsReady}}
+        <h2>Admin Menu</h2>
+        <div class="row" style="margin-bottom:30px">
+            <div class="col s12">
+                <div class="col s12" style="margin-bottom:10px">
+                    <h5>Update {{currentUser.profile.activeCompany}} Employees</h5>
+                </div>
+                <div class="col s12">
+                    <strong>File Format</strong>
+                    <div class="col s12 white z-depth-1">
+                        <p>First Name, Last Name, Email, Birthday, Role</p>
+                        <p>John, Doe, john.doe@example.com,01/05/1990,employee</p>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <form action="#">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>Upload Employee CSV file</span>
+                                <input type="file" class="modEmps">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <h5>Edit Employee</h5>
+                <select name="edituser">
+                            <option>Select Employee</option>
+                            {{#each employees}}
+                            <option value="{{value}}">{{label}}</option>
+                            {{/each}}
+                    </select>
+            </div>
+        </div>
+        <script>
+            $("select").material_select();
+        </script>
+        {{else}}
+        <div class="center">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Loading Checklist</p>
+        </div>
+        {{/if}}
+    {{else}}
+    <h2 class="red-text">Not Authorized</h2>
+    {{/if}}
 </template>

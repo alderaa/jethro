@@ -1,31 +1,31 @@
 <template name="survey">
     <h4>Evaluating Project '{{project.title}}'</h4>
     <table>
-    {{#each project.performance}}
-        {{#unless ifEquals @index 0}}
-        <tr>
-            <td>    
-                {{this}}
-            </td>
-            <td>
-                <input name="result{{@index}}" type="radio" id="{{@index}}0" value="1" />
-                <label for="{{@index}}0">1</label>
-                
-                <input name="result{{@index}}" type="radio" id="{{@index}}1" value="2"/>
-                <label for="{{@index}}1">2</label>
-                
-                <input name="result{{@index}}" type="radio" id="{{@index}}2" value="3"/>
-                <label for="{{@index}}2">3</label>
-                
-                <input name="result{{@index}}" type="radio" id="{{@index}}3" value="4"/>
-                <label for="{{@index}}3">4</label>
-                
-                <input name="result{{@index}}" type="radio" id="{{@index}}4" value="5"/>
-                <label for="{{@index}}4">5</label>
-            </td>
-        </tr>
-        {{/unless}}
-    {{/each}}
+        {{#each project.performance}} 
+            {{#unless ifEquals @index 0}}
+            <tr>
+                <td>
+                    {{this}}
+                </td>
+                <td>
+                    <input name="result{{@index}}" type="radio" id="{{@index}}0" value="1" />
+                    <label for="{{@index}}0">1</label>
+
+                    <input name="result{{@index}}" type="radio" id="{{@index}}1" value="2" />
+                    <label for="{{@index}}1">2</label>
+
+                    <input name="result{{@index}}" type="radio" id="{{@index}}2" value="3" />
+                    <label for="{{@index}}2">3</label>
+
+                    <input name="result{{@index}}" type="radio" id="{{@index}}3" value="4" />
+                    <label for="{{@index}}3">4</label>
+
+                    <input name="result{{@index}}" type="radio" id="{{@index}}4" value="5" />
+                    <label for="{{@index}}4">5</label>
+                </td>
+            </tr>
+            {{/unless}} 
+        {{/each}}
     </table>
     <a class="btn submit wave" href="#">Submit</a>
 </template>

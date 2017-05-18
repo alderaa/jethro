@@ -1,60 +1,59 @@
 <template name="newrequest">
-	<h3>Add a Project Request</h3>
-	{{#autoForm collection="Requests" id="insertRequest" type="insert"}}
-	  {{> afQuickField name='title'}}
-      {{> afQuickField name='description' rows=3}}
-      {{> afQuickField name='owner' options=employees firstOption="(None Assigned)"}}
-      {{> afQuickField name='due_on'}}
-	  {{> afQuickField name='notes'}}
-	  <input type="submit" class="btn" value="Insert"/>
-	{{/autoForm}}
+    <h3>Add a Project Request</h3>
+    {{#autoForm collection="Requests" id="insertRequest" type="insert"}} {{> afQuickField name='title'}} {{> afQuickField name='description'
+    rows=3}} {{> afQuickField name='owner' options=employees firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}}
+    {{> afQuickField name='notes'}}
+    <input type="submit" class="btn" value="Insert" /> {{/autoForm}}
 </template>
+
 <template name="requestBody">
-	<div class="card white darken-3">
+    <div class="card white darken-3">
         <div class="card-content">
-              <div class="row">
-              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+            <div class="row">
+                <div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
                 <div class="col s6">
-                	Requested by <strong>{{requestor}}</strong>
+                    Requested by <strong>{{requestor}}</strong>
                 </div>
-              </div>
-              <div class="col s6"><strong class="">Notes:<br/></strong> {{notes}}</div>
+            </div>
+            <div class="col s6"><strong class="">Notes:<br/></strong> {{notes}}</div>
         </div>
         <div class="card-action">
-        	<a href="/requestToProject/{{_id}}" class="btn white-text">Create Project</a>
+            <a href="/requestToProject/{{_id}}" class="btn white-text">Create Project</a>
         </div>
-     </div>
+    </div>
 </template>
+
 <template name="myRequestBody">
-	<div class="card white darken-3">
+    <div class="card white darken-3">
         <div class="card-content">
-              <div class="row">
-              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+            <div class="row">
+                <div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
                 <div class="col s6">
-                	Requested from <strong>{{ownerName}}</strong>
+                    Requested from <strong>{{ownerName}}</strong>
                 </div>
-              </div>
-              <div class="col s6"><strong class="">Notes:<br/></strong> {{notes}}</div>
+            </div>
+            <div class="col s6"><strong class="">Notes:<br/></strong> {{notes}}</div>
         </div>
         <div class="card-action">
-        	<a href="#" class="deleteRequest btn red white-text right">Delete</a>
+            <a href="#" class="deleteRequest btn red white-text right">Delete</a>
         </div>
-     </div>
+    </div>
 </template>
+
 <template name="myrequests">
-	<div class="col s12">
-		<h3>My Project Requests</h3>
-		<p class="header">Title <span class="right">Due On</span></p>
-		<ul class="collapsible popout" data-collapsible="accordion">
-			{{#each requests}}
-				<li>
-			      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
-			      <div class="collapsible-body">
-			      	{{>myRequestBody}}
-			      </div>
-			    </li>
-			{{/each}}
-			</ul>
-		<p><a href="/newrequest" class="btn btn-info">Add Request</a></p>
-	</div>
+    <div class="col s12">
+        <h3>My Project Requests</h3>
+        <p class="header">Title <span class="right">Due On</span></p>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            {{#each requests}}
+            <li>
+                <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
+                <div class="collapsible-body">
+                    {{>myRequestBody}}
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        <p><a href="/newrequest" class="btn btn-info">Add Request</a></p>
+    </div>
 </template>

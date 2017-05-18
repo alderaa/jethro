@@ -6,19 +6,16 @@
 			<input type="submit" class="btn action-btn" value="Submit">
 		</form>
 		{{#if Template.subscriptionsReady}}
-			<ul id="convs">
-				{{# each convs}}
-			    <li>{{{text}}}<br/><i>{{user}} {{formatDateTime date}}</i></li>
-				{{/each}}
-			</ul>
+		<ul id="convs">
+			{{# each convs}}
+			<li>{{{text}}}<br/><i>{{user}} {{formatDateTime date}}</i></li>
+			{{/each}}
+		</ul>
 		{{else}}
-			<div class="center">
-				<p><i class="fa fa-spinner fa-spin"></i></p>
-				<p>Loading</p>
-			</div>
-
+		<div class="center">
+			<p><i class="fa fa-spinner fa-spin"></i></p>
+			<p>Loading</p>
+		</div>
 		{{/if}}
-
-        
 	</div>
-</template>	
+</template>

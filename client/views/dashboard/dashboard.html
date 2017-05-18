@@ -1,125 +1,127 @@
 <template name="dueon">
-	{{formatDate this.due_on}}
+    {{formatDate this.due_on}}
 </template>
 <template name="completedon">
-	{{formatDate this.completed_on}}
+    {{formatDate this.completed_on}}
 </template>
 <template name="dashboard">
-	<div class="col s12">
-		{{#if Template.subscriptionsReady}}
-			<h3>{{currentUser.profile.activeCompany}} Checklist</h3>
-			<h4 class="center">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</h4>
-			{{#if tasks}}
-				<p class="header">
-					<a class="taskTitle header-span">Title</a>
-					<a class="projTaskTitle header-span">Project</a> 
-					<a class="taskDueDate right">Due On</a>
-				</p>
-				<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each tasks}}
-					<li>
-				      <div class="collapsible-header">
-				      	<span class="header-span">
+    <div class="col s12">
+        {{#if Template.subscriptionsReady}}
+        <h3>{{currentUser.profile.activeCompany}} Checklist</h3>
+        <h4 class="center">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</h4>
+        {{#if tasks}}
+        <p class="header">
+            <a class="taskTitle header-span">Title</a>
+            <a class="projTaskTitle header-span">Project</a>
+            <a class="taskDueDate right">Due On</a>
+        </p>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            {{#each tasks}}
+            <li>
+                <div class="collapsible-header">
+                    <span class="header-span">
                               {{title}}
                               {{#if ifEquals "0" projectId}}
         	                   <i class="material-icons right orange-text text-lighten-1">report_problem</i>
                               {{/if}}
-                        </span> 
-				      	<span class="header-span">{{projectTitle}}</span>
-				      	<span class="right">{{>dueon}}</span>
-				      </div>				      
-				      <div class="collapsible-body">
-				      	{{>taskBody}}
-				      </div>
-				    </li>
-				{{/each}}
-				</ul>
-			{{else}}
-				<h5 class="center green-text">You have no tasks!</h5>
-			{{/if}}
+                        </span>
+                    <span class="header-span">{{projectTitle}}</span>
+                    <span class="right">{{>dueon}}</span>
+                </div>
+                <div class="collapsible-body">
+                    {{>taskBody}}
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <h5 class="center green-text">You have no tasks!</h5>
+        {{/if}}
 
-			<h4 class="center" style="margin-top:30px">Active Projects</h4>
-			{{#if projects}}
-          <p class="header">
-					<a href="#" class="projTitle">Title</a> 
-					<span class="right"><a href="#" class="projDueDate">Due On</a></span>
-				</p>				<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each projects}}
-					<li>
-				      <div class="collapsible-header">
-				      	<span class="header-span">{{title}}</span> 
-				      	<span class="right">{{>dueon}}</span>
-				      </div>				      
-				      <div class="collapsible-body">
-				      	{{>projectBody}}
-				      </div>
-				    </li>
-				{{/each}}
-				</ul>
-			{{else}}
-				<h5 class="center green-text">You have no projects!</h5>
-			{{/if}}
-		   	<h4 class="center" style="margin-top:30px">Projects Requests</h4>
-			{{#if requests}}
-				<p class="header">Title <span class="right">Due On</span></p>
-				<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each requests}}
-					<li>
-				      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
-				      <div class="collapsible-body">
-				      	{{>requestBody}}
-				      </div>
-				    </li>
-				{{/each}}
-				</ul>
-			{{else}}
-				<h5 class="center green-text">You have no requests!</h5>
-			{{/if}}
-			<script>
-				$(".collapsible").collapsible();
-			</script>
-		{{else}}
-			<div class="center">
-				  <div class="preloader-wrapper big active">
-				    <div class="spinner-layer spinner-blue-only">
-				      <div class="circle-clipper left">
-				        <div class="circle"></div>
-				      </div><div class="gap-patch">
-				        <div class="circle"></div>
-				      </div><div class="circle-clipper right">
-				        <div class="circle"></div>
-				      </div>
-				    </div>
-				  </div>
-				<p>Loading Checklist</p>
-			</div>
-		{{/if}}
+        <h4 class="center" style="margin-top:30px">Active Projects</h4>
+        {{#if projects}}
+        <p class="header">
+            <a href="#" class="projTitle">Title</a>
+            <span class="right"><a href="#" class="projDueDate">Due On</a></span>
+        </p>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            {{#each projects}}
+            <li>
+                <div class="collapsible-header">
+                    <span class="header-span">{{title}}</span>
+                    <span class="right">{{>dueon}}</span>
+                </div>
+                <div class="collapsible-body">
+                    {{>projectBody}}
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <h5 class="center green-text">You have no projects!</h5>
+        {{/if}}
+        <h4 class="center" style="margin-top:30px">Projects Requests</h4>
+        {{#if requests}}
+        <p class="header">Title <span class="right">Due On</span></p>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            {{#each requests}}
+            <li>
+                <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
+                <div class="collapsible-body">
+                    {{>requestBody}}
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <h5 class="center green-text">You have no requests!</h5>
+        {{/if}}
+        <script>
+            $(".collapsible").collapsible();
+        </script>
+        {{else}}
+        <div class="center">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Loading Checklist</p>
+        </div>
+        {{/if}}
     </div>
 </template>
 
 <template name="projectLink">
-	 <a href="/project/{{projectId}}" class="btn light-blue white-text">Go To Project</a>
+    <a href="/project/{{projectId}}" class="btn light-blue white-text">Go To Project</a>
 </template>
 
 <template name="editProjectLink">
-	<a href="/project/{{_id}}" class="btn light-blue white-text">Go To Project</a> <a href="/newtask/{{_id}}" class="white-text btn">Add Task</a>
+    <a href="/project/{{_id}}" class="btn light-blue white-text">Go To Project</a> <a href="/newtask/{{_id}}" class="white-text btn">Add Task</a>
 </template>
 
 <template name="taskLink">
-	<a href="/edittask/{{_id}}" class="btn light-blue white-text">Edit</a>
+    <a href="/edittask/{{_id}}" class="btn light-blue white-text">Edit</a>
 </template>
 <template name="issueLink">
-	<a href="/editissue/{{_id}}" class="btn light-blue white-text">Edit</a>
+    <a href="/editissue/{{_id}}" class="btn light-blue white-text">Edit</a>
 </template>
 
 <template name="Actions">
-	{{#unless completed_on}}
-		<a class="btn done white-text">Done</a>
-	{{/unless}} 
+    {{#unless completed_on}}
+    <a class="btn done white-text">Done</a> {{/unless}}
 
-	<!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
+    <!-- <input type="button" class="btn btn-danger delete" value="Delete"/>  -->
 </template>
 
 <template name="notfound">
-	<h3 class="red-text center">404 Page not found</h3>
+    <h3 class="red-text center">404 Page not found</h3>
 </template>

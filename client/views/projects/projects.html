@@ -1,81 +1,76 @@
 <template name="projects">
-	{{#if Template.subscriptionsReady}}
-        {{#if projects}}
-		<div class="col s12">
-			<p class="header">Title <span class="right">Due On</span></p>
-			<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each projects}}
-					<li>
-				      <div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
-				      <div class="collapsible-body">
-				      	{{>projectBody}}
-				      </div>
-				    </li>
-				{{/each}}
-				</ul>
-		</div>
-        {{else}}
-        <h5>No projects in this state</h5>
-        {{/if}}
-		<script>
-			$(".collapsible").collapsible();
-		</script>
+	{{#if Template.subscriptionsReady}} {{#if projects}}
+	<div class="col s12">
+		<p class="header">Title <span class="right">Due On</span></p>
+		<ul class="collapsible popout" data-collapsible="accordion">
+			{{#each projects}}
+			<li>
+				<div class="collapsible-header">{{title}} <span class="right">{{>dueon}}</span></div>
+				<div class="collapsible-body">
+					{{>projectBody}}
+				</div>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
 	{{else}}
-		<div class="center">
-		  <div class="preloader-wrapper big active">
-		    <div class="spinner-layer spinner-blue-only">
-		      <div class="circle-clipper left">
-		        <div class="circle"></div>
-		      </div><div class="gap-patch">
-		        <div class="circle"></div>
-		      </div><div class="circle-clipper right">
-		        <div class="circle"></div>
-		      </div>
-		    </div>
-		  </div>
+	<h5>No projects in this state</h5>
+	{{/if}}
+	<script>
+		$(".collapsible").collapsible();
+	</script>
+	{{else}}
+	<div class="center">
+		<div class="preloader-wrapper big active">
+			<div class="spinner-layer spinner-blue-only">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
 		</div>
+	</div>
 	{{/if}}
 </template>
 
 <template name="active">
-    {{>projectViews page="active"}}
-    {{>projects projects=active}}
-    <p><a href="/newproject" class="btn btn-info">Add Project</a></p>
+	{{>projectViews page="active"}} {{>projects projects=active}}
+	<p><a href="/newproject" class="btn btn-info">Add Project</a></p>
 
 </template>
 
 <template name="maintain">
-    {{>projectViews page="maintain"}}
-    {{>projects projects=maintain}}
+	{{>projectViews page="maintain"}} {{>projects projects=maintain}}
 </template>
 
 <template name="hold">
-    {{>projectViews page="hold"}}
-    {{>projects projects=hold}}
+	{{>projectViews page="hold"}} {{>projects projects=hold}}
 </template>
 
 <template name="completed">
-    {{>projectViews page="completed"}}
-    {{>projects projects=completed}}
+	{{>projectViews page="completed"}} {{>projects projects=completed}}
 </template>
 
 <template name="taskActions">
-	<a href="/edittask/{{_id}}" class="btn action-btn blue lighten-1">Edit</a>
-	{{#unless completed_on}}
-		<a href="#" class="btn btn-success action-btn done"><i class="material-icons">done</i></a>
-	{{/unless}}
+	<a href="/edittask/{{_id}}" class="btn action-btn blue lighten-1">Edit</a> {{#unless completed_on}}
+	<a href="#" class="btn btn-success action-btn done"><i class="material-icons">done</i></a> {{/unless}}
 </template>
 
 <template name="projectViews">
-    <h3>Projects</h3>
-    <div class="row">
-        <div class="col s6">
-            <select name="chooseProject" id="viewing">
+	<h3>Projects</h3>
+	<div class="row">
+		<div class="col s6">
+			<select name="chooseProject" id="viewing">
                 <option value="active" {{selectedIfEquals "active" page}}>Active Projects</option>
                 <option value="completed" {{selectedIfEquals "completed" page}}>Completed Projects</option>
                 <option value="hold" {{selectedIfEquals "hold" page}}>Projects On Hold</option>
                 <option value="maintain" {{selectedIfEquals "maintain" page}}>Projects In Maintenance</option>
             </select>
-        </div>
-    </div>
+		</div>
+	</div>
 </template>

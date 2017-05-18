@@ -3,18 +3,18 @@
 		<h3>Login</h3>
 		<div class="col s6">
 			<label>Email</label>
-			<input type="email" name="email"/>
+			<input type="email" name="email" />
 		</div>
 		<div class="col s6">
 			<label>Password</label>
-			<input type="password" name="password"/>
+			<input type="password" name="password" />
 		</div>
 		<div class="col s6">
 			<label>Company</label>
-			<input type="text" name="company"/>
+			<input type="text" name="company" />
 		</div>
 		<div class="col s12" style="margin-top:10px">
-			<input type="submit" class="btn btn-success" value="Login"/>
+			<input type="submit" class="btn btn-success" value="Login" />
 		</div>
 	</form>
 </template>
@@ -35,31 +35,26 @@
 			<p>{{formatDate user.profile.birthday}}</p>
 		</div>
 		<div class="col s4 l2">
-        	<label>Email</label>
-        	{{#each user.emails}}
-       			<p>{{this.address}}</p>
-       		{{/each}}
-        </div>
-        <div class="col s12">
-        	<label>Companies</label>
-        	<ul style="list-style-type:none;padding-left:2px">
-        	{{#each companies}}
-       			<li>{{this}}</li>
-       		{{/each}}
-       		</ul>
-        </div>        
-    </div>
+			<label>Email</label> {{#each user.emails}}
+			<p>{{this.address}}</p>
+			{{/each}}
+		</div>
+		<div class="col s12">
+			<label>Companies</label>
+			<ul style="list-style-type:none;padding-left:2px">
+				{{#each companies}}
+				<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
 </template>
 <template name="switchcompany">
 	<div>
 		<h4>Change Company</h4>
-        {{#each companies}}
-            {{#if ifEquals this currentUser.profile.activeCompany}}
-            <input name="companies" type="radio" id="{{this}}"  checked="checked"/> 
-            {{else}}
-            <input name="companies" type="radio" id="{{this}}"/> 
-            {{/if}}
-            <label for="{{this}}">{{this}}</label>
-        {{/each}}
+		{{#each companies}} {{#if ifEquals this currentUser.profile.activeCompany}}
+		<input name="companies" type="radio" id="{{this}}" checked="checked" /> {{else}}
+		<input name="companies" type="radio" id="{{this}}" /> {{/if}}
+		<label for="{{this}}">{{this}}</label> {{/each}}
 	</div>
 </template>

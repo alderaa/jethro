@@ -1,82 +1,88 @@
 <template name="project">
-	<div class="row col">
-		<div class="col s12 m9 project">
-		{{#if Template.subscriptionsReady}}
-			<div class="row">
-				<h4>Project: {{project.title}}
-                    {{#if ifEquals project.owner currentUser._id}}
-                     <a href="/editproject/{{project._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a>
-                    {{/if}}
-                </h4>    
-				<div>
-					<ul class="collection z-depth-1">
-				      	<li class="collection-item"><span class="title">Due On:</span><p>{{formatDate project.due_on}}</p></li>
-						<li class="collection-item"><span class="title">Completed On:</span><p>{{formatDate project.completed_on}}</p></li>
-						<li class="collection-item"><span class="title">Notes:</span><p>{{project.notes}}</p></li>
-				    </ul>
-				</div>
-			</div>
-			<div class="row">
-				<h5>Tasks</h5>
-				<p class="header">Title <span class="right">Due On</span></p>
-				<ul class="collapsible popout" data-collapsible="accordion">
-				{{#each todo}}
-					<li id="{{_id}}">
-					  {{#if completed_on}}
-					  	<div class="collapsible-header green white-text">#{{order_num}} {{title}} 
-				      	<span class="right">{{>dueon}}</span>
-				        <span class="right" style="margin-right:10px">Done</span>
-				      </div>
-					  {{else}}
-					      <div class="collapsible-header">#{{order_num}} {{title}} 
-					      	<span class="right">{{>dueon}}</span>
-					      </div>
-				      {{/if}}
-				      <div class="collapsible-body">
-							{{>taskBody}}
-				      </div>
-				    </li>
-				{{/each}}
-				</ul>
-				<a href="/newtask/{{project._id}}" class="btn">Add Task</a>
-			</div>
-			<script>
-				$(".collapsible").collapsible();
-			</script>
-		{{else}}
-			<div class="center">
-			  <div class="preloader-wrapper big active">
-			    <div class="spinner-layer spinner-blue-only">
-			      <div class="circle-clipper left">
-			        <div class="circle"></div>
-			      </div><div class="gap-patch">
-			        <div class="circle"></div>
-			      </div><div class="circle-clipper right">
-			        <div class="circle"></div>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-		{{/if}}
-		</div>
-		{{> conv}}
-	</div>
+    <div class="row col">
+        <div class="col s12 m9 project">
+            {{#if Template.subscriptionsReady}}
+            <div class="row">
+                <h4>Project: {{project.title}} {{#if ifEquals project.owner currentUser._id}}
+                    <a href="/editproject/{{project._id}}" style="font-size: 16px;" class="action-btn btn blue lighten-1"><i class="material-icons">settings</i></a>                    {{/if}}
+                </h4>
+                <div>
+                    <ul class="collection z-depth-1">
+                        <li class="collection-item"><span class="title">Due On:</span>
+                            <p>{{formatDate project.due_on}}</p>
+                        </li>
+                        <li class="collection-item"><span class="title">Completed On:</span>
+                            <p>{{formatDate project.completed_on}}</p>
+                        </li>
+                        <li class="collection-item"><span class="title">Notes:</span>
+                            <p>{{project.notes}}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <h5>Tasks</h5>
+                <p class="header">Title <span class="right">Due On</span></p>
+                <ul class="collapsible popout" data-collapsible="accordion">
+                    {{#each todo}}
+                    <li id="{{_id}}">
+                        {{#if completed_on}}
+                        <div class="collapsible-header green white-text">#{{order_num}} {{title}}
+                            <span class="right">{{>dueon}}</span>
+                            <span class="right" style="margin-right:10px">Done</span>
+                        </div>
+                        {{else}}
+                        <div class="collapsible-header">#{{order_num}} {{title}}
+                            <span class="right">{{>dueon}}</span>
+                        </div>
+                        {{/if}}
+                        <div class="collapsible-body">
+                            {{>taskBody}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+                <a href="/newtask/{{project._id}}" class="btn">Add Task</a>
+            </div>
+            <script>
+                $(".collapsible").collapsible();
+            </script>
+            {{else}}
+            <div class="center">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        {{> conv}}
+    </div>
 </template>
 
 <template name="projectBody">
-	<div class="card white darken-3">
+    <div class="card white darken-3">
         <div class="card-content">
-              <div class="row">
-              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+            <div class="row">
+                <div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
                 <div class="col s6">
-                	<span class="header-span">Status:</span> {{status}}<br/>
+                    <span class="header-span">Status:</span> {{status}}<br/>
                     <span class="header-span">Requested By:</span> {{requestor}}<br/>
-                	<span class="header-span">Notes:</span><br/>{{notes}}
+                    <span class="header-span">Notes:</span><br/>{{notes}}
                 </div>
-              </div>
+            </div>
         </div>
         <div class="card-action">
-        	{{>editProjectLink}}
+            {{>editProjectLink}}
         </div>
-     </div>
+    </div>
 </template>

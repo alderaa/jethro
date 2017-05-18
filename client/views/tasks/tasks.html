@@ -1,76 +1,57 @@
 <template name="taskBody">
-	<div class="card white darken-3">
+    <div class="card white darken-3">
         <div class="card-content">
-              <div class="row">
-              	<div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
+            <div class="row">
+                <div class="col s6"><strong class="">Description:<br/></strong> {{description}}</div>
                 <div class="col s6">
-                	Assigned to <strong>{{assigned_to}}</strong>
-                    {{#if ifEquals "0" projectId}}
-                    <br/>Identified by <strong>{{assigned_by}}</strong>
-                    {{/if}}
+                    Assigned to <strong>{{assigned_to}}</strong> {{#if ifEquals "0" projectId}}
+                    <br/>Identified by <strong>{{assigned_by}}</strong> {{/if}}
                 </div>
-              </div>
+            </div>
         </div>
         <div class="card-action">
-            {{#if ifEquals "0" projectId}}
-        	    {{>issueLink}}
-            {{else}}
-                {{>taskLink}}
-                {{>projectLink}}
-            {{/if}}
-        	{{>Actions}}
+            {{#if ifEquals "0" projectId}} {{>issueLink}} {{else}} {{>taskLink}} {{>projectLink}} {{/if}} {{>Actions}}
         </div>
-     </div>
+    </div>
 </template>
 
 <template name="newtask">
-	<h5>Add Task for <i>{{project.title}}</i></h5>
-	{{#autoForm collection="Tasks" id="insertTask" type="insert" doc=task}}
-	  {{> afQuickField name='title'}}
-	  {{> afQuickField name='order_num'}}
-      {{> afQuickField name='description' rows=3}}
-      {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
-      {{> afQuickField name='due_on'}}
-	  {{> afQuickField name='completed_on'}}
-      {{> afQuickField name='isIssue' value="0"}}
-	  <input type="submit" class="btn" value="Insert"/>
-	  <input type="button" class="back btn btn-primary right blue" value="< Back To Project"/>
-	{{/autoForm}}
+    <h5>Add Task for <i>{{project.title}}</i></h5>
+    {{#autoForm collection="Tasks" id="insertTask" type="insert" doc=task}} {{> afQuickField name='title'}} {{> afQuickField
+    name='order_num'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='assigned_to' options=employees
+    firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}} {{> afQuickField name='completed_on'}} {{> afQuickField
+    name='isIssue' value="0"}}
+    <input type="submit" class="btn" value="Insert" />
+    <input type="button" class="back btn btn-primary right blue" value="< Back To Project" /> {{/autoForm}}
 </template>
 
 <template name="edittask">
-	<h3>Edit Task</h3>
-	{{#if Template.subscriptionsReady}}
-		{{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}}
-		  {{> afQuickField name='title'}}
-		  {{> afQuickField name='order_num'}}
-	      {{> afQuickField name='description' rows=3}}
-	      {{> afQuickField name='due_on'}}
-	      {{#if task.completed_on}}
-	      	<label>Completed On</label>
-		  	<p>{{formatDate task.completed_on}} <input type="button" class="not-done btn action-btn red" value="X"/></p>
-		  {{else}}
-		  	{{> afQuickField name='completed_on'}}
-		  {{/if}}
-		  <div class="select-field">
-		  	{{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
-		  </div>
-		  <input type="submit" class="btn left" value="Update"/>
-		  <a href="/project/{{task.projectId}}" class="right back btn btn-primary blue">Back To Project</a>
-		{{/autoForm}}
-	{{else}}
-		<div class="center">
-		  <div class="preloader-wrapper big active">
-		    <div class="spinner-layer spinner-blue-only">
-		      <div class="circle-clipper left">
-		        <div class="circle"></div>
-		      </div><div class="gap-patch">
-		        <div class="circle"></div>
-		      </div><div class="circle-clipper right">
-		        <div class="circle"></div>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-	{{/if}}	
+    <h3>Edit Task</h3>
+    {{#if Template.subscriptionsReady}} {{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}} {{> afQuickField
+    name='title'}} {{> afQuickField name='order_num'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='due_on'}}
+    {{#if task.completed_on}}
+    <label>Completed On</label>
+    <p>{{formatDate task.completed_on}} <input type="button" class="not-done btn action-btn red" value="X" /></p>
+    {{else}} {{> afQuickField name='completed_on'}} {{/if}}
+    <div class="select-field">
+        {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}}
+    </div>
+    <input type="submit" class="btn left" value="Update" />
+    <a href="/project/{{task.projectId}}" class="right back btn btn-primary blue">Back To Project</a> {{/autoForm}} {{else}}
+    <div class="center">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
 </template>

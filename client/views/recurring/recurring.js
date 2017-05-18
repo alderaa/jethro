@@ -1,28 +1,28 @@
-Template.createRecurring.onCreated(function(){
+Template.createRecurring.onCreated(function () {
     this.subscribe("recurring");
 });
 Template.createRecurring.helpers({
-    "recurringSchema": function(){
+    "recurringSchema": function () {
         return RecurringSchema;
     }
 });
-Template.createRecurring.onRendered(function(){
-   $( "#cron" ).cronselector({targetInput : "input[name=cron]"});
+Template.createRecurring.onRendered(function () {
+    $("#cron").cronselector({ targetInput: "input[name=cron]" });
 });
 
 
-Template.recurring.onCreated(function(){
+Template.recurring.onCreated(function () {
     this.subscribe("recurring");
     var sched = later.parse.recur().on(2).minute();
 
-  // works perfectly
-  console.log(later.schedule(sched).next());
+    // works perfectly
+    console.log(later.schedule(sched).next());
 });
 
 Template.recurring.helpers({
-    dates: function(){
+    dates: function () {
         var dates = Recurring.find().fetch();
-        for(var i in dates){
+        for (var i in dates) {
             var next = later.parse.cron(dates[i].cron);
             dates[i].next = later.schedule(next).next();
         }
@@ -30,82 +30,79 @@ Template.recurring.helpers({
     }
 });
 
-Template.recurringDate.onCreated(function(){
+Template.recurringDate.onCreated(function () {
     this.subscribe("recurring");
     this.subscribe("templates");
 })
 
 Template.recurringDate.helpers({
-    'rdate': function(){
+    'rdate': function () {
         var id = FlowRouter.getParam('dateId');
         var rdate = Recurring.findOne(id);
-        if(rdate)
-        {
+        if (rdate) {
             var next = later.parse.cron(rdate.cron);
             rdate.next = later.schedule(next).next();
-            for(var t in rdate.templates){
+            for (var t in rdate.templates) {
                 var temp = Templates.findOne(rdate.templates[t].tempId);
                 rdate.templates[t].title = temp.title;
             }
         }
         return rdate;
     },
-    'dayHelper': function(daysAfter){
-        if(daysAfter == 1){
+    'dayHelper': function (daysAfter) {
+        if (daysAfter == 1) {
             return "Day";
         }
-        else{
+        else {
             return "Days";
         }
     },
-    'availTemps': function(){
+    'availTemps': function () {
         $('select').material_select();
-        return Templates.find({"owner":Meteor.userId()}).map(function (p) {
-            return {label: p.title, value: p._id};
+        return Templates.find({ "owner": Meteor.userId() }).map(function (p) {
+            return { label: p.title, value: p._id };
         });
     },
 })
 
-Template.recurringDate.onRendered(function(){
+Template.recurringDate.onRendered(function () {
     $('select').material_select();
 })
 
 Template.recurringDate.events({
-   "click .delete": function(){
-       var id = FlowRouter.getParam("dateId");
-       Recurring.update({'_id':id},{$pull: {'templates':{ tempId: this.tempId}}});
-   } 
+    "click .delete": function () {
+        var id = FlowRouter.getParam("dateId");
+        Recurring.update({ '_id': id }, { $pull: { 'templates': { tempId: this.tempId } } });
+    }
 });
 
 var recHooks = {
     before: {
-        insert: function(doc){      
+        insert: function (doc) {
             doc.owner = Meteor.userId();
             return doc;
         }
     },
-    after:{
-        insert: function(error, result){
-            if(!error)
-            {
-                FlowRouter.go("/recurring/"+result);
-    		    Materialize.toast('Added Recurring Date!', 3000, 'green');
+    after: {
+        insert: function (error, result) {
+            if (!error) {
+                FlowRouter.go("/recurring/" + result);
+                Materialize.toast('Added Recurring Date!', 3000, 'green');
             }
-            else{
+            else {
                 Materialize.toast('Recurring Date creation failed. <br/>Please specified a reccurence', 5000, 'red');
             }
         },
-        update: function(error, result){
-            if(!error)
-            {
-                FlowRouter.go("/recurring/"+this.currentDoc._id);
-    		    Materialize.toast('Updated Recurring Date!', 3000, 'green');
+        update: function (error, result) {
+            if (!error) {
+                FlowRouter.go("/recurring/" + this.currentDoc._id);
+                Materialize.toast('Updated Recurring Date!', 3000, 'green');
             }
-            else{
+            else {
                 console.log(error);
-                Materialize.toast('Recurring Date update failed!', 5000, 'red');       
+                Materialize.toast('Recurring Date update failed!', 5000, 'red');
             }
         }
     }
 }
-AutoForm.addHooks(['insertRecurringDate','updateRecurringDate'], recHooks);
+AutoForm.addHooks(['insertRecurringDate', 'updateRecurringDate'], recHooks);

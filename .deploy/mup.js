@@ -1,18 +1,17 @@
 module.exports = {
   servers: {
     one: {
+      // TODO: set host address, username, and authentication method
       host: '138.68.23.31',
       username: 'root',
       pem: '~/.ssh/id_rsa'
-      // password: 'server-password'
-      // or neither for authenticate from ssh-agent
     }
   },
 
   meteor: {
     // TODO: change app name and path
     name: 'jethro',
-    path: '../',
+    path: '~/projects/jethro',
 
     servers: {
       one: {},
@@ -25,8 +24,14 @@ module.exports = {
     env: {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
-      ROOT_URL: 'http://app.com',
+      ROOT_URL: 'http://138.68.23.31',
       MONGO_URL: 'mongodb://localhost/meteor',
+      PORT:80
+    },
+
+    docker: {
+      image: 'abernix/meteord:base',
+      imagePort: 80, // (default: 80, some images EXPOSE different ports)
     },
 
     // This is the maximum time in seconds it will wait

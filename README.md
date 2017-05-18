@@ -1,6 +1,6 @@
 # README #
 
-### SPMAPP ###
+### Jethro ###
 
 * Simple Project Management App
 

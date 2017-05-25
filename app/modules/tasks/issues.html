@@ -1,6 +1,6 @@
 <template name="issues">
     {{#if Template.subscriptionsReady}}
-    <h3>Issues</h3>
+    <h4>Issues</h4>
     <h5>Unresolved Issues Assigned to Me</h5>
     {{#if issues}}
     <p class="header">
@@ -51,7 +51,7 @@
     {{/if}}
 </template>
 <template name="newissue">
-    <h3>Add Don't Forget Issue</h3>
+    <h4>Add Don't Forget Issue</h4>
     {{#autoForm collection="Tasks" id="insertIssue" type="insert" doc=task}} {{> afQuickField name='title'}} {{> afQuickField
     name='description' rows=3}} {{> afQuickField name='assigned_to' options=employees firstOption="(None Assigned)"}} {{>
     afQuickField name='due_on'}} {{> afQuickField name='completed_on'}} {{> afQuickField name='isIssue' value="1"}}
@@ -59,7 +59,7 @@
     <a href="/" class="btn btn-primary left blue">Back To Checklist</a> {{/autoForm}}
 </template>
 <template name="editissue">
-    <h3>Edit Issue</h3>
+    <h4>Edit Issue</h4>
     {{#if Template.subscriptionsReady}} {{#autoForm collection="Tasks" id="updateIssue" type="update" doc=issue}} {{> afQuickField
     name='title'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='due_on'}} {{#if issue.completed_on}}
     <label>Completed On</label>

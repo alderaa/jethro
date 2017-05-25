@@ -1,5 +1,5 @@
 <template name="recurring">
-    <h3>Current Recurring Dates</h3>
+    <h4>Current Recurring Dates</h4>
     <div class="collection z-depth-1">
         {{#each dates}}
         <a href="/recurring/{{_id}}" class="collection-item">{{title}} <span class="right">{{formatDateTime next}}</span></a>        
@@ -9,7 +9,7 @@
 </template>
 
 <template name="createRecurring">
-    <h3>Add Recurring Date</h3>
+    <h4>Add Recurring Date</h4>
     {{#autoForm collection="Recurring" id="insertRecurringDate" type="insert"}} {{> afQuickField name='title'}} {{> afQuickField
     name='description'}} {{> afQuickField name="cron"}}
     <div id="cron">

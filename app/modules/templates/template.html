@@ -1,5 +1,5 @@
 <template name="templates">
-    <h2>Templates</h2>
+    <h4>Templates</h4>
     <div class="collection z-depth-1">
         {{#each templates}}
         <a class="collection-item" href="/template/{{_id}}">{{title}}</a> {{/each}}
@@ -69,7 +69,7 @@
 </template>
 
 <template name="createtemplate">
-    <h2>Create template Template</h2>
+    <h4>Create template Template</h4>
     {{#autoForm collection="Templates" id="insertTemplate" type="insert"}} {{> afQuickField name='title'}} {{> afQuickField name='status'}}
     {{> afQuickField name='description' rows=3}} {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}}
     {{> afQuickField name='due_after'}} {{> afQuickField name='notes'}} {{> afQuickField name='noEvaluation' class="filled-in"}}
@@ -87,7 +87,7 @@
 </template>
 
 <template name="createTemplateTask">
-    <h3>Add task to Template <i>{{template.title}}</i></h3>
+    <h4>Add task to Template <i>{{template.title}}</i></h4>
     {{#autoForm id="addTempTask" type="update-pushArray" collection="Templates" doc=template scope="tasks"}} {{> afQuickField
     name='task_title'}} {{> afQuickField name='task_order_num'}} {{> afQuickField name='task_description' rows=3}} {{> afQuickField
     name='task_assigned_to' options=employees firstOption="(None Assigned)"}} {{> afQuickField name='task_due_after'}} {{>
@@ -97,7 +97,7 @@
 </template>
 
 <template name="updateTemplateTask">
-    <h3>Update Task</h3>
+    <h4>Update Task</h4>
     {{#if Template.subscriptionsReady}} {{#autoForm id="addTempTask" type="update" collection="Templates" doc=template}} {{>
     afQuickField name=(getTaskName 'task_title')}} {{> afQuickField name=(getTaskName 'task_order_num') disabled="true"}}
     {{> afQuickField name=(getTaskName 'task_description') rows=3}} {{> afQuickField name=(getTaskName 'task_assigned_to')

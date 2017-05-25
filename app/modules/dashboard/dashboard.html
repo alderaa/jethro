@@ -7,7 +7,6 @@
 <template name="dashboard">
     <div class="col s12">
         {{#if Template.subscriptionsReady}}
-        <h3>{{currentUser.profile.activeCompany}} Checklist</h3>
         <h4 class="center">Tasks for {{currentUser.profile.firstname}} {{currentUser.profile.lastname}}</h4>
         {{#if tasks}}
         <p class="header">

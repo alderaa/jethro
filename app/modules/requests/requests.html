@@ -1,5 +1,5 @@
 <template name="newrequest">
-    <h3>Add a Project Request</h3>
+    <h4>Add a Project Request</h4>
     {{#autoForm collection="Requests" id="insertRequest" type="insert"}} {{> afQuickField name='title'}} {{> afQuickField name='description'
     rows=3}} {{> afQuickField name='owner' options=employees firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}}
     {{> afQuickField name='notes'}}
@@ -42,7 +42,7 @@
 
 <template name="myrequests">
     <div class="col s12">
-        <h3>My Project Requests</h3>
+        <h4>My Project Requests</h4>
         <p class="header">Title <span class="right">Due On</span></p>
         <ul class="collapsible popout" data-collapsible="accordion">
             {{#each requests}}

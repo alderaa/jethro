@@ -1,7 +1,7 @@
 <template name="editproject">
     <div class="row">
         {{#if ifEquals project.owner currentUser._id}} {{#if Template.subscriptionsReady}}
-        <h3>Edit Project</h3>
+        <h4>Edit Project</h4>
         {{#autoForm collection="Projects" id="updateProject" type="update" doc=project}} {{> afQuickField name='title'}} {{> afQuickField
         name='status'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='requestor' options=employees
         firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}} {{> afQuickField name='notes'}} {{> afQuickField
@@ -49,7 +49,7 @@
 </template>
 
 <template name="newproject">
-    <h3>Add a Project</h3>
+    <h4>Add a Project</h4>
     {{#autoForm collection="Projects" id="insertProject" type="insert" doc=request}} {{> afQuickField name='title'}} {{> afQuickField
     name='status'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='requestor' options=employees firstOption="(None Assigned)"}} 
     {{> afQuickField name='due_on'}} {{> afQuickField name='notes'}} {{> afQuickField name='noEvaluation' class="filled-in"}}
@@ -67,7 +67,7 @@
 </template>
 
 <template name="requestToProject">
-    <h3>Create Project from Request</h3>
+    <h4>Create Project from Request</h4>
     {{#autoForm collection="Projects" id="insertReqToProject" type="insert" doc=request}} {{> afQuickField name='title'}} {{>
     afQuickField name='status'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='requestor' options=employees
     firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}} {{> afQuickField name='notes'}}

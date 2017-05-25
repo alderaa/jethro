@@ -16,7 +16,7 @@
 </template>
 
 <template name="newtask">
-    <h5>Add Task for <i>{{project.title}}</i></h5>
+    <h4>Add Task for <i>{{project.title}}</i></h4>
     {{#autoForm collection="Tasks" id="insertTask" type="insert" doc=task}} {{> afQuickField name='title'}} {{> afQuickField
     name='order_num'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='assigned_to' options=employees
     firstOption="(None Assigned)"}} {{> afQuickField name='due_on'}} {{> afQuickField name='completed_on'}} {{> afQuickField
@@ -26,7 +26,7 @@
 </template>
 
 <template name="edittask">
-    <h3>Edit Task</h3>
+    <h4>Edit Task</h4>
     {{#if Template.subscriptionsReady}} {{#autoForm collection="Tasks" id="updateTask" type="update" doc=task}} {{> afQuickField
     name='title'}} {{> afQuickField name='order_num'}} {{> afQuickField name='description' rows=3}} {{> afQuickField name='due_on'}}
     {{#if task.completed_on}}

@@ -1,0 +1,37 @@
+<head>
+    <title>Jethro</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1">
+</head>
+<template name="mainLayout">
+    {{> nav}}
+    <div class="main padded">
+        <div class="container">
+            <h5 class="red-text" style="display:none">Company not set, please <a class="modal-trigger btn red" href="#modal1">Set Company</a></h5>
+            <div style="margin:0 20px">
+                {{> Template.dynamic template=content}}
+            </div>
+            <div class="fixed-action-btn horizontal" style="bottom: 80px; right: 24px;">
+                <a class="btn-floating btn-large red">
+            <i class="large material-icons">add</i>
+            </a>
+                <ul>
+                    <li><a class="btn-floating blue" href="/newproject"><i class="material-icons">note_add</i></a></li>
+                    <li><a class="btn-floating grey darken-2" href="/createrecurring"><i class="material-icons">restore</i></a></li>
+                    <li><a class="btn-floating teal" href="/newrequest"><i class="material-icons">question_answer</i></a></li>
+                    <li><a class="btn-floating yellow darken-1" href="/newissue"><i class="material-icons">report_problem</i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            {{> switchcompany}}
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+        </div>
+    </div>
+</template>

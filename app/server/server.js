@@ -1,10 +1,10 @@
 Meteor.startup(function () {
 	process.env.MAIL_URL = "smtp://aaron.m.alder%40gmail.com:5AjAQFFGU9NXcBb@smtp.gmail.com:465/";
-	var admin = Meteor.users.findOne({ emails: { $elemMatch: { address: "felix@excelceo.com" } } });
+	var admin = Meteor.users.findOne({ emails: { $elemMatch: { address: "admin@jethro.com" } } });
 	if (admin == undefined) {
 		console.log("Adding Admin")
 		var options = {
-			email: "felix@excelceo.com",
+			email: "admin@jethro.com",
 			password: "alderaa",
 			profile: {
 				firstname: "Aaron",

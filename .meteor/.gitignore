@@ -1,1 +1,3 @@
 local
+build/*.gz
+node_modules/

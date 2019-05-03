@@ -10,7 +10,10 @@ html {
 .collapsible-header:hover {
     background-color:#efefef;
     opacity: .8;
-}  
+} 
+.dueon {
+    width: 70%;
+}
 .home.row {
     background-image: url('/bg-5-full.jpg');
     background-size: 100% auto;

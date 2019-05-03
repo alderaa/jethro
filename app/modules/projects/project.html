@@ -27,13 +27,13 @@
                     {{#each todo}}
                     <li id="{{_id}}">
                         {{#if completed_on}}
-                        <div class="collapsible-header green white-text">#{{order_num}} {{title}}
-                            <span class="right">{{>dueon}}</span>
-                            <span class="right" style="margin-right:10px">Done</span>
+                        <div class="collapsible-header green white-text"><strong>#{{order_num}}</strong>&nbsp;&nbsp; {{title}}
+                            <span class="right-align dueon">{{>dueon}}
+                            <span class="right" style="margin-right:10px">Done</span></span>
                         </div>
                         {{else}}
-                        <div class="collapsible-header">#{{order_num}} {{title}}
-                            <span class="right">{{>dueon}}</span>
+                        <div class="collapsible-header"><strong>#{{order_num}}</strong>&nbsp;&nbsp; {{title}}
+                            <span class="right-align dueon">{{>dueon}}</span>
                         </div>
                         {{/if}}
                         <div class="collapsible-body">

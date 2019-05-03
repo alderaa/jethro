@@ -10,4 +10,4 @@
 
 ### How to run ###
 
-*meteor
+* meteor

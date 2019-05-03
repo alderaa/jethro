@@ -6,4 +6,8 @@
 
 ### How to install ###
 
-* meteor
+* npm install
+
+### How to run ###
+
+*meteor
